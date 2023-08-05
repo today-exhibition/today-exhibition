@@ -1,9 +1,27 @@
 import datetime
+import enum
 
 from flask_sqlalchemy import SQLAlchemy
 
 
 db = SQLAlchemy()
+
+class TicketType(enum.Enum):
+    NO_DISCOUNT = 0
+    STUDENT = 1
+    SENIOR_CITIZEN = 2
+    GROUP = 3
+    EARLY_BIRD = 4
+
+class DayType(enum.Enum):
+    MONDAY = "월요일"
+    TUESDAY = "화요일"
+    WEDNESDAY = "수요일"
+    THURSDAY = "목요일"
+    FRIDAY = "금요일"
+    SATURDAY = "토요일"
+    SUNDAY = "일요일"
+    HOLIDAY = "법정공휴일"
 
 class User(db.Model) :
     __tablename__ = 'user'
@@ -12,7 +30,7 @@ class User(db.Model) :
     nickname = db.Column(db.String(16), nullable=False)
     password = db.Column(db.String(32))
     profile_img = db.Column(db.String(64))
-    created_at = db.Column(db.DateTime(), default=datetime.now(), nullable=False)
+    created_at = db.Column(db.DateTime(), default=datetime.datetime.now(), nullable=False)
     gender = db.Column(db.Integer())
     birthdate = db.Column(db.Date())
 
@@ -41,19 +59,18 @@ class GalleryOpeningHour(db.Model):
 class Exhibition(db.Model):
     __tablename__ = 'exhibition'
     id = db.Column(db.String(64), primary_key=True)
-    start_date = db.Column(db.Date())
-    end_date = db.Column(db.Date())
     title = db.Column(db.String(), nullable=False)
     area = db.Column(db.String())
+    start_date = db.Column(db.Date())
+    end_date = db.Column(db.Date())
     gallery_id = db.Column(db.String(64))
-    keyword_id = db.Column(db.String(64)) # keyword_id 없이 keyword 테이블에서 primary key 두 개 설정도 고려
     thumbnail_img = db.Column(db.String(64))
     price = db.Column(db.Integer())
 
 class TicketPrice(db.Model):
     __tablename__ = 'ticket_price'
     exhibition_id = db.Column(db.String(64), primary_key=True)
-    ticket_type = db.Column(db.Integer(), nullable=False) # Enum 타입도 고려
+    ticket_type = db.Column(db.Enum(TicketType), nullable=False)
     final_price = db.Column(db.Integer(), nullable=False)
     available = db.Column(db.Boolean())
 
@@ -95,13 +112,12 @@ class Comment(db.Model):
     user_id = db.Column(db.String(64), nullable=False)
     exhibition_id = db.Column(db.String(64), nullable=False)
     content = db.Column(db.String())
-    created_at = db.Column(db.DateTime(), default=datetime.now(), nullable=False)
+    created_at = db.Column(db.DateTime(), default=datetime.datetime.now(), nullable=False)
 
-class ExhibitionKeyword(db.Model) :
+class ExhibitionKeyword(db.Model) : #TODO: 기본키 두 개 설정하기 
     __tablename__ = 'exhibition_keyword'
-    id = db.Column(db.String(64), primary_key=True)
-    exhibition_id = db.Column(db.String(64), nullable=False)
-    keyword = db.Column(db.String(16), nullable=False)
+    exhibition_id = db.Column(db.String(64), primary_key=True)
+    keyword = db.Column(db.String(16), primary_key=True)
 
 class ExhibitionArea(db.Model):
     __tablename__ = 'exhibition_area'
@@ -113,4 +129,4 @@ class ExhibitionArea(db.Model):
 class GalleryCloseDay(db.Model) :
     __tablename__ = 'gallery_close_day'
     gallery_id = db.Column(db.String(64), primary_key=True)
-    close_type = db.Column(db.Integer())
+    close_type = db.Column(db.Enum(DayType))
