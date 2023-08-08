@@ -23,7 +23,7 @@ class DayType(enum.Enum):
     SUNDAY = "일요일"
     HOLIDAY = "법정공휴일"
 
-class User(db.Model) :
+class User(db.Model):
     __tablename__ = 'user'
     id = db.Column(db.String(64), primary_key=True)
     email = db.Column(db.String(32))
@@ -37,7 +37,6 @@ class User(db.Model) :
 class Gallery(db.Model):
     __tablename__ = 'gallery'
     id = db.Column(db.String(64), primary_key=True)
-    address = db.Column(db.String(128))
     name = db.Column(db.String(32), nullable=False)
     opening_hours = db.Column(db.String())
     description = db.Column(db.String())
@@ -60,7 +59,6 @@ class Exhibition(db.Model):
     __tablename__ = 'exhibition'
     id = db.Column(db.String(64), primary_key=True)
     title = db.Column(db.String(), nullable=False)
-    area = db.Column(db.String())
     start_date = db.Column(db.Date())
     end_date = db.Column(db.Date())
     gallery_id = db.Column(db.String(64))
@@ -78,8 +76,12 @@ class Artist(db.Model):
     __tablename__ = 'artist'
     id = db.Column(db.String(64), primary_key=True)
     name = db.Column(db.String(16), nullable=False)
-    exhibition_id = db.Column(db.String(64))
     thumbnail_img = db.Column(db.String(64))
+
+class ArtistExhibition(db.Model):
+    __tablename__ = 'artist_exhibition'
+    artist_id = db.Column(db.String(64), primary_key=True)
+    exhibition_id = db.Column(db.String(64), primary_key=True)
 
 class Booking(db.Model): # 추후 예매테이블 구체화
     __tablename__ = 'booking'
@@ -114,19 +116,21 @@ class Comment(db.Model):
     content = db.Column(db.String())
     created_at = db.Column(db.DateTime(), default=datetime.datetime.now(), nullable=False)
 
-class ExhibitionKeyword(db.Model) : #TODO: 기본키 두 개 설정하기 
+class ExhibitionKeyword(db.Model):
     __tablename__ = 'exhibition_keyword'
     exhibition_id = db.Column(db.String(64), primary_key=True)
     keyword = db.Column(db.String(16), primary_key=True)
 
-class ExhibitionArea(db.Model):
+class GalleryAddress(db.Model):
     __tablename__ = 'exhibition_area'
-    exhibition_id = db.Column(db.String(64), primary_key=True)
+    gallery_id = db.Column(db.String(64), primary_key=True)
     area1 = db.Column(db.String(16))
     area2 = db.Column(db.String(16))
+    gpsx = db.Column(db.Float())
+    gpsy = db.Column(db.Float())
     address = db.Column(db.String(128), nullable=False)
 
-class GalleryCloseDay(db.Model) :
+class GalleryCloseDay(db.Model):
     __tablename__ = 'gallery_close_day'
     gallery_id = db.Column(db.String(64), primary_key=True)
     close_type = db.Column(db.Enum(DayType))
