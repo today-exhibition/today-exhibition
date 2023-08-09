@@ -25,7 +25,7 @@ class DayType(enum.Enum):
     FRIDAY = "금요일"
     SATURDAY = "토요일"
     SUNDAY = "일요일"
-    HOLIDAY = "법정공휴일"
+    HOLIDAY = "공휴일"
 
 class User(db.Model):
     __tablename__ = 'user'
