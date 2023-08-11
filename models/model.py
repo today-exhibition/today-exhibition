@@ -6,6 +6,10 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
+class LoginType(enum.Enum):
+    NAVER = "NAVER"
+    KAKAO = "KAKAO"
+
 class TicketType(enum.Enum):
     NO_DISCOUNT = 0
     STUDENT = 1
@@ -21,18 +25,18 @@ class DayType(enum.Enum):
     FRIDAY = "금요일"
     SATURDAY = "토요일"
     SUNDAY = "일요일"
-    HOLIDAY = "법정공휴일"
+    HOLIDAY = "공휴일"
 
 class User(db.Model):
     __tablename__ = 'user'
     id = db.Column(db.String(64), primary_key=True)
     email = db.Column(db.String(32))
     nickname = db.Column(db.String(16), nullable=False)
-    password = db.Column(db.String(32))
     profile_img = db.Column(db.String(64))
     created_at = db.Column(db.DateTime(), default=datetime.datetime.now(), nullable=False)
     gender = db.Column(db.Integer())
     birthdate = db.Column(db.Date())
+    login_type = db.Column(db.Enum(LoginType), nullable=False)
 
 class Gallery(db.Model):
     __tablename__ = 'gallery'
@@ -59,6 +63,7 @@ class Exhibition(db.Model):
     __tablename__ = 'exhibition'
     id = db.Column(db.String(64), primary_key=True)
     title = db.Column(db.String(), nullable=False)
+    description = db.Column(db.String())
     start_date = db.Column(db.Date())
     end_date = db.Column(db.Date())
     gallery_id = db.Column(db.String(64))
