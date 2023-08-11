@@ -95,18 +95,21 @@ class LikeExhibition(db.Model):
     id = db.Column(db.String(64), primary_key=True)
     user_id = db.Column(db.String(64), nullable=False)
     exhibition_id = db.Column(db.String(64), nullable=False)
+    liked_at = db.Column(db.DateTime(), default=datetime.datetime.now(), nullable=False)
 
 class FollowingArtist(db.Model):
     __tablename__ = 'following_artist'
     id = db.Column(db.String(64), primary_key=True)
     user_id = db.Column(db.String(64), nullable=False)
     artist_id = db.Column(db.String(64), nullable=False)
+    followed_at = db.Column(db.DateTime(), default=datetime.datetime.now(), nullable=False)
 
 class FollowingGallery(db.Model):
     __tablename__ = 'following_gallery'
     id = db.Column(db.String(64), primary_key=True)
     user_id = db.Column(db.String(64), nullable=False)
     gallery_id = db.Column(db.String(64), nullable=False)
+    followed_at = db.Column(db.DateTime(), default=datetime.datetime.now(), nullable=False)
 
 class Comment(db.Model):
     __tablename__ = 'comment'
@@ -122,7 +125,7 @@ class ExhibitionKeyword(db.Model):
     keyword = db.Column(db.String(16), primary_key=True)
 
 class GalleryAddress(db.Model):
-    __tablename__ = 'exhibition_area'
+    __tablename__ = 'gallery_address'
     gallery_id = db.Column(db.String(64), primary_key=True)
     area1 = db.Column(db.String(16))
     area2 = db.Column(db.String(16))
