@@ -92,7 +92,7 @@ class Booking(db.Model): # 추후 예매테이블 구체화
     __tablename__ = 'booking'
     id = db.Column(db.String(64), primary_key=True)
     user_id = db.Column(db.String(64), nullable=False)
-    gallery_id = db.Column(db.String(64), nullable=False)
+    exhibition_id = db.Column(db.String(64), nullable=False)
     visited_at = db.Column(db.DateTime())
 
 class LikeExhibition(db.Model):
