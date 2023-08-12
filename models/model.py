@@ -17,16 +17,6 @@ class TicketType(enum.Enum):
     GROUP = 3
     EARLY_BIRD = 4
 
-class DayType(enum.Enum):
-    MONDAY = "월요일"
-    TUESDAY = "화요일"
-    WEDNESDAY = "수요일"
-    THURSDAY = "목요일"
-    FRIDAY = "금요일"
-    SATURDAY = "토요일"
-    SUNDAY = "일요일"
-    HOLIDAY = "공휴일"
-
 class User(db.Model):
     __tablename__ = 'user'
     id = db.Column(db.String(64), primary_key=True)
@@ -43,6 +33,7 @@ class Gallery(db.Model):
     id = db.Column(db.String(64), primary_key=True)
     name = db.Column(db.String(32), nullable=False)
     opening_hours = db.Column(db.String())
+    holiday_info = db.Column(db.String(128))
     description = db.Column(db.String())
     parking_yn = db.Column(db.Boolean())
     contact = db.Column(db.String(32))
@@ -138,7 +129,3 @@ class GalleryAddress(db.Model):
     gpsy = db.Column(db.Float())
     address = db.Column(db.String(128), nullable=False)
 
-class GalleryCloseDay(db.Model):
-    __tablename__ = 'gallery_close_day'
-    gallery_id = db.Column(db.String(64), primary_key=True)
-    close_type = db.Column(db.Enum(DayType))
