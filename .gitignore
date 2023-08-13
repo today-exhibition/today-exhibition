@@ -1,12 +1,15 @@
-# MAC
+# macOS system files
 .DS_Store
 
-# python 컴파일, 바이너리
+# Compiled Python files
 __pycache__
 *.pyc
 
-# database
+# Database files
 *.db
 
-# key
+# Sensitive data: API keys and other secrets
+secrets.json
+
+# Application configuration
 config.py
