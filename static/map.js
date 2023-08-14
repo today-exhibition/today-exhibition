@@ -17,11 +17,18 @@ function makeCard(title, img, s_date, e_date, gallery) {
 
 $(document).ready(function () {
   kakao.maps.load(() => {
+    // 기본 위치 : 서울시청으로 설정
+    var curLoc = new kakao.maps.LatLng(37.5667, 126.9784);
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {  
+        curLoc = new kakao.maps.LatLng(position.coords.latitude, position.coords.longitude);
+      });
+    }
 
     // 지도
     var map = new kakao.maps.Map(document.getElementById('map'), {
-      center: new kakao.maps.LatLng(36.2683, 127.6358),
-      level: 14
+      center: curLoc,
+      level: 10
     });
 
     // 마커 클러스터
