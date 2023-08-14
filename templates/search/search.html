@@ -4,7 +4,7 @@
   <form action="/search" method="get">
     {% include 'common/block_search.html' %}
     
-    <span class="search_result">"{{ keyword }}" 검색결과 {{ exhibition_count + exhibition_count + exhibition_count }}건</span>
+    <span class="search_result">"{{ keyword }}" 검색결과 {{ exhibition_count + exhibition_count + gallery_count }}건</span>
   </form>
 {% endblock %}
 
@@ -61,17 +61,17 @@
   <div><a href="{{ url_for('search.search_artist', keyword=keyword) }}">작가 결과 더보기</a></div>
   
   <hr>
-  <h3>미술관({{ exhibition_count }})</h3>
+  <h3>미술관({{ gallery_count }})</h3>
   <div class="card mb-3" style="max-width: 100%;">
-    {% for exhibition in exhibition_list %}
+    {% for gallery in gallery_list %}
     <div class="row artist-row">
       <div class="col-md-4 artist-col">
         <i class="fa-regular fa-bookmark fa-2x"></i>
-        <img src="{{ exhibition.thumbnail_img }}" class="img-fluid rounded-start" alt="{{ exhibition.title }}">
+        <img src="{{ gallery.thumbnail_img }}" class="img-fluid rounded-start" alt="{{ gallery.name }}">
       </div>
       <div class="col-md-8">
         <div class="my-card-body">
-          <h5 class="card-title">{{ exhibition.gallery_id }}</h5>
+          <h5 class="card-title">{{ gallery.name }}</h5>
         </div>
       </div>
     </div>
