@@ -1,0 +1,82 @@
+{% extends 'common/layout.html' %}
+
+{% block search %}
+  <form action="/search" method="get">
+    {% include 'common/block_search.html' %}
+    
+    <span class="search_result">"{{ keyword }}" 검색결과 {{ exhibition_count + exhibition_count + exhibition_count }}건</span>
+  </form>
+{% endblock %}
+
+{% block content %}
+
+  <h3>전시({{ exhibition_count }})</h3>
+  <div class="row row-cols-1 row-cols-md-3 g-5">
+    {% for exhibition in exhibition_list %}
+    <div class="col">
+      <div class="card" id="{{ exhibition.id }}">
+        <i class="fa-regular fa-heart fa-2x"></i>
+        <img src="{{ exhibition.thumbnail_img }}"
+          class="card-img-top"
+          alt="{{ exhibition.title }}"/>
+        <div class="card-body" onclick="window.location='/search/exhibition{{ exhibition.id }}'">
+          <h5 class="card-title">{{ exhibition.title }}</h5>
+
+          <ul>
+            <li>
+              <strong>기간:</strong>
+              <p class="card-text gallery-date">
+                {{ exhibition.start_date }} ~ {{ exhibition.end_date }}
+              </p>
+            </li>
+            <li>
+              <strong>장소:</strong>
+              <p class="card-text gallery-place">{{ exhibition.gallery_id }}</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  <div><a href="{{ url_for('search.search_exhibition', keyword=keyword) }}">전시 결과 더보기</a></div>
+
+  <hr>
+  <h3>작가({{ exhibition_count }})</h3>
+  <div class="card mb-3" style="max-width: 100%;">
+    {% for exhibition in exhibition_list %}
+    <div class="row artist-row ">
+      <div class="col-md-4 artist-col">
+        <i class="fa-regular fa-bookmark fa-2x"></i>
+        <img src="{{ exhibition.thumbnail_img }}" class="img-fluid rounded-start" alt="{{ exhibition.title }}">
+      </div>
+      <div class="col-md-8">
+        <div class="my-card-body">
+          <h5 class="card-title">{{ exhibition.title }}</h5>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  <div><a href="{{ url_for('search.search_artist', keyword=keyword) }}">작가 결과 더보기</a></div>
+  
+  <hr>
+  <h3>미술관({{ exhibition_count }})</h3>
+  <div class="card mb-3" style="max-width: 100%;">
+    {% for exhibition in exhibition_list %}
+    <div class="row artist-row">
+      <div class="col-md-4 artist-col">
+        <i class="fa-regular fa-bookmark fa-2x"></i>
+        <img src="{{ exhibition.thumbnail_img }}" class="img-fluid rounded-start" alt="{{ exhibition.title }}">
+      </div>
+      <div class="col-md-8">
+        <div class="my-card-body">
+          <h5 class="card-title">{{ exhibition.gallery_id }}</h5>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  <div><a href="{{ url_for('search.search_gallery', keyword=keyword) }}">미술관 결과 더보기</a></div>
+
+{% endblock %}

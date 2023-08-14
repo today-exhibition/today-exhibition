@@ -1,0 +1,30 @@
+{% extends 'common/layout.html' %}
+
+{% block search %}
+  <form action="/search/artist" method="get">
+    {% include 'common/block_search.html' %}
+    
+    <span class="search_result">"{{ keyword }}" 검색결과 {{ exhibition_count }}건</span>
+  </form>
+{% endblock %}
+
+{% block content %}
+
+  <h3>작가({{ exhibition_count }})</h3>
+  <div class="card mb-3" style="max-width: 100%;">
+    {% for exhibition in exhibitions %}
+    <div class="row artist-row ">
+      <div class="col-md-4 artist-col">
+        <i class="fa-regular fa-bookmark fa-2x"></i>
+        <img src="{{ exhibition.thumbnail_img }}" class="img-fluid rounded-start" alt="{{ exhibition.title }}">
+      </div>
+      <div class="col-md-8">
+        <div class="my-card-body">
+          <h5 class="card-title">{{ exhibition.title }}</h5>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+{% endblock %}

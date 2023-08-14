@@ -5,6 +5,7 @@ from config import DEBUG, SQLALCHEMY_DATABASE_URI, SQLALCHEMY_TRACK_MODIFICATION
 from models.model import db
 
 from views.map.map import map_bp
+from views.search.search import search_bp
 
 app = Flask(__name__)
 
@@ -16,6 +17,7 @@ app.debug = DEBUG
 db.init_app(app)
 
 app.register_blueprint(map_bp)
+app.register_blueprint(search_bp)
 
 if __name__ == "__main__" :
     with app.app_context():
