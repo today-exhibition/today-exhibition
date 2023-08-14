@@ -29,7 +29,14 @@ $(document).ready(function () {
       map: map,
       averageCenter: true, 
       minLevel: 10,
-      disableClickZoom: true
+      disableClickZoom: true,
+      styles: [{
+        width: '32px', height: '32px',
+        background: 'url(https://github.com/today-exhibition/today-exhibition/assets/63828057/d1c02f39-df31-4b74-a0a0-f781893b6baf) no-repeat',
+        textAlign: 'center',
+        lineHeight: '31px',
+        color: '#EFF1F3'
+      }]
     });
     
     // 마커
@@ -37,7 +44,8 @@ $(document).ready(function () {
     for (var i = 0; i < exhibitionsArray.length; i++) {
       var position = exhibitionsArray[i];
       var marker = new kakao.maps.Marker({
-        position: new kakao.maps.LatLng(position.gpsy, position.gpsx)
+        position: new kakao.maps.LatLng(position.gpsy, position.gpsx),
+        image: new kakao.maps.MarkerImage('https://github.com/today-exhibition/today-exhibition/assets/63828057/b86a1ed4-40b0-4c8b-ba66-fe5529841546', new kakao.maps.Size(32, 32))
       });
       markers.push(marker);
     }
