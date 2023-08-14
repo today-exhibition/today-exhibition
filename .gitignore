@@ -13,3 +13,6 @@ secrets.json
 
 # Application configuration
 config.py
+
+# image folder
+img

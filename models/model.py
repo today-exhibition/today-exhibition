@@ -22,10 +22,9 @@ class User(db.Model):
     id = db.Column(db.String(64), primary_key=True)
     email = db.Column(db.String(32))
     nickname = db.Column(db.String(16), nullable=False)
-    profile_img = db.Column(db.String(64))
+    profile_img = db.Column(db.String(256))
     created_at = db.Column(db.DateTime(), default=datetime.datetime.now(), nullable=False)
-    gender = db.Column(db.Integer())
-    birthdate = db.Column(db.Date())
+    gender = db.Column(db.String(6))
     login_type = db.Column(db.Enum(LoginType), nullable=False)
 
 class Gallery(db.Model):
@@ -38,7 +37,7 @@ class Gallery(db.Model):
     parking_yn = db.Column(db.Boolean())
     contact = db.Column(db.String(32))
     homepage_url = db.Column(db.String(64))
-    thumbnail_img = db.Column(db.String(64))
+    thumbnail_img = db.Column(db.String(256))
 
 class GalleryOpeningHour(db.Model):
     __tablename__ = 'gallery_opening_hour'
@@ -58,7 +57,7 @@ class Exhibition(db.Model):
     start_date = db.Column(db.Date())
     end_date = db.Column(db.Date())
     gallery_id = db.Column(db.String(64))
-    thumbnail_img = db.Column(db.String(64))
+    thumbnail_img = db.Column(db.String(256))
     price = db.Column(db.Integer())
 
 class TicketPrice(db.Model):
@@ -72,7 +71,7 @@ class Artist(db.Model):
     __tablename__ = 'artist'
     id = db.Column(db.String(64), primary_key=True)
     name = db.Column(db.String(16), nullable=False)
-    thumbnail_img = db.Column(db.String(64))
+    thumbnail_img = db.Column(db.String(256))
 
 class ArtistExhibition(db.Model):
     __tablename__ = 'artist_exhibition'
@@ -128,4 +127,3 @@ class GalleryAddress(db.Model):
     gpsx = db.Column(db.Float())
     gpsy = db.Column(db.Float())
     address = db.Column(db.String(128), nullable=False)
-
