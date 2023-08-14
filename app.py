@@ -1,12 +1,12 @@
 import os
-
 from flask import Flask
 
 from config import DEBUG, SQLALCHEMY_DATABASE_URI, SQLALCHEMY_TRACK_MODIFICATIONS
-
 from models.model import db
 
 from views.artist.artist import artist_bp
+from views.map.map import map_bp
+from views.search.search import search_bp
 
 
 app = Flask(__name__)
@@ -19,6 +19,8 @@ app.debug = True
 db.init_app(app)
 
 app.register_blueprint(artist_bp)
+app.register_blueprint(map_bp)
+app.register_blueprint(search_bp)
 
 if __name__ == "__main__" :
     with app.app_context():
