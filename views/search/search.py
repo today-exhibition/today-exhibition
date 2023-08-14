@@ -29,3 +29,26 @@ def search():
     
 
     return render_template('search/search.html', exhibition_list=exhibition_list, keyword=keyword, exhibition_count=exhibition_count)
+
+@search_bp.route('/search/exhibition')
+def search_exhibition():
+    keyword = request.args.get('keyword', default="", type=str).strip()
+    sort = request.args.get('sort')
+    sub_sort = request.args.get('sub_sort')
+
+    exhibitions = Exhibition.query \
+                        .with_entities(
+                        Exhibition.id,
+                        Exhibition.title,
+                        Exhibition.start_date,
+                        Exhibition.end_date,
+                        Exhibition.gallery_id,
+                        Exhibition.thumbnail_img
+                        ) \
+                        .filter(Exhibition.title.like('%' + keyword + '%')) \
+                        .order_by(Exhibition.start_date) \
+                        .all()
+    
+    exhibition_count = len(exhibitions)
+    
+    return render_template('search/search_exhibition.html', exhibitions=exhibitions, keyword=keyword, exhibition_count=exhibition_count)
