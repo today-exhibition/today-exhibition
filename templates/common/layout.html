@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+    <script src="{{ url_for('static', filename='main.js') }}" defer></script>
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="container">
+      {% block search %}
+      <!-- 검색창 -->
+      {% endblock %}
+      
+      <div style="display: flex; justify-content: center;">
+        <button type="submit" name="exhibition" id="category" class="btn btn-outline-secondary" onclick="window.location='{{ url_for('search.search_exhibition', keyword=keyword) }}'">전시</button>
+        <button type="submit" name="artist" id="category" class="btn btn-outline-secondary" onclick="window.location='{{ url_for('search.search_artist', keyword=keyword) }}'">작가</button>
+        <button type="submit" name="gallery" id="category" class="btn btn-outline-secondary" onclick="window.location='{{ url_for('search.search_gallery', keyword=keyword) }}'">미술관</button>
+      </div>
+      {% block sorting %}
+      <!-- 전시 정렬 버튼 -->
+      {% endblock %}
+
+      {% block content %}
+      <!-- 메인 콘텐츠 -->
+      {% endblock %}
+    </div>
+    <script src="https://kit.fontawesome.com/840a32f19e.js" crossorigin="anonymous"></script>
+  </body>
+</html>
