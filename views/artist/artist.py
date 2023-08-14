@@ -39,7 +39,7 @@ def artist(id):
             ended_exhibitions.append(exhibition)
 
 
-    return render_template('artist.html', artist=artist, 
+    return render_template('artist/artist.html', artist=artist, 
                             ongoing_exhibitions=ongoing_exhibitions,
                             ongoing_count=len(ongoing_exhibitions),
                             upcoming_exhibitions=upcoming_exhibitions,
