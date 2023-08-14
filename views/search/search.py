@@ -81,3 +81,34 @@ def search_artist():
     #             .limit(9)
 
     return render_template('search/search_artist.html', exhibitions=exhibitions, keyword=keyword, exhibition_count=exhibition_count)
+
+@search_bp.route('/search/gallery')
+def search_gallery():
+    keyword = request.args.get('keyword', default="", type=str).strip()
+
+    exhibitions = Exhibition.query \
+                    .with_entities(
+                    Exhibition.id,
+                    Exhibition.title,
+                    Exhibition.start_date,
+                    Exhibition.end_date,
+                    Exhibition.gallery_id,
+                    Exhibition.thumbnail_img
+                    ) \
+                    .filter(Exhibition.title.like('%' + keyword + '%')) \
+                    .order_by(Exhibition.start_date) \
+                    .all()
+    
+    exhibition_count = len(exhibitions)
+        
+    # gallerys = Gallery.query \
+    #             .with_entities(
+    #             Gallery.id,
+    #             Gallery.name,
+    #             Gallery.thumbnail_img
+    #             ) \
+    #             .filter(Gallery.name.like('%' + keyword + '%')) \
+    #             .order_by(Gallery.id) \
+    #             .limit(9)
+
+    return render_template('search/search_gallery.html', exhibitions=exhibitions, keyword=keyword, exhibition_count=exhibition_count)
