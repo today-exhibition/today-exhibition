@@ -1,12 +1,15 @@
 import os
 from flask import Flask
+from flask_session import Session
 
 from config import DEBUG, SQLALCHEMY_DATABASE_URI, SQLALCHEMY_TRACK_MODIFICATIONS
 from models.model import db
 
+from views.main.main import main_bp
 from views.artist.artist import artist_bp
 from views.map.map import map_bp
 from views.search.search import search_bp
+from views.user.user import user_bp
 
 
 app = Flask(__name__)
@@ -16,11 +19,18 @@ app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = SQLALCHEMY_TRACK_MODIFICATIONS
 app.debug = True
 
+app.config["SESSION_TYPE"] = "sqlalchemy"
+app.config["SESSION_SQLALCHEMY"] = db
+Session(app)
+
 db.init_app(app)
 
+
+app.register_blueprint(main_bp)
 app.register_blueprint(artist_bp)
 app.register_blueprint(map_bp)
 app.register_blueprint(search_bp)
+app.register_blueprint(user_bp)
 
 if __name__ == "__main__" :
     with app.app_context():
