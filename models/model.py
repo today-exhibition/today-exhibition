@@ -25,7 +25,6 @@ class User(db.Model):
     profile_img = db.Column(db.String(256))
     created_at = db.Column(db.DateTime(), default=datetime.datetime.now(), nullable=False)
     gender = db.Column(db.String(6))
-    birthdate = db.Column(db.Date())
     login_type = db.Column(db.Enum(LoginType), nullable=False)
 
 class Gallery(db.Model):
