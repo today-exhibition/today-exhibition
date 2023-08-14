@@ -1,0 +1,48 @@
+{% extends 'common/layout.html' %}
+
+{% block search %}
+  <form action="/search/exhibition" method="get">
+    {% include 'common/block_search.html' %}
+
+    <span class="search_result">"{{ keyword }}" 검색결과 {{ exhibition_count }}건</span>
+  </form>
+{% endblock %}
+
+{% block sorting %}
+  {% include 'common/block_sorting.html' %}
+{% endblock %}
+
+{% block content %}
+
+  <h3>전시({{ exhibition_count }})</h3>
+  <div class="row row-cols-1 row-cols-md-3 g-5">
+    {% for exhibition in exhibitions %}
+    <div class="col">
+      <div class="card" id="{{ exhibition.id }}" onclick="window.location='/search/{{ exhibition.id }}'">
+        <i class="fa-regular fa-heart fa-2x"></i>
+        <img src="{{ exhibition.thumbnail_img }}"
+          class="card-img-top"
+          alt="{{ exhibition.title }}"/>
+
+        <div class="card-body">
+          <h5 class="card-title">{{ exhibition.title }}</h5>
+
+          <ul>
+            <li>
+              <strong>기간:</strong>
+              <p class="card-text gallery-date">
+                {{ exhibition.start_date }} ~ {{ exhibition.end_date }}
+              </p>
+            </li>
+            <li>
+              <strong>장소:</strong>
+              <p class="card-text gallery-place">{{ exhibition.gallery_id }}</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+{% endblock %}
