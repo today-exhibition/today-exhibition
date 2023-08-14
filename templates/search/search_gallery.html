@@ -1,12 +1,12 @@
 {% extends 'common/layout.html' %}
 
-
 {% block search %}
   <form action="/search/gallery" method="get">
     {% include 'common/block_search.html' %}
-
-    <span class="search_result">"{{ keyword }}" 검색결과 {{ gallery_count }}건</span>
+    
+    <span class="search_result">"{{ keyword }}" 검색결과 {{ exhibition_count }}건</span>
   </form>
+    {% include './common/filter.html' %}
 {% endblock %}
 
 {% block content %}
