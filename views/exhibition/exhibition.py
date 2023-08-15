@@ -16,9 +16,9 @@ def exhibition(id):
                 Exhibition.end_date,
                 Gallery.opening_hours,
                 GalleryAddress.area,
-                Gallery.name,
+                Gallery.name.label("gallery_name"),
                 Exhibition.price,
-                Artist.name,
+                Artist.name.label("artist_name"),
                 Exhibition.description,
                 Exhibition.thumbnail_img)\
                 .join(Gallery, Exhibition.gallery_id == Gallery.id)\
@@ -28,10 +28,10 @@ def exhibition(id):
                 .filter(Exhibition.id == id).all()
 #! [전시디테일 > 전시 코멘트 조회(닉네임, 작성일, 내용)]
     comments = db.session.query(
-                User.id,
+                User.id.label("user_id"),
                 Comment.content,
-                func.substr(Comment.created_at, 1, 10),
-                Comment.id)\
+                func.substr(Comment.created_at, 1, 10).label("created_at"),
+                Comment.id.label("comment_id"))\
                 .join(User, Comment.user_id == User.id)\
                 .join(Exhibition, Comment.exhibition_id == Exhibition.id)\
                 .filter(Exhibition.id == id).all()
