@@ -18,8 +18,10 @@ def user():
         user_id = session.get("user_id")
         user = User.query.get(user_id)
         if request.method == "POST":
-            input_nickname = request.form.get("input_nickname")
-            if user.nickname != input_nickname:
+            input_nickname = request.form.get("input_nickname", None)
+            # TODO 유저 네임 유효성 검사 안되면 alert
+            db.session.query()
+            if input_nickname is not None and user.nickname != input_nickname:
                 user.nickname = input_nickname
                 db.session.commit()
         user_info = db.session.query(User.id, User.email, User.nickname, User.profile_img, User.created_at, User.gender, User.login_type).filter_by(id=user_id).first()
@@ -45,26 +47,28 @@ def login():
 
 @user_bp.route('/login/callback/naver')
 def naver_callback():
-    secrets = load_secrets()
-    social_keys = secrets.get("social")
-    
-    NAVER_CLIENT_ID = social_keys["naver_client_id"]
-    NAVER_CLIENT_SECRET = social_keys["naver_client_secret"]
-    
-    params = request.args.to_dict()
-    code = params.get("code")
-    
-    token_request = requests.get(f"https://nid.naver.com/oauth2.0/token?client_id={NAVER_CLIENT_ID}&client_secret={NAVER_CLIENT_SECRET}&grant_type=authorization_code&code={code}")
-    token_json = token_request.json()
-    
-    ACCESS_TOKEN = token_json.get("access_token", None)
-    if ACCESS_TOKEN is None:
-        Response("Unauthorized", status=401)
-    TOKEN_TYPE = token_json.get("token_type")
-    
-    profile_request = requests.get(f"https://openapi.naver.com/v1/nid/me", headers={"Authorization": f"{TOKEN_TYPE} {ACCESS_TOKEN}"})
-    data = profile_request.json()
-    
+    try:
+        secrets = load_secrets()
+        social_keys = secrets.get("social")
+        
+        NAVER_CLIENT_ID = social_keys["naver_client_id"]
+        NAVER_CLIENT_SECRET = social_keys["naver_client_secret"]
+        
+        params = request.args.to_dict()
+        code = params.get("code")
+        
+        token_request = requests.get(f"https://nid.naver.com/oauth2.0/token?client_id={NAVER_CLIENT_ID}&client_secret={NAVER_CLIENT_SECRET}&grant_type=authorization_code&code={code}")
+        token_json = token_request.json()
+        
+        ACCESS_TOKEN = token_json.get("access_token", None)
+        if ACCESS_TOKEN is None:
+            Response("Unauthorized", status=401)
+        TOKEN_TYPE = token_json.get("token_type")
+        
+        profile_request = requests.get(f"https://openapi.naver.com/v1/nid/me", headers={"Authorization": f"{TOKEN_TYPE} {ACCESS_TOKEN}"})
+        data = profile_request.json()
+    except:
+        return redirect(url_for('main.main'))
     return social_signin(data, "naver")
 
 @user_bp.route('/login/callback/kakao')
@@ -95,6 +99,8 @@ def kakao_callback():
 def social_signin(data, social_type):
     if social_type == "naver":
         account_info = data.get("response")
+        if account_info is None:
+            return redirect(url_for('main.main'))
         
         id = account_info.get("id", None)
         email = account_info.get("email", None)
@@ -108,15 +114,17 @@ def social_signin(data, social_type):
   
     elif social_type == "kakao":
         account_info = data.get("kakao_account")
+        if account_info is None:
+            return redirect(url_for('main.main'))
+        
         profile = account_info.get("profile")
         
         id = data.get("id", None)
-        
         email = account_info.get("email", None)
         nickname = profile.get("nickname", None)
-        profile_img = profile.get("profile_image_url", None),
-        created_at = datetime.datetime.now(),
-        gender = account_info.get("gender", None),
+        profile_img = profile.get("profile_image_url", None)
+        created_at = datetime.datetime.now()
+        gender = account_info.get("gender", None)
         login_type = LoginType.KAKAO
     
     # id를 받지 못한 경우 예외처리
