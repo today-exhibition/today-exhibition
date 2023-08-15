@@ -1,6 +1,6 @@
 from flask import Blueprint, request, render_template
-from models.model import Exhibition
-# , Gallery, Comment, User
+from models.model import Exhibition, Gallery
+# Comment, User
 from datetime import datetime
 from sqlalchemy import func
 
@@ -17,18 +17,32 @@ def search():
                         Exhibition.title,
                         Exhibition.start_date,
                         Exhibition.end_date,
-                        Exhibition.gallery_id,
+                        Gallery.name,
                         Exhibition.thumbnail_img
                         ) \
                         .filter(Exhibition.title.like('%' + keyword + '%')) \
+                        .join(Gallery, Exhibition.gallery_id == Gallery.id) \
                         .order_by(Exhibition.start_date) \
                         .all()
+    
+    gallerys = Gallery.query \
+                .with_entities(
+                Gallery.id,
+                Gallery.name,
+                Gallery.thumbnail_img
+                ) \
+                .filter(Gallery.name.like('%' + keyword + '%')) \
+                .order_by(Gallery.id) \
+                .all()
 
     exhibition_count = len(exhibitions)
     exhibition_list = exhibitions[:3]
+
+    gallery_count = len(gallerys)
+    gallery_list = gallerys[:3]
     
 
-    return render_template('search/search.html', exhibition_list=exhibition_list, keyword=keyword, exhibition_count=exhibition_count)
+    return render_template('search/search.html', exhibition_list=exhibition_list, keyword=keyword, exhibition_count=exhibition_count, gallery_count=gallery_count, gallery_list=gallery_list)
 
 @search_bp.route('/search/exhibition')
 def search_exhibition():
@@ -42,10 +56,11 @@ def search_exhibition():
                         Exhibition.title,
                         Exhibition.start_date,
                         Exhibition.end_date,
-                        Exhibition.gallery_id,
+                        Gallery.name,
                         Exhibition.thumbnail_img
                         ) \
                         .filter(Exhibition.title.like('%' + keyword + '%')) \
+                        .join(Gallery, Exhibition.gallery_id == Gallery.id) \
                         .order_by(Exhibition.start_date) \
                         .all()
     
@@ -63,10 +78,11 @@ def search_artist():
                     Exhibition.title,
                     Exhibition.start_date,
                     Exhibition.end_date,
-                    Exhibition.gallery_id,
+                    Gallery.name,
                     Exhibition.thumbnail_img
                     ) \
                     .filter(Exhibition.title.like('%' + keyword + '%')) \
+                    .join(Gallery, Exhibition.gallery_id == Gallery.id) \
                     .order_by(Exhibition.start_date) \
                     .all()
     exhibition_count = len(exhibitions)
@@ -86,29 +102,32 @@ def search_artist():
 def search_gallery():
     keyword = request.args.get('keyword', default="", type=str).strip()
 
-    exhibitions = Exhibition.query \
-                    .with_entities(
-                    Exhibition.id,
-                    Exhibition.title,
-                    Exhibition.start_date,
-                    Exhibition.end_date,
-                    Exhibition.gallery_id,
-                    Exhibition.thumbnail_img
-                    ) \
-                    .filter(Exhibition.title.like('%' + keyword + '%')) \
-                    .order_by(Exhibition.start_date) \
-                    .all()
+    # exhibitions = Exhibition.query \
+    #                 .with_entities(
+    #                 Exhibition.id,
+    #                 Exhibition.title,
+    #                 Exhibition.start_date,
+    #                 Exhibition.end_date,
+    #                 Gallery.name,
+    #                 Exhibition.thumbnail_img
+    #                 ) \
+    #                 .filter(Exhibition.title.like('%' + keyword + '%')) \
+    #                 .join(Gallery, Exhibition.gallery_id == Gallery.id) \
+    #                 .order_by(Exhibition.start_date) \
+    #                 .all()
     
-    exhibition_count = len(exhibitions)
+    
         
-    # gallerys = Gallery.query \
-    #             .with_entities(
-    #             Gallery.id,
-    #             Gallery.name,
-    #             Gallery.thumbnail_img
-    #             ) \
-    #             .filter(Gallery.name.like('%' + keyword + '%')) \
-    #             .order_by(Gallery.id) \
-    #             .limit(9)
+    gallerys = Gallery.query \
+                .with_entities(
+                Gallery.id,
+                Gallery.name,
+                Gallery.thumbnail_img
+                ) \
+                .filter(Gallery.name.like('%' + keyword + '%')) \
+                .order_by(Gallery.id) \
+                .all()
+    
+    gallery_count = len(gallerys)
 
-    return render_template('search/search_gallery.html', exhibitions=exhibitions, keyword=keyword, exhibition_count=exhibition_count)
+    return render_template('search/search_gallery.html', gallerys=gallerys, keyword=keyword, gallery_count=gallery_count)

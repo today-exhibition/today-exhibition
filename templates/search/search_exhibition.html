@@ -3,9 +3,10 @@
 {% block search %}
   <form action="/search/exhibition" method="get">
     {% include 'common/block_search.html' %}
-
+    
     <span class="search_result">"{{ keyword }}" 검색결과 {{ exhibition_count }}건</span>
   </form>
+    {% include './common/filter.html' %}
 {% endblock %}
 
 {% block sorting %}
