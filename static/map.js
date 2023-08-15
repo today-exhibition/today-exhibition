@@ -44,39 +44,52 @@ $(document).ready(function () {
         lineHeight: '31px',
         color: '#EFF1F3'
       }]
-    });
+    });    
     
     // 마커
     var markers = [];
     for (var i = 0; i < exhibitionsArray.length; i++) {
-      var position = exhibitionsArray[i];
+      var exhibition = exhibitionsArray[i];
       var marker = new kakao.maps.Marker({
-        position: new kakao.maps.LatLng(position.gpsy, position.gpsx),
+        position: new kakao.maps.LatLng(exhibition.gpsy, exhibition.gpsx),
         image: new kakao.maps.MarkerImage('https://github.com/today-exhibition/today-exhibition/assets/63828057/b86a1ed4-40b0-4c8b-ba66-fe5529841546', new kakao.maps.Size(32, 32))
       });
+      marker.data = exhibition;
       markers.push(marker);
     }
+
+    clusterer.addMarkers(markers);
 
     // 지도에 있는 마커만 카드 리스트 표시
     var bounds = map.getBounds();
     $('#card-list').text(bounds.toString());
-
-    clusterer.addMarkers(markers);
-    for (let i = 0; i < exhibitionsArray.length; i++) {
-      makeCard(exhibitionsArray[i]['exhibition_title'], exhibitionsArray[i]['thumbnail_img'], exhibitionsArray[i]['start_date'], exhibitionsArray[i]['end_date'], exhibitionsArray[i]['gallery_name']);
+    for (let i = 0; i < markers.length; i++) {
+      var curMarker = markers[i];
+      if (bounds.contain(curMarker.getPosition())) {
+        makeCard(curMarker.data['exhibition_title'], curMarker.data['thumbnail_img'], curMarker.data['start_date'], curMarker.data['end_date'], curMarker.data['gallery_name']);
+      }
     }
 
     // 지도 이동할 때마다 카드 리스트 변경
     kakao.maps.event.addListener(map, 'bounds_changed', function () {
       bounds = map.getBounds();
       $('#card-list').text(bounds.toString());
-      clusterer.addMarkers(markers);
-      for (let i = 0; i < exhibitionsArray.length; i++) {
-        l = new kakao.maps.LatLng(exhibitionsArray[i].gpsy, exhibitionsArray[i].gpsx);
-        if (bounds.contain(l)) {
-          makeCard(exhibitionsArray[i]['exhibition_title'], exhibitionsArray[i]['thumbnail_img'], exhibitionsArray[i]['start_date'], exhibitionsArray[i]['end_date'], exhibitionsArray[i]['gallery_name']);
+      for (let i = 0; i < markers.length; i++) {
+        var curMarker = markers[i];
+        if (bounds.contain(curMarker.getPosition())) {
+          makeCard(curMarker.data['exhibition_title'], curMarker.data['thumbnail_img'], curMarker.data['start_date'], curMarker.data['end_date'], curMarker.data['gallery_name']);
         }
       }
     });
+    
+    // 마커클러스터 클릭 시 해당 카드 리스트만 조회
+    kakao.maps.event.addListener(clusterer, 'clusterclick', function(cluster) {
+      map.setCenter(cluster.getCenter());
+      $('#card-list').text("");
+      var clustererMarkers = cluster.getMarkers();
+      clustererMarkers.forEach(marker => {
+        makeCard(marker.data['exhibition_title'], marker.data['thumbnail_img'], marker.data['start_date'], marker.data['end_date'], marker.data['gallery_name']);
+      })
+    })
   })
 });
