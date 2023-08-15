@@ -10,11 +10,21 @@ from models.model import db, User, LoginType
 user_bp = Blueprint('user', __name__)
 
 #! user -> 로그인이 되어 있으면 user 정보 되어 있지 않으면 login url로 이동
-@user_bp.route('/user')
+@user_bp.route('/user', methods=['GET', 'POST'])
 def user():
     if not "user_id" in session:
         return render_template("user/login.html")
-    return render_template("user/user.html")
+    else:
+        user_id = session.get("user_id")
+        user = User.query.get(user_id)
+        if request.method == "POST":
+            input_nickname = request.form.get("input_nickname")
+            if user.nickname != input_nickname:
+                user.nickname = input_nickname
+                db.session.commit()
+        user_info = db.session.query(User.id, User.email, User.nickname, User.profile_img, User.created_at, User.gender, User.login_type).filter_by(id=user_id).first()
+    
+    return render_template("user/user.html", user_info=user_info)
 
 @user_bp.route('/login', methods=['POST'])
 def login():
@@ -137,6 +147,7 @@ def social_signin(data, social_type):
 
 @user_bp.route('/logout', methods=['POST'])
 def logout():
-    if "user_id" in session:
-        session.clear()
+    if request.method == "POST":
+        if "user_id" in session:
+            session.clear()
     return redirect(url_for('main.main'))

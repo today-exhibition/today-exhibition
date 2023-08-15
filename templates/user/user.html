@@ -2,8 +2,33 @@
 
 {% block content %}
     <div class="container text-center">
-        <form method="post" action="{{ url_for('user.logout') }}">
-            <input type="submit" class="btn btn-primary" value="로그아웃" name="logout">
-        </form>
+        <div>
+            <h1>내 정보 수정</h1>
+            <p>프로필을 수정할 수 있습니다.</p>
+        </div>
+        <div>
+            <div>
+                <div>
+                    <form method="POST" action="{{ url_for('user.user') }}">
+                        <p>프로필 이미지</p>
+                        <input type="image" src="{{ user_info.profile_img }}" alt="프로필 이미지" width="60" style="border-radius: 50%;" />
+                        <p>닉네임</p>
+                        <input type="text" value="{{ user_info.nickname }}" name="input_nickname"/>
+                    </form>
+                    <input type="submit" class="btn btn-primary" value="적용하기" name="submit"/>
+                </div>
+                <p>회원 탈퇴</p>
+                <a href="https://nid.naver.com/internalToken/view/tokenList/pc/ko" style="text-decoration: none;">
+                    <input type="image" src="{{ url_for('static', filename='/img/naver/naver_circle_logo.png') }}" width="60" />
+                </a>
+                <a href="https://accounts.kakao.com/weblogin/account/partner" style="text-decoration: none;">
+                    <input type="image" src="{{ url_for('static', filename='/img/kakao/kakao_circle_logo.png') }}" width="60" />
+                </a>
+                <form method="POST" action="{{ url_for('user.logout') }}">
+                    <input type="submit" class="btn btn-primary" value="로그아웃" name="logout" />
+                </form>
+            </div>
+            
+        </div>
     </div>
 {% endblock %}
