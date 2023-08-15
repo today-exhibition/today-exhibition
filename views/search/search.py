@@ -1,8 +1,9 @@
-from flask import Blueprint, request, render_template
-from models.model import Exhibition, Gallery
+from flask import Blueprint, request, render_template, jsonify, current_app
+from models.model import db, Exhibition, Gallery, GalleryAddress
 # Comment, User
 from datetime import datetime
 from sqlalchemy import func
+import json
 
 
 search_bp = Blueprint('search', __name__)
@@ -47,24 +48,42 @@ def search():
 @search_bp.route('/search/exhibition')
 def search_exhibition():
     keyword = request.args.get('keyword', default="", type=str).strip()
-    sort = request.args.get('sort')
-    sub_sort = request.args.get('sub_sort')
+    sub_sorts = request.args.get('sub_sort')  # ongoing,free
+    areas = request.args.get('area') 
+    sort = request.args.get('sort') 
+    print(areas)
+    
+    selected_sub_sorts = sub_sorts.split(',') if sub_sorts else [] # ['ongoing', 'free']
+    selected_areas = areas.split(',') if areas else []
+    print(selected_areas)
 
-    exhibitions = Exhibition.query \
+    current_datetime = datetime.now() 
+
+    exhibitions_query = Exhibition.query \
                         .with_entities(
                         Exhibition.id,
                         Exhibition.title,
                         Exhibition.start_date,
                         Exhibition.end_date,
                         Gallery.name,
-                        Exhibition.thumbnail_img
+                        Exhibition.thumbnail_img,
+                        func.substr(GalleryAddress.area, 1, 2)
                         ) \
                         .filter(Exhibition.title.like('%' + keyword + '%')) \
                         .join(Gallery, Exhibition.gallery_id == Gallery.id) \
-                        .order_by(Exhibition.start_date) \
-                        .all()
+                        .join(GalleryAddress, Gallery.id == GalleryAddress.gallery_id) \
+                        .order_by(Exhibition.start_date) 
+                   
+    if selected_areas:
+        exhibitions_query = exhibitions_query.filter(func.substr(GalleryAddress.area, 1, 2).in_(selected_areas))
+        print(exhibitions_query)
+
+    exhibitions = exhibitions_query.all()
+    print(exhibitions)
     
     exhibition_count = len(exhibitions)
+
+    
     
     return render_template('search/search_exhibition.html', exhibitions=exhibitions, keyword=keyword, exhibition_count=exhibition_count)
 
