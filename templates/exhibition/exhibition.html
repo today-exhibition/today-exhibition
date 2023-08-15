@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    {% for exhibition in exhibitions %}
+    <!-- 전시 이름 -->
+    <h3>{{exhibition.title}}</h3>
+
+    <!-- 전시 정보 -->
+    <li>전시명: {{ exhibition.title }}</li>
+    <li>기간: {{ exhibition.start_date }} ~ {{ exhibition.end_date }}</li>
+    <li>시간: {{ exhibition.opening_hours }}</li>
+    <li>장소: {{ exhibition.area }} | {{ exhibition.gallery_name }}</li>
+    <li>요금: {{ exhibition.price }}</li>
+    <li>작가: {{ exhibition.artist_name }}</li>
+    <li>전시 포스터:<br> <img src="{{ exhibition.thumbnail_img }}" alt="{{ exhibition.title }}" style="max-height: 300px;"></li>
+
+    <!-- 전시 소개 -->
+    <h3>전시소개</h3>
+    <li>{{ exhibition.description }}</li>
+    {% endfor %}
+
+    <!-- 코멘트 -->
+    <h3>코멘트 작성하기</h3>
+    <form action="{{ url_for('exhibition.add_comment', id=id) }}" method="POST">
+        <label for="comment">코멘트:</label><br>
+        <textarea id="comment" name="content" rows="2" cols="50"></textarea>
+        <input type="submit" value="작성">
+    </form>
+
+    {% for comment in comments %}
+    <div class="comment">
+        <h3>등록된 코멘트</h3>
+        <li>이름: {{ comment.user_id }}</li>
+        <li>내용: {{ comment.content }}</li>
+        <li>작성일: {{ comment.created_at }}</li>
+    
+    <!-- 수정 버튼과 수정 폼 -->
+    <button class="edit-button" data-comment-id="{{ comment.comment_id }}">수정</button>
+    <form class="edit-form" id="edit-form-{{ comment.comment_id }}" style="display: none;"
+        action="{{ url_for('exhibition.edit_comment', id=id, comment_id=comment.comment_id) }}" method="POST">
+        <textarea name="edited_content" rows="2" cols="50">{{ comment.content }}</textarea>
+        <input type="submit" value="수정 완료">
+    </form>
+
+    <!-- 삭제 버튼 -->
+    <form class="delete-form" action="{{ url_for('exhibition.delete_comment', id=id, comment_id=comment.comment_id) }}" method="POST">
+        <button type="submit" class="delete-button">삭제</button>
+    </form>
+    </div>
+    {% endfor %}
+
+    <script>
+        // 수정 버튼 클릭 시 폼 표시
+        const editButtons = document.querySelectorAll('.edit-button');
+        editButtons.forEach(button => {
+            button.addEventListener('click', event => {
+                event.preventDefault();
+                const commentId = button.getAttribute('data-comment-id');
+                const editForm = document.getElementById(`edit-form-${commentId}`);
+                editForm.style.display = 'block';
+            });
+        });
+    </script>
+</body>
+
+</html>
