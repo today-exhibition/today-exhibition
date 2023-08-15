@@ -76,7 +76,7 @@ def search_exhibition():
                    
     if 'ongoing' in selected_sub_sorts or 'ended' in selected_sub_sorts or 'upcoming' in selected_sub_sorts:
         ongoing_condition = Exhibition.start_date <= current_datetime
-        ended_condition = Exhibition.end_date < current_datetime + timedelta(days=1)
+        ended_condition = Exhibition.end_date < current_datetime - timedelta(days=1)
         upcoming_condition = Exhibition.start_date > current_datetime
         
         if 'ongoing' in selected_sub_sorts and 'ended' in selected_sub_sorts and 'upcoming' in selected_sub_sorts:
