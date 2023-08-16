@@ -1,73 +1,97 @@
 ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  li {
-    display: flex;
-  }
-  h3 {
-    text-align: center;
-    padding: 50px 0;
-  }
-  input::placeholder {
-    color: #5C6169;
-  }
-  .container {
-    width: 1100px;
-  }
-  .card {
-    height: 100%; 
-    position: relative;
-  }
-  .fa-heart{
-    width: 50px;
-    height: 50px;
-    position: absolute;
-    color: #FF0000;
-    cursor: pointer;
-  }
-  .fa-bookmark {
-    width: 50px;
-    height: 50px;
-    position: absolute;
-  }
-  .card-img-top {
-    height: 100%; 
-  }
-  .card-text {
-    padding-left: 5px;
-  }
-  .artist-row {
-    height: 180px;
-  }
-  .artist-col {
-    width: 360px;
-    height: 180px;
-    overflow: hidden;
-    position: relative;
-  }
-  .artist-col img {
-    width: 100%; /* 현재는 전시의 사진이 들어가 있지만 작가의 사진으로 넣어줄때는 height: 100%; 으로 바꿔주기 */
-  }
-  .my-card-body {
-    height: 100%;
-    /* .card-body의 하위요소 상하좌우 정중앙 정렬하기 */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .card-body {
-    cursor:pointer;
-  }
-  .btn-outline-secondary {
-    margin: 5px;
-  }
-  .btn {
-    margin: 5px;
-  }
-  .btn.active {
-    background-color: #6C757D;
-    color: #FFFF;
-  }
-  
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  display: flex;
+}
+
+h3 {
+  text-align: center;
+  padding: 50px 0;
+}
+
+input::placeholder {
+  color: #5C6169;
+}
+
+.container {
+  width: 1100px;
+}
+
+/* font awesome */
+
+.fa-heart{
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  color: #FF0000;
+  cursor: pointer;
+}
+
+.fa-bookmark {
+  width: 50px;
+  height: 50px;
+  position: absolute;
+}
+
+/* button */
+
+.btn {
+  margin: 5px;
+}
+
+.btn-outline-secondary {
+  margin: 5px;
+}
+
+.btn.active {
+  background-color: #6C757D;
+  color: #FFFF;
+}
+
+/* card */
+
+.card {
+  height: 100%; 
+  position: relative;
+}
+
+.card-img-top {
+  height: 100%; 
+}
+
+.card-text {
+  padding-left: 5px;
+}
+
+.my-card-body {
+  height: 100%;
+  /* .card-body의 하위요소 상하좌우 정중앙 정렬하기 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card-body {
+  cursor:pointer;
+}
+
+/* artist */
+
+.artist-row {
+  height: 180px;
+}
+
+.artist-col {
+  width: 360px;
+  height: 180px;
+  overflow: hidden;
+  position: relative;
+}
+
+.artist-col img {
+  width: 100%; /* 현재는 전시의 사진이 들어가 있지만 작가의 사진으로 넣어줄때는 height: 100%; 으로 바꿔주기 */
+}
