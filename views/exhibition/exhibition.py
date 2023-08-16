@@ -62,7 +62,7 @@ def edit_comment(id, comment_id):
     edited_content = request.form['edited_content']
     comment = db.session.get(Comment, comment_id)
 
-    if comment:
+    if comment and user_id == comment.user_id:
         comment.content = edited_content
         db.session.commit()
 
@@ -73,7 +73,7 @@ def delete_comment(id, comment_id):
     user_id = session.get('user_id')
     comment = db.session.get(Comment, comment_id)
 
-    if comment:        
+    if comment and user_id == comment.user_id:        
         db.session.delete(comment)
         db.session.commit()
 
