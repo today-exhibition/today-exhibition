@@ -7,6 +7,8 @@ from models.model import db
 
 from views.main.main import main_bp
 from views.artist.artist import artist_bp
+from views.gallery.gallery import gallery_bp
+from views.exhibition.exhibition import exhibition_bp
 from views.map.map import map_bp
 from views.search.search import search_bp
 from views.user.user import user_bp
@@ -28,6 +30,8 @@ db.init_app(app)
 
 app.register_blueprint(main_bp)
 app.register_blueprint(artist_bp)
+app.register_blueprint(gallery_bp)
+app.register_blueprint(exhibition_bp)
 app.register_blueprint(map_bp)
 app.register_blueprint(search_bp)
 app.register_blueprint(user_bp)

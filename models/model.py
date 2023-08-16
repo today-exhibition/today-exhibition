@@ -122,8 +122,7 @@ class ExhibitionKeyword(db.Model):
 class GalleryAddress(db.Model):
     __tablename__ = 'gallery_address'
     gallery_id = db.Column(db.String(64), primary_key=True)
-    area1 = db.Column(db.String(16))
-    area2 = db.Column(db.String(16))
+    area = db.Column(db.String(16))
     gpsx = db.Column(db.Float())
     gpsy = db.Column(db.Float())
     address = db.Column(db.String(128), nullable=False)

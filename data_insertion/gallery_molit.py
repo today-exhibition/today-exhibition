@@ -32,27 +32,22 @@ def insert_molit_to_db(data_dict):
             gallery = Gallery.query \
                 .filter(Gallery.name==name) \
                 .one()
-            
-            # TODO: area1, area2 가공하도록 코드 변경
+
             # TODO: gpsx, gpsy 지도 검색을 통해 받아오도록 코드 변경
             # gallery_address
             address = properties['new_adr']
+            if address:
+                area = address.split()[0]
             geometry = data['geometry']
             if geometry['type'] == 'Point' :
                 gpsx = geometry['coordinates'][0]
                 gpsy = geometry['coordinates'][1]
-                gallery_address = GalleryAddress.query \
-                    .filter(GalleryAddress.gallery_id==gallery.id) \
-                    .all()
-                if not gallery_address:
-                    new_gallery_address = GalleryAddress(gallery_id=gallery.id, gpsx=gpsx, gpsy=gpsy, address=address)
-            else : 
-                gallery_address = GalleryAddress.query \
-                    .filter(GalleryAddress.gallery_id==gallery.id) \
-                    .one()
-                if not gallery_address:
-                    new_gallery_address = GalleryAddress(gallery_id=gallery.id, address=address)
-            db.session.add(new_gallery_address)
+            gallery_address = GalleryAddress.query \
+                .filter(GalleryAddress.gallery_id==gallery.id) \
+                .all()
+            if not gallery_address:
+                new_gallery_address = GalleryAddress(gallery_id=gallery.id, area=area, gpsx=gpsx, gpsy=gpsy, address=address)
+                db.session.add(new_gallery_address)
 
             # gallery_openinghour
             weekday_open_hhmm = datetime.datetime.strptime(properties['wds_tme'], '%H:%M').time()
@@ -65,7 +60,7 @@ def insert_molit_to_db(data_dict):
                 .all()
             if not gallery_opening_hour:
                 new_gallery_opening_hour = GalleryOpeningHour(gallery_id=gallery.id, weekday_open_hhmm=weekday_open_hhmm, weekday_close_hhmm=weekday_close_hhmm, holiday_open_hhmm=holiday_open_hhmm, holiday_close_hhmm=holiday_close_hhmm)
-            db.session.add(new_gallery_opening_hour)
+                db.session.add(new_gallery_opening_hour)
     db.session.commit()
 
 def insert_gallery_molit() :
