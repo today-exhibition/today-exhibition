@@ -11,6 +11,7 @@ gallery_bp = Blueprint('gallery', __name__)
 def gallery(id):
     gallery = db.session.query(
                 Gallery.name,
+                Gallery.thumbnail_img,
                 Gallery.opening_hours,
                 Gallery.holiday_info,
                 GalleryAddress.address,
