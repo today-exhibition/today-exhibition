@@ -20,7 +20,6 @@ document.addEventListener("DOMContentLoaded", function() {
       cardText.textContent = truncatedText;
     }
   })
-
 })
 
 //============================================================================================
@@ -58,72 +57,32 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   });
 
-  
-// 검색 버튼 클릭 시 처리
-searchButton.addEventListener("click", async (event) => {
-  event.preventDefault(); // 폼의 기본 제출 동작 막기
+  // 검색 버튼 클릭 시 처리
+  searchButton.addEventListener("click", async (event) => {
+    event.preventDefault(); // 폼의 기본 제출 동작 막기
 
-  const keywordInput = document.getElementById("keyword-input");
-  const keyword = keywordInput.value;
+    const keywordInput = document.getElementById("keyword-input");
+    const keyword = keywordInput.value;
 
-  const selectedSubSorts = Array.from(typeSortButtons)
+    const selectedSubSorts = Array.from(typeSortButtons)
+                              .filter(button => button.classList.contains("selected"))
+                              .map(button => button.getAttribute("sub-sort"));
+
+    const selectedAreas = Array.from(areaSortButtons)
                             .filter(button => button.classList.contains("selected"))
                             .map(button => button.getAttribute("sub-sort"));
 
-  const selectedAreas = Array.from(areaSortButtons)
-                          .filter(button => button.classList.contains("selected"))
-                          .map(button => button.getAttribute("sub-sort"));
+    const selectedSortButtons = Array.from(topSortButtons)
+                                .filter(button => button.classList.contains("selected"));
+    const selectedSort = selectedSortButtons.length > 0 ? selectedSortButtons[0].getAttribute("sub-sort") : null;
 
-  const selectedSortButtons = Array.from(topSortButtons)
-                              .filter(button => button.classList.contains("selected"));
-  const selectedSort = selectedSortButtons.length > 0 ? selectedSortButtons[0].getAttribute("sub-sort") : null;
-
-  // 선택한 조건을 서버로 전송하여 쿼리 실행
-  await sendQueryToServer(selectedSubSorts, selectedAreas, selectedSort, keyword);
-
+    const subSortsParam = selectedSubSorts.join(",");
+    const areasParam = selectedAreas.join(",");
+    const sortedSort = selectedSort || ""; // selectedSort가 null일 경우 빈 문자열로 초기화
+  
+    // areasParam이 콤마로 구분된 문자열이므로 encodeURIComponent를 적용해야함
+    const url = `/search/exhibition?keyword=${encodeURIComponent(keyword)}&sub_sort=${encodeURIComponent(subSortsParam)}&area=${encodeURIComponent(areasParam)}&sort=${encodeURIComponent(sortedSort)}`;
+  
+    window.location.href = url;
+  });
 });
-
-
-});
-
-
-// 서버로 선택한 조건들을 전송하여 쿼리 실행하는 함수
-async function sendQueryToServer(selectedSubSorts, selectedAreas, selectedSort, keyword) {
-  const subSortsParam = selectedSubSorts.join(",");
-  const areasParam = selectedAreas.join(",");
-
-  // areasParam이 콤마로 구분된 문자열이므로 encodeURIComponent를 적용해야함
-  const url = `/search/exhibition?keyword=${encodeURIComponent(keyword)}&sub_sort=${encodeURIComponent(subSortsParam)}&area=${encodeURIComponent(areasParam)}&sort=${selectedSort}`;
-
-  try {
-    const response = await fetch(url, {
-      method: "GET"
-    });
-    
-    if (!response.ok) {
-      throw new Error(`Network response was not ok. Status: ${response.status}`);
-    }
-    
-    const data = await response.text(); // 응답 데이터를 받아옴
-
-    // 화면에 데이터를 표시하는 영역을 찾아서 innerHTML로 데이터를 삽입
-    const resultsContainer = document.getElementById("searchResults");
-    resultsContainer.innerHTML = data;
-
-  } catch (error) {
-    console.error("Error fetching data:", error);
-  }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
