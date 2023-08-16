@@ -1,7 +1,11 @@
-{% extends 'common/layout.html' %}
+{% extends 'common/layout_side_split.html' %}
+
+{% block side_content %}
+    {% include './user/user_side.html' %}
+{% endblock %}
 
 {% block content %}
-    <div class="container text-center">
+    <div class="container ms-5">
         <div>
             <h1>내 정보 수정</h1>
             <p>프로필을 수정할 수 있습니다.</p>
@@ -40,7 +44,4 @@
             
         </div>
     </div>
-{% endblock %}
-
-{% block script %}
 {% endblock %}
