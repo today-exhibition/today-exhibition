@@ -19,7 +19,7 @@
   <div class="row row-cols-1 row-cols-md-3 g-5">
     {% for exhibition in exhibitions %}
     <div class="col">
-      <div class="card" id="{{ exhibition.id }}" onclick="window.location='/search/{{ exhibition.id }}'">
+      <div class="card" id="{{ exhibition.id }}" onclick="window.location='/exhibition/{{ exhibition.id }}'">
         <i class="fa-regular fa-heart fa-2x"></i>
         <img src="{{ exhibition.thumbnail_img }}"
           class="card-img-top"
