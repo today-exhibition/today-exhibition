@@ -1,8 +1,9 @@
 from flask import Blueprint, request, render_template
-from models.model import Exhibition, Gallery
+from models.model import db, Exhibition, Gallery, GalleryAddress
 # Comment, User
-from datetime import datetime
+from datetime import datetime, timedelta
 from sqlalchemy import func
+import json
 
 
 search_bp = Blueprint('search', __name__)
@@ -22,6 +23,7 @@ def search():
                         ) \
                         .filter(Exhibition.title.like('%' + keyword + '%')) \
                         .join(Gallery, Exhibition.gallery_id == Gallery.id) \
+                        .join(GalleryAddress, Gallery.id == GalleryAddress.gallery_id, isouter = True) \
                         .order_by(Exhibition.start_date) \
                         .all()
     
@@ -47,22 +49,57 @@ def search():
 @search_bp.route('/search/exhibition')
 def search_exhibition():
     keyword = request.args.get('keyword', default="", type=str).strip()
-    sort = request.args.get('sort')
-    sub_sort = request.args.get('sub_sort')
+    sub_sorts = request.args.get('sub_sort') # ongoing,free
+    areas = request.args.get('area') 
+    sort = request.args.get('sort') 
 
-    exhibitions = Exhibition.query \
+    selected_sub_sorts = sub_sorts.split(',') if sub_sorts else [] # ['ongoing', 'free']
+    selected_areas = areas.split(',') if areas else []
+
+    current_datetime = datetime.now() 
+
+    exhibitions_query = Exhibition.query \
                         .with_entities(
                         Exhibition.id,
                         Exhibition.title,
                         Exhibition.start_date,
                         Exhibition.end_date,
                         Gallery.name,
-                        Exhibition.thumbnail_img
+                        Exhibition.thumbnail_img,
+                        func.substr(GalleryAddress.area, 1, 2)
                         ) \
                         .filter(Exhibition.title.like('%' + keyword + '%')) \
                         .join(Gallery, Exhibition.gallery_id == Gallery.id) \
-                        .order_by(Exhibition.start_date) \
-                        .all()
+                        .join(GalleryAddress, Gallery.id == GalleryAddress.gallery_id, isouter = True) \
+                        .order_by(Exhibition.start_date) 
+                   
+    if 'ongoing' in selected_sub_sorts or 'ended' in selected_sub_sorts or 'upcoming' in selected_sub_sorts:
+        ongoing_condition = Exhibition.start_date <= current_datetime
+        ended_condition = Exhibition.end_date < current_datetime - timedelta(days=1)
+        upcoming_condition = Exhibition.start_date > current_datetime
+        
+        if 'ongoing' in selected_sub_sorts and 'ended' in selected_sub_sorts and 'upcoming' in selected_sub_sorts:
+            exhibitions_query = exhibitions_query.filter(
+                ongoing_condition | ended_condition | upcoming_condition
+            )
+        elif 'ongoing' in selected_sub_sorts and 'ended' in selected_sub_sorts:
+            exhibitions_query = exhibitions_query.filter(ongoing_condition | ended_condition)
+        elif 'ongoing' in selected_sub_sorts and 'upcoming' in selected_sub_sorts:
+            exhibitions_query = exhibitions_query.filter(ongoing_condition | upcoming_condition)
+        elif 'ended' in selected_sub_sorts and 'upcoming' in selected_sub_sorts:
+            exhibitions_query = exhibitions_query.filter(ended_condition | upcoming_condition)
+        elif 'ongoing' in selected_sub_sorts:
+            exhibitions_query = exhibitions_query.filter(ongoing_condition)
+        elif 'ended' in selected_sub_sorts:
+            exhibitions_query = exhibitions_query.filter(ended_condition)
+        elif 'upcoming' in selected_sub_sorts:
+            exhibitions_query = exhibitions_query.filter(upcoming_condition)
+    
+
+    if selected_areas:
+        exhibitions_query = exhibitions_query.filter(func.substr(GalleryAddress.area, 1, 2).in_(selected_areas))
+        
+    exhibitions = exhibitions_query.all()
     
     exhibition_count = len(exhibitions)
     
@@ -102,22 +139,6 @@ def search_artist():
 def search_gallery():
     keyword = request.args.get('keyword', default="", type=str).strip()
 
-    # exhibitions = Exhibition.query \
-    #                 .with_entities(
-    #                 Exhibition.id,
-    #                 Exhibition.title,
-    #                 Exhibition.start_date,
-    #                 Exhibition.end_date,
-    #                 Gallery.name,
-    #                 Exhibition.thumbnail_img
-    #                 ) \
-    #                 .filter(Exhibition.title.like('%' + keyword + '%')) \
-    #                 .join(Gallery, Exhibition.gallery_id == Gallery.id) \
-    #                 .order_by(Exhibition.start_date) \
-    #                 .all()
-    
-    
-        
     gallerys = Gallery.query \
                 .with_entities(
                 Gallery.id,
