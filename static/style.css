@@ -60,7 +60,7 @@ input::placeholder {
 }
 
 .card-img-top {
-  height: 100%; 
+  height: 100%;
 }
 
 .card-text {
@@ -94,4 +94,9 @@ input::placeholder {
 
 .artist-col img {
   width: 100%; /* 현재는 전시의 사진이 들어가 있지만 작가의 사진으로 넣어줄때는 height: 100%; 으로 바꿔주기 */
+}
+
+/* map */
+.map.card {
+  height: auto; 
 }

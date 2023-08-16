@@ -1,14 +1,18 @@
 function makeCard(title, img, s_date, e_date, gallery) {
   let card_content =
   `
-  <div class="card">
-    <div class="card-img">
-      <img src="${img}" alt="">
-    </div>
-    <div class="card-content">
-      <h3>${title}</h3>
-      <p>${s_date}~${e_date}</p>
-      <p>${gallery}</p>
+  <div class="map card mb-3" style="max-width: 540px;">
+    <div class="row g-0">
+      <div class="col-md-4">
+        <img src="${img}" class="img-fluid rounded-start" alt="${title}">
+      </div>
+      <div class="col-md-8">
+        <div class="card-body">
+          <h5 class="card-title">${title}</h5>
+          <p class="card-text">${s_date}~${e_date}</p>
+          <p class="card-text"><small class="text-body-secondary">${gallery}</small></p>
+        </div>
+      </div>
     </div>
   </div>
   `
