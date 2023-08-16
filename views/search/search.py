@@ -1,4 +1,4 @@
-from flask import Blueprint, request, render_template, jsonify, current_app, redirect
+from flask import Blueprint, request, render_template
 from models.model import db, Exhibition, Gallery, GalleryAddress
 # Comment, User
 from datetime import datetime, timedelta
@@ -23,6 +23,7 @@ def search():
                         ) \
                         .filter(Exhibition.title.like('%' + keyword + '%')) \
                         .join(Gallery, Exhibition.gallery_id == Gallery.id) \
+                        .join(GalleryAddress, Gallery.id == GalleryAddress.gallery_id, isouter = True) \
                         .order_by(Exhibition.start_date) \
                         .all()
     
@@ -48,11 +49,10 @@ def search():
 @search_bp.route('/search/exhibition')
 def search_exhibition():
     keyword = request.args.get('keyword', default="", type=str).strip()
-    sub_sorts = request.args.get('sub_sort')  # ongoing,free
+    sub_sorts = request.args.get('sub_sort') # ongoing,free
     areas = request.args.get('area') 
     sort = request.args.get('sort') 
 
-    
     selected_sub_sorts = sub_sorts.split(',') if sub_sorts else [] # ['ongoing', 'free']
     selected_areas = areas.split(',') if areas else []
 
@@ -70,7 +70,7 @@ def search_exhibition():
                         ) \
                         .filter(Exhibition.title.like('%' + keyword + '%')) \
                         .join(Gallery, Exhibition.gallery_id == Gallery.id) \
-                        .join(GalleryAddress, Gallery.id == GalleryAddress.gallery_id) \
+                        .join(GalleryAddress, Gallery.id == GalleryAddress.gallery_id, isouter = True) \
                         .order_by(Exhibition.start_date) 
                    
     if 'ongoing' in selected_sub_sorts or 'ended' in selected_sub_sorts or 'upcoming' in selected_sub_sorts:
@@ -139,22 +139,6 @@ def search_artist():
 def search_gallery():
     keyword = request.args.get('keyword', default="", type=str).strip()
 
-    # exhibitions = Exhibition.query \
-    #                 .with_entities(
-    #                 Exhibition.id,
-    #                 Exhibition.title,
-    #                 Exhibition.start_date,
-    #                 Exhibition.end_date,
-    #                 Gallery.name,
-    #                 Exhibition.thumbnail_img
-    #                 ) \
-    #                 .filter(Exhibition.title.like('%' + keyword + '%')) \
-    #                 .join(Gallery, Exhibition.gallery_id == Gallery.id) \
-    #                 .order_by(Exhibition.start_date) \
-    #                 .all()
-    
-    
-        
     gallerys = Gallery.query \
                 .with_entities(
                 Gallery.id,
