@@ -1,4 +1,4 @@
-function makeCard(title, img, s_date, e_date, gallery) {
+function makeCard(id, title, img, s_date, e_date, gallery) {
   let card_content =
   `
   <div class="map card mb-3" style="max-width: 540px;">
@@ -7,7 +7,7 @@ function makeCard(title, img, s_date, e_date, gallery) {
         <img src="${img}" class="img-fluid rounded-start" alt="${title}">
       </div>
       <div class="col-md-8">
-        <div class="card-body">
+        <div class="card-body" onclick="window.location='/exhibition/${id}'">
           <h5 class="card-title">${title}</h5>
           <p class="card-text">${s_date}~${e_date}</p>
           <p class="card-text"><small class="text-body-secondary">${gallery}</small></p>
@@ -51,7 +51,7 @@ $(document).ready(function () {
       kakao.maps.event.addListener(marker, 'click', function(){
         map.setCenter(this.getPosition());
         $('#card-list').text("");
-        makeCard(this.data['exhibition_title'], this.data['thumbnail_img'], this.data['start_date'], this.data['end_date'], this.data['gallery_name']);
+        makeCard(this.data['exhibition_id'], this.data['exhibition_title'], this.data['thumbnail_img'], this.data['start_date'], this.data['end_date'], this.data['gallery_name']);
       });
     }
 
@@ -78,7 +78,7 @@ $(document).ready(function () {
       $('#card-list').text("");
       var clustererMarkers = cluster.getMarkers();
       clustererMarkers.forEach(marker => {
-        makeCard(marker.data['exhibition_title'], marker.data['thumbnail_img'], marker.data['start_date'], marker.data['end_date'], marker.data['gallery_name']);
+        makeCard(marker.data['exhibition_id'], marker.data['exhibition_title'], marker.data['thumbnail_img'], marker.data['start_date'], marker.data['end_date'], marker.data['gallery_name']);
       })
     })
 
@@ -88,7 +88,7 @@ $(document).ready(function () {
     for (let i = 0; i < markers.length; i++) {
       var curMarker = markers[i];
       if (bounds.contain(curMarker.getPosition())) {
-        makeCard(curMarker.data['exhibition_title'], curMarker.data['thumbnail_img'], curMarker.data['start_date'], curMarker.data['end_date'], curMarker.data['gallery_name']);
+        makeCard(curMarker.data['exhibition_id'], curMarker.data['exhibition_title'], curMarker.data['thumbnail_img'], curMarker.data['start_date'], curMarker.data['end_date'], curMarker.data['gallery_name']);
       }
     }
 
@@ -99,7 +99,7 @@ $(document).ready(function () {
       for (let i = 0; i < markers.length; i++) {
         var curMarker = markers[i];
         if (bounds.contain(curMarker.getPosition())) {
-          makeCard(curMarker.data['exhibition_title'], curMarker.data['thumbnail_img'], curMarker.data['start_date'], curMarker.data['end_date'], curMarker.data['gallery_name']);
+          makeCard(curMarker.data['exhibition_id'], curMarker.data['exhibition_title'], curMarker.data['thumbnail_img'], curMarker.data['start_date'], curMarker.data['end_date'], curMarker.data['gallery_name']);
         }
       }
     });

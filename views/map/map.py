@@ -11,7 +11,7 @@ def map() :
         secrets = json.load(secrets_file)
     kakao_map_api_key = secrets["map"]["kakao_api_key"]
 
-    map_list = db.session.query(Exhibition.title.label("exhibition_title"), Exhibition.thumbnail_img, Exhibition.start_date, Exhibition.end_date, Gallery.name.label("gallery_name"), GalleryAddress.gpsx, GalleryAddress.gpsy) \
+    map_list = db.session.query(Exhibition.id, Exhibition.title.label("exhibition_title"), Exhibition.thumbnail_img, Exhibition.start_date, Exhibition.end_date, Gallery.name.label("gallery_name"), GalleryAddress.gpsx, GalleryAddress.gpsy) \
       .join(Gallery, Gallery.id == Exhibition.gallery_id) \
       .join(GalleryAddress, Gallery.id == GalleryAddress.gallery_id) \
       .all()
@@ -19,6 +19,7 @@ def map() :
     result_list = []
     for item in map_list:
         result_list.append({
+            "exhibition_id": item.id,
             "exhibition_title": item.exhibition_title,
             "thumbnail_img": item.thumbnail_img,
             "start_date": str(item.start_date),
