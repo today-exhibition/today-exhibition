@@ -80,9 +80,36 @@ document.addEventListener("DOMContentLoaded", function() {
     const areasParam = selectedAreas.join(",");
     const sortedSort = selectedSort || ""; // selectedSort가 null일 경우 빈 문자열로 초기화
   
-    // areasParam이 콤마로 구분된 문자열이므로 encodeURIComponent를 적용해야함
+    // areasParam이 콤마로 구분된 문자열이므로 encodeURIComponent 적용
     const url = `/search/exhibition?keyword=${encodeURIComponent(keyword)}&sub_sort=${encodeURIComponent(subSortsParam)}&area=${encodeURIComponent(areasParam)}&sort=${encodeURIComponent(sortedSort)}`;
   
     window.location.href = url;
   });
 });
+
+//============================================================================================
+function HeartIcon(icon, exhibition_id) {
+  const url = `/search/exhibition/${exhibition_id}/like`;
+
+  $.ajax({
+    type: "POST", 
+    url: url, 
+    data: { exhibition_id: exhibition_id }, 
+    success: function (resp) {
+      if (resp === "login_required") {
+        window.location.href = "/user"; 
+      } else if (resp === "success") {
+        if (icon.classList.contains("fa-regular")) {
+          icon.classList.remove("fa-regular");
+          icon.classList.add("fa-solid");
+        } else if (icon.classList.contains("fa-solid")) {
+          icon.classList.remove("fa-solid");
+          icon.classList.add("fa-regular");
+        }
+      }
+    }
+  });
+}
+
+
+

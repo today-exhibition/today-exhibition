@@ -1,9 +1,9 @@
-from flask import Blueprint, request, render_template
-from models.model import db, Exhibition, Gallery, GalleryAddress
+from flask import Blueprint, request, render_template, session, redirect, url_for
+from models.model import db, Exhibition, Gallery, GalleryAddress, LikeExhibition
 # Comment, User
 from datetime import datetime, timedelta
 from sqlalchemy import func
-import json
+import uuid
 
 
 search_bp = Blueprint('search', __name__)
@@ -43,8 +43,22 @@ def search():
     gallery_count = len(gallerys)
     gallery_list = gallerys[:3]
     
-
     return render_template('search/search.html', exhibition_list=exhibition_list, keyword=keyword, exhibition_count=exhibition_count, gallery_count=gallery_count, gallery_list=gallery_list)
+
+@search_bp.route('/search/exhibition/<exhibition_id>/like', methods=['post'])
+def like_exhibition(exhibition_id):
+    if "user_id" not in session:
+        return "login_required"
+        
+    user_id = session["user_id"]
+    liked_at = datetime.now()
+
+    insertdb = LikeExhibition(id=str(uuid.uuid4()), user_id=user_id, exhibition_id=exhibition_id, liked_at=liked_at)
+    db.session.add(insertdb)
+    db.session.commit()
+    
+    return "success"
+
 
 @search_bp.route('/search/exhibition')
 def search_exhibition():
