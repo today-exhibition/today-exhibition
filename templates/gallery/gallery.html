@@ -6,9 +6,9 @@
     <title>Gallery</title>
 </head>
 <body>
-    {% for gallery in galleries %}
     <!-- 미술관 이름 -->
     <h3>{{ gallery.name }}</h3>
+
     <!-- 미술관 정보 -->
     <li>미술관명: {{ gallery.name }}</li>
     <li>운영시간: {{ gallery.opening_hours }}</li>
@@ -18,13 +18,14 @@
     <li>주차장: {{ gallery.parking_yn }}</li>
     <li>홈페이지: <a href="{{ gallery.homepage_url }}">바로가기</a></li>
     <br>
+
     <!-- 미술관 소개 -->
     <h3>{{ gallery.name }} 소개</h3>
     <li>{{ gallery.description }}</li>
     <br>
+
     <!-- 전시 정보 -->
     <h3>{{ gallery.name }} 전시회 정보</h3>
-    {% endfor %}
 
     <h3>진행중 전시회 ({{ ongoing_count }})</h3>
         {% for exhibition in ongoing_exhibitions %}

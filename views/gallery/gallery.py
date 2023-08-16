@@ -9,7 +9,7 @@ gallery_bp = Blueprint('gallery', __name__)
 # ? gallery 테이블에 adderess 컬럼이 사라졌다. -> 반영(2023.08.12)
 @gallery_bp.route('/gallery/<id>')
 def gallery(id):
-    galleries = db.session.query(
+    gallery = db.session.query(
                 Gallery.name,
                 Gallery.opening_hours,
                 Gallery.holiday_info,
@@ -20,7 +20,7 @@ def gallery(id):
                 Gallery.description)\
                 .join(GalleryAddress, Gallery.id == GalleryAddress.gallery_id)\
                 .filter(Gallery.id == id)\
-                .all()
+                .first()
     
 #! [미술관디테일 > 전시 정보 조회(전시명, 미술관명, 전시기간, 전시이미지)]
     exhibitions = db.session.query(
@@ -48,7 +48,7 @@ def gallery(id):
         elif exhibition[3] < today:
             ended_exhibitions.append(exhibition)
 
-    return render_template('gallery/gallery.html', galleries=galleries, 
+    return render_template('gallery/gallery.html', gallery=gallery, 
                             ongoing_exhibitions=ongoing_exhibitions,
                             ongoing_count=len(ongoing_exhibitions),
                             upcoming_exhibitions=upcoming_exhibitions,
