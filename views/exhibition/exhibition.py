@@ -10,23 +10,22 @@ exhibition_bp = Blueprint('exhibition', __name__)
 @exhibition_bp.route('/exhibition/<id>')
 def exhibition(id):
 #! [전시디테일 > 전시 정보 조회(전시명, 기간, 시간, 지역, 장소, 요금, 소개, 포스터)]
-    exhibition = db.session.query(
-                Exhibition.title,  
-                Exhibition.start_date, 
-                Exhibition.end_date,
-                Gallery.opening_hours,
-                GalleryAddress.area,
-                Gallery.name.label("gallery_name"),
-                Exhibition.price,
-                Artist.name.label("artist_name"),
-                Exhibition.description,
-                Exhibition.thumbnail_img)\
+    exhibition = db.session.query(Exhibition.title,
+                                  Exhibition.start_date,
+                                  Exhibition.end_date,
+                                  Gallery.opening_hours,
+                                  GalleryAddress.area,
+                                  Gallery.name.label("gallery_name"),
+                                  Exhibition.price,
+                                  Artist.name.label("artist_name"),
+                                  Exhibition.description,
+                                  Exhibition.thumbnail_img) \
                 .join(Gallery, Exhibition.gallery_id == Gallery.id)\
-                .join(GalleryAddress, Gallery.id == GalleryAddress.gallery_id)\
-                .join(ArtistExhibition, ArtistExhibition.exhibition_id == Exhibition.id)\
-                .join(Artist, Artist.id == ArtistExhibition.artist_id)\
+                .join(GalleryAddress, Gallery.id == GalleryAddress.gallery_id, isouter = True)\
+                .join(ArtistExhibition, ArtistExhibition.exhibition_id == Exhibition.id, isouter = True)\
+                .join(Artist, Artist.id == ArtistExhibition.artist_id, isouter = True)\
                 .filter(Exhibition.id == id).first()
-    
+
 #! [전시디테일 > 전시 코멘트 조회(닉네임, 작성일, 내용)]
     comments = db.session.query(
                 User.nickname,
