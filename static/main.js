@@ -34,14 +34,12 @@ document.addEventListener("DOMContentLoaded", function() {
   typeSortButtons.forEach(button => {
     button.addEventListener('click', () => {
       button.classList.toggle('selected'); // 'selected'가 있으면 classList에서 없애고, 없으면 만들어줌.
-      button.classList.toggle('active');
     });
   });
 
   areaSortButtons.forEach(button => {
     button.addEventListener('click', ()=> {
       button.classList.toggle('selected');
-      button.classList.toggle('active');
     });
   });
 
@@ -50,10 +48,8 @@ document.addEventListener("DOMContentLoaded", function() {
     button.addEventListener('click', () => {
       topSortButtons.forEach(btn => {
         btn.classList.remove('selected');
-        btn.classList.remove('active');
       });
       button.classList.add('selected');
-      button.classList.add('active');
     });
   });
 

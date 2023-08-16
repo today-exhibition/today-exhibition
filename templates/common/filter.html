@@ -1,8 +1,11 @@
 <div style="display: flex; justify-content: center;">
-    <button type="submit" name="exhibition" id="category" class="btn btn-outline-secondary"
-        onclick="window.location='{{ url_for('search.search_exhibition', keyword=keyword) }}'">전시</button>
-    <button type="submit" name="artist" id="category" class="btn btn-outline-secondary"
-        onclick="window.location='{{ url_for('search.search_artist', keyword=keyword) }}'">작가</button>
-    <button type="submit" name="gallery" id="category" class="btn btn-outline-secondary"
-        onclick="window.location='{{ url_for('search.search_gallery', keyword=keyword) }}'">미술관</button>
+    <a href="{{ url_for('search.search_exhibition', keyword=keyword) }}" name="exhibition" id="category" class="btn btn-outline-secondary {% if type == 'exhibition' %}selected{% endif %}">
+        전시
+    </a>
+    <a href="{{ url_for('search.search_artist', keyword=keyword) }}" name="artist" id="category" class="btn btn-outline-secondary {% if type == 'artist' %}selected{% endif %}">
+        작가
+    </a>
+    <a href="{{ url_for('search.search_gallery', keyword=keyword) }}" name="gallery" id="category" class="btn btn-outline-secondary {% if type == 'gallery' %}selected{% endif %}">
+        미술관
+    </a>
 </div>
