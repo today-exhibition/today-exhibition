@@ -11,6 +11,8 @@
   <script src="{{ url_for('static', filename='main.js') }}" defer></script>
   <title>오늘의 전시</title>
   <link rel="icon" href="{{ url_for('static', filename='/img/favicon.svg') }}" type="image/svg+xml" sizes="32x32"/>
+  {% block style %}
+  {% endblock %}
   </head>
 
   <body>
@@ -32,5 +34,7 @@
     </div>
     
     <script src="https://kit.fontawesome.com/840a32f19e.js" crossorigin="anonymous"></script>
+    {% block script %}
+    {% endblock %}
   </body>
 </html>

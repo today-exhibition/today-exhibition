@@ -2,8 +2,8 @@
 
 {% block content %}
 <div>
-    {% if user_id %}
-        <h1>안녕하세요{{ user_id }}님 오늘의 전시입니다.</h1>
+    {% if nickname %}
+        <h1>안녕하세요 {{ nickname }}님 오늘의 전시입니다.</h1>
     {% else %}
         <h1>안녕하세요 오늘의 전시입니다.</h1>
     {% endif %}

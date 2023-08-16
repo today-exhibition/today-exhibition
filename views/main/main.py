@@ -9,6 +9,6 @@ main_bp = Blueprint('main', __name__)
 def main():
     if "user_id" in session:
         user_id = session.get("user_id")
-        login_user_id = db.session.query(User.id).filter_by(id=user_id).first()[0]
-        return render_template('main/main.html', user_id=login_user_id)    
+        nickname = db.session.query(User.nickname).filter_by(id=user_id).first()[0]
+        return render_template('main/main.html', nickname=nickname)    
     return render_template('main/main.html')
