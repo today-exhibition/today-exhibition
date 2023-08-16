@@ -81,13 +81,10 @@ searchButton.addEventListener("click", async (event) => {
   // 선택한 조건을 서버로 전송하여 쿼리 실행
   await sendQueryToServer(selectedSubSorts, selectedAreas, selectedSort, keyword);
 
-  // 검색 버튼 클릭 후에 검색어 입력란 초기화
-  keywordInput.value = "";
 });
 
 
 });
-
 
 
 // 서버로 선택한 조건들을 전송하여 쿼리 실행하는 함수
@@ -99,14 +96,20 @@ async function sendQueryToServer(selectedSubSorts, selectedAreas, selectedSort, 
   const url = `/search/exhibition?keyword=${encodeURIComponent(keyword)}&sub_sort=${encodeURIComponent(subSortsParam)}&area=${encodeURIComponent(areasParam)}&sort=${selectedSort}`;
 
   try {
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      method: "GET"
+    });
+    
     if (!response.ok) {
       throw new Error(`Network response was not ok. Status: ${response.status}`);
     }
     
-    const data = await response.json();
-    // 서버에서 받은 데이터를 화면에 표시하거나 처리하는 로직 추가
-    console.log(data);
+    const data = await response.text(); // 응답 데이터를 받아옴
+
+    // 화면에 데이터를 표시하는 영역을 찾아서 innerHTML로 데이터를 삽입
+    const resultsContainer = document.getElementById("searchResults");
+    resultsContainer.innerHTML = data;
+
   } catch (error) {
     console.error("Error fetching data:", error);
   }

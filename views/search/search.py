@@ -51,11 +51,10 @@ def search_exhibition():
     sub_sorts = request.args.get('sub_sort')  # ongoing,free
     areas = request.args.get('area') 
     sort = request.args.get('sort') 
-    print(areas, sub_sorts)
+
     
     selected_sub_sorts = sub_sorts.split(',') if sub_sorts else [] # ['ongoing', 'free']
     selected_areas = areas.split(',') if areas else []
-    print(selected_sub_sorts, selected_areas)
 
     current_datetime = datetime.now() 
 
@@ -101,7 +100,6 @@ def search_exhibition():
         exhibitions_query = exhibitions_query.filter(func.substr(GalleryAddress.area, 1, 2).in_(selected_areas))
         
     exhibitions = exhibitions_query.all()
-    print(exhibitions)
     
     exhibition_count = len(exhibitions)
     

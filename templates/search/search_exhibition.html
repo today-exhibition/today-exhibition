@@ -2,11 +2,13 @@
 
 {% block search %}
   <form action="/search/exhibition" method="get">
-    {% include 'common/block_search.html' %}
-    
-    <span class="search_result">"{{ keyword }}" 검색결과 {{ exhibition_count }}건</span>
+    <div class="input-group mb-3" style="width: 500px; margin: 0 auto; padding-top: 50px;">
+      <input type="text" name="keyword" class="form-control" placeholder="검색어를 입력해주세요" value="{{ keyword }}" id="keyword-input">   
+      <button class="btn btn-outline-secondary" type="submit" id="filter-button">검색</button> 
+  </div>
   </form>
-    {% include './common/filter.html' %}
+  <span class="search_result">"{{ keyword }}" 검색결과 {{ exhibition_count }}건</span>
+  {% include './common/filter.html' %}
 {% endblock %}
 
 {% block sorting %}
