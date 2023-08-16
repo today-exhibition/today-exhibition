@@ -9,24 +9,40 @@ from models.model import db, User, LoginType
 
 user_bp = Blueprint('user', __name__)
 
-#! user -> 로그인이 되어 있으면 user 정보 되어 있지 않으면 login url로 이동
 @user_bp.route('/user', methods=['GET', 'POST'])
 def user():
+    # 로그인 여부 확인
     if not "user_id" in session:
         return render_template("user/login.html")
-    else:
-        user_id = session.get("user_id")
-        user = User.query.get(user_id)
-        if request.method == "POST":
-            input_nickname = request.form.get("input_nickname", None)
-            # TODO 유저 네임 유효성 검사 안되면 alert
-            db.session.query()
-            if input_nickname is not None and user.nickname != input_nickname:
-                user.nickname = input_nickname
-                db.session.commit()
-        user_info = db.session.query(User.id, User.email, User.nickname, User.profile_img, User.created_at, User.gender, User.login_type).filter_by(id=user_id).first()
+    
+    user_id = session.get("user_id")
+    user = User.query.get(user_id)
+    
+    if request.method == "POST":
+        input_nickname = request.form.get("input_nickname")
+        error_message = validate_and_update_nickname(user, input_nickname)
+        
+        if error_message:
+            user_info = db.session.query(User.nickname, User.profile_img).filter_by(id=user_id).first()
+            return render_template("user/user.html", user_info=user_info, error_message=error_message)
+    
+    user_info = db.session.query(User.nickname, User.profile_img).filter_by(id=user_id).first()
     
     return render_template("user/user.html", user_info=user_info)
+
+def validate_and_update_nickname(user, input_nickname):
+    if input_nickname == "":
+        return "닉네임을 입력해주세요."
+    
+    if user.nickname != input_nickname:
+        existing_user = User.query.filter_by(nickname=input_nickname).first()
+        
+        if existing_user:
+            return "입력한 닉네임은 이미 사용 중이거나 유효하지 않습니다."
+
+        user.nickname = input_nickname
+        db.session.commit()
+    return None
 
 @user_bp.route('/login', methods=['POST'])
 def login():
@@ -62,7 +78,7 @@ def naver_callback():
         
         ACCESS_TOKEN = token_json.get("access_token", None)
         if ACCESS_TOKEN is None:
-            Response("Unauthorized", status=401)
+            return Response("Unauthorized", status=401)
         TOKEN_TYPE = token_json.get("token_type")
         
         profile_request = requests.get(f"https://openapi.naver.com/v1/nid/me", headers={"Authorization": f"{TOKEN_TYPE} {ACCESS_TOKEN}"})
