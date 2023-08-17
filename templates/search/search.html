@@ -15,7 +15,7 @@
     {% for exhibition in exhibition_list %}
     <div class="col">
       <div class="card" id="{{ exhibition.id }}">
-        <i class="fa-regular fa-heart fa-2x"></i>
+        <i class="fa-regular fa-heart fa-2x" onclick="HeartIcon(this, '{{ exhibition.id }}')"></i>
         <img src="{{ exhibition.thumbnail_img }}"
           class="card-img-top"
           alt="{{ exhibition.title }}"/>
@@ -31,7 +31,7 @@
             </li>
             <li>
               <strong>장소:</strong>
-              <p class="card-text gallery-place">{{ exhibition.gallery_id }}</p>
+              <p class="card-text gallery-place">{{ exhibition.name }}</p>
             </li>
           </ul>
         </div>
