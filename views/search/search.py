@@ -15,7 +15,6 @@ def search():
     option = "user_out"
     if "user_id" in session:
         option = "user_in"
-    print(option)
 
     exhibitions_query = Exhibition.query \
                         .with_entities(
@@ -72,7 +71,6 @@ def like_exhibition(exhibition_id):
     
     return "exist"
 
-
 @search_bp.route('/search/exhibition')
 def search_exhibition():
     keyword = request.args.get('keyword', default="", type=str).strip()
@@ -84,6 +82,10 @@ def search_exhibition():
     selected_areas = areas.split(',') if areas else []
 
     current_datetime = datetime.now() 
+
+    option = "user_out"
+    if "user_id" in session:
+        option = "user_in"
 
     exhibitions_query = Exhibition.query \
                         .with_entities(
@@ -132,7 +134,7 @@ def search_exhibition():
     
     exhibition_count = len(exhibitions)
     
-    return render_template('search/search_exhibition.html', exhibitions=exhibitions, keyword=keyword, exhibition_count=exhibition_count)
+    return render_template('search/search_exhibition.html', exhibitions=exhibitions, keyword=keyword, exhibition_count=exhibition_count, option=option)
 
 @search_bp.route('/search/artist')
 def search_artist():
