@@ -1,0 +1,22 @@
+<div style="display: flex; justify-content: center;">
+  <a href="/map" name="exhibition"
+    class="btn btn-outline-secondary {% if type == 'exhibition' %}selected{% endif %}">
+    전체
+  </a>
+  <a href="/map/ending_soon" name="ending_soon"
+    class="btn btn-outline-secondary {% if type == 'ending_soon' %}selected{% endif %}">
+    곧 종료되는 전시
+  </a>
+  <a href="{{ url_for('map.featured') }}" name="featured"
+    class="btn btn-outline-secondary {% if type == 'featured' %}selected{% endif %}">
+    지금 주목받는 전시
+  </a>
+  <a href="{{ url_for('map.popular') }}" name="popular"
+    class="btn btn-outline-secondary {% if type == 'popular' %}selected{% endif %}">
+    인기순
+  </a>
+  <a href="{{ url_for('map.recommended') }}" name="recommended"
+    class="btn btn-outline-secondary {% if type == 'recommended' %}selected{% endif %}">
+    추천 전시
+  </a>
+</div>
