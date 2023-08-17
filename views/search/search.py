@@ -1,6 +1,5 @@
 from flask import Blueprint, request, render_template, session, redirect, url_for
-from models.model import db, Exhibition, Gallery, GalleryAddress, LikeExhibition
-# Comment, User
+from models.model import db, Exhibition, Gallery, GalleryAddress, LikeExhibition, FollowingGallery
 from datetime import datetime, timedelta
 from sqlalchemy import func
 import uuid
@@ -37,9 +36,11 @@ def search():
                 .with_entities(
                 Gallery.id,
                 Gallery.name,
-                Gallery.thumbnail_img
+                Gallery.thumbnail_img,
+                FollowingGallery.gallery_id
                 ) \
                 .filter(Gallery.name.like('%' + keyword + '%')) \
+                .join(FollowingGallery, Gallery.id == FollowingGallery.gallery_id, isouter = True) \
                 .order_by(Gallery.id) \
                 .all()
 
@@ -56,16 +57,36 @@ def like_exhibition(exhibition_id):
     if "user_id" not in session:
         return "login_required"
     
-    exist = LikeExhibition.query.filter(LikeExhibition.user_id == session["user_id"], LikeExhibition.exhibition_id == exhibition_id).first()
+    existing_like = LikeExhibition.query.filter(LikeExhibition.user_id == session["user_id"], LikeExhibition.exhibition_id == exhibition_id).first()
     
-    if exist is not None:
-        db.session.delete(exist)
+    if existing_like is not None:
+        db.session.delete(existing_like)
         db.session.commit()
         return "success"
     else:
         user_id = session["user_id"]
         liked_at = datetime.now()
         insertdb = LikeExhibition(id=str(uuid.uuid4()), user_id=user_id, exhibition_id=exhibition_id, liked_at=liked_at)
+        db.session.add(insertdb)
+        db.session.commit()
+    
+    return "exist"
+
+@search_bp.route('/search/gallery/<gallery_id>/following', methods=['post'])
+def following_exhibition(gallery_id):
+    if "user_id" not in session:
+        return "login_required"
+    
+    existing_following_gallery = FollowingGallery.query.filter(FollowingGallery.user_id == session["user_id"], FollowingGallery.gallery_id == gallery_id).first()
+    
+    if existing_following_gallery is not None:
+        db.session.delete(existing_following_gallery)
+        db.session.commit()
+        return "success"
+    else:
+        user_id = session["user_id"]
+        followed_at = datetime.now()
+        insertdb = FollowingGallery(id=str(uuid.uuid4()), user_id=user_id, gallery_id=gallery_id, followed_at=followed_at)
         db.session.add(insertdb)
         db.session.commit()
     
@@ -168,18 +189,24 @@ def search_artist():
 
 @search_bp.route('/search/gallery')
 def search_gallery():
+    option = "user_out"
+    if "user_id" in session:
+        option = "user_in"
+
     keyword = request.args.get('keyword', default="", type=str).strip()
 
     gallerys = Gallery.query \
                 .with_entities(
                 Gallery.id,
                 Gallery.name,
-                Gallery.thumbnail_img
+                Gallery.thumbnail_img,
+                FollowingGallery.gallery_id
                 ) \
                 .filter(Gallery.name.like('%' + keyword + '%')) \
+                .join(FollowingGallery, Gallery.id == FollowingGallery.gallery_id, isouter = True) \
                 .order_by(Gallery.id) \
                 .all()
     
     gallery_count = len(gallerys)
 
-    return render_template('search/search_gallery.html', gallerys=gallerys, keyword=keyword, gallery_count=gallery_count)
+    return render_template('search/search_gallery.html', gallerys=gallerys, keyword=keyword, gallery_count=gallery_count, option=option)
