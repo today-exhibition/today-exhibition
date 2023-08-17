@@ -42,7 +42,7 @@ $(document).ready(function () {
       var marker = new kakao.maps.Marker({
         position: new kakao.maps.LatLng(exhibition.gpsy, exhibition.gpsx),
         clickable: true,
-        image: new kakao.maps.MarkerImage('https://github.com/today-exhibition/today-exhibition/assets/63828057/b86a1ed4-40b0-4c8b-ba66-fe5529841546', new kakao.maps.Size(32, 32))
+        image: new kakao.maps.MarkerImage('/static/img/marker.svg', new kakao.maps.Size(32, 32))
       });
       marker.data = exhibition;
       markers.push(marker);
@@ -63,7 +63,7 @@ $(document).ready(function () {
       disableClickZoom: true,
       styles: [{
         width: '32px', height: '32px',
-        background: 'url(https://github.com/today-exhibition/today-exhibition/assets/63828057/d1c02f39-df31-4b74-a0a0-f781893b6baf) no-repeat',
+        background: 'url(/static/img/clusterer.svg) no-repeat',
         textAlign: 'center',
         lineHeight: '31px',
         color: '#EFF1F3'
