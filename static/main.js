@@ -98,14 +98,12 @@ function HeartIcon(icon, exhibition_id) {
     success: function (resp) {
       if (resp === "login_required") {
         window.location.href = "/user"; 
+      } else if (resp == "exist") {
+        icon.classList.remove("fa-regular");
+        icon.classList.add("fa-solid");
       } else if (resp === "success") {
-        if (icon.classList.contains("fa-regular")) {
-          icon.classList.remove("fa-regular");
-          icon.classList.add("fa-solid");
-        } else if (icon.classList.contains("fa-solid")) {
-          icon.classList.remove("fa-solid");
-          icon.classList.add("fa-regular");
-        }
+        icon.classList.remove("fa-solid");
+        icon.classList.add("fa-regular");
       }
     }
   });

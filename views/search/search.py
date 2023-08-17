@@ -49,15 +49,21 @@ def search():
 def like_exhibition(exhibition_id):
     if "user_id" not in session:
         return "login_required"
-        
-    user_id = session["user_id"]
-    liked_at = datetime.now()
-
-    insertdb = LikeExhibition(id=str(uuid.uuid4()), user_id=user_id, exhibition_id=exhibition_id, liked_at=liked_at)
-    db.session.add(insertdb)
-    db.session.commit()
     
-    return "success"
+    exist = LikeExhibition.query.filter(LikeExhibition.user_id == session["user_id"], LikeExhibition.exhibition_id == exhibition_id).first()
+    
+    if exist is not None:
+        db.session.delete(exist)
+        db.session.commit()
+        return "success"
+    else:
+        user_id = session["user_id"]
+        liked_at = datetime.now()
+        insertdb = LikeExhibition(id=str(uuid.uuid4()), user_id=user_id, exhibition_id=exhibition_id, liked_at=liked_at)
+        db.session.add(insertdb)
+        db.session.commit()
+    
+    return "exist"
 
 
 @search_bp.route('/search/exhibition')
