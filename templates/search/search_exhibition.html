@@ -1,5 +1,9 @@
 {% extends 'common/layout.html' %}
 
+{% block style %}
+<script src="{{ url_for('static', filename='search.js') }}" defer></script>
+{% endblock %}
+
 {% block search %}
   <form action="/search/exhibition" method="get">
     <div class="input-group mb-3" style="width: 500px; margin: 0 auto; padding-top: 50px;">
