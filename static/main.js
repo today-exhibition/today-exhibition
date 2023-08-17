@@ -32,6 +32,7 @@ function changeLikeState(icon, exhibition_id) {
     data: { exhibition_id: exhibition_id }, 
     success: function (resp) {
       if (resp === "login_required") {
+        alert("로그인 후 이용 가능한 서비스입니다.")
         window.location.href = "/user"; 
       } else if (resp == "exist") {
         icon.classList.remove("fa-regular");
@@ -53,6 +54,7 @@ function changeGalleryFollow(icon, gallery_id) {
     data: { gallery_id: gallery_id }, 
     success: function (resp) {
       if (resp === "login_required") {
+        alert("로그인 후 이용 가능한 서비스입니다.")
         window.location.href = "/user"; 
       } else if (resp == "exist") {
         icon.classList.remove("fa-regular");
