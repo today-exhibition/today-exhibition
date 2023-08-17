@@ -1,4 +1,11 @@
-function makeCard(id, title, img, s_date, e_date, gallery) {
+function makeCard(data) {
+  const id = data['exhibition_id']
+  const title = data['exhibition_title']
+  const img = data['thumbnail_img']
+  const s_date = data['start_date']
+  const e_date = data['end_date']
+  const gallery = data['gallery_name']
+
   let card_content =
   `
   <div class="map card mb-3" style="max-width: 540px;">
@@ -42,7 +49,7 @@ $(document).ready(function () {
       var marker = new kakao.maps.Marker({
         position: new kakao.maps.LatLng(exhibition.gpsy, exhibition.gpsx),
         clickable: true,
-        image: new kakao.maps.MarkerImage('https://github.com/today-exhibition/today-exhibition/assets/63828057/b86a1ed4-40b0-4c8b-ba66-fe5529841546', new kakao.maps.Size(32, 32))
+        image: new kakao.maps.MarkerImage('/static/img/marker.svg', new kakao.maps.Size(32, 32))
       });
       marker.data = exhibition;
       markers.push(marker);
@@ -51,7 +58,7 @@ $(document).ready(function () {
       kakao.maps.event.addListener(marker, 'click', function(){
         map.setCenter(this.getPosition());
         $('#card-list').text("");
-        makeCard(this.data['exhibition_id'], this.data['exhibition_title'], this.data['thumbnail_img'], this.data['start_date'], this.data['end_date'], this.data['gallery_name']);
+        makeCard(this.data);
       });
     }
 
@@ -63,7 +70,7 @@ $(document).ready(function () {
       disableClickZoom: true,
       styles: [{
         width: '32px', height: '32px',
-        background: 'url(https://github.com/today-exhibition/today-exhibition/assets/63828057/d1c02f39-df31-4b74-a0a0-f781893b6baf) no-repeat',
+        background: 'url(/static/img/clusterer.svg) no-repeat',
         textAlign: 'center',
         lineHeight: '31px',
         color: '#EFF1F3'
@@ -78,7 +85,7 @@ $(document).ready(function () {
       $('#card-list').text("");
       var clustererMarkers = cluster.getMarkers();
       clustererMarkers.forEach(marker => {
-        makeCard(marker.data['exhibition_id'], marker.data['exhibition_title'], marker.data['thumbnail_img'], marker.data['start_date'], marker.data['end_date'], marker.data['gallery_name']);
+        makeCard(marker.data);
       })
     })
 
@@ -88,7 +95,7 @@ $(document).ready(function () {
     for (let i = 0; i < markers.length; i++) {
       var curMarker = markers[i];
       if (bounds.contain(curMarker.getPosition())) {
-        makeCard(curMarker.data['exhibition_id'], curMarker.data['exhibition_title'], curMarker.data['thumbnail_img'], curMarker.data['start_date'], curMarker.data['end_date'], curMarker.data['gallery_name']);
+        makeCard(curMarker.data);
       }
     }
 
@@ -99,7 +106,7 @@ $(document).ready(function () {
       for (let i = 0; i < markers.length; i++) {
         var curMarker = markers[i];
         if (bounds.contain(curMarker.getPosition())) {
-          makeCard(curMarker.data['exhibition_id'], curMarker.data['exhibition_title'], curMarker.data['thumbnail_img'], curMarker.data['start_date'], curMarker.data['end_date'], curMarker.data['gallery_name']);
+          makeCard(curMarker.data);
         }
       }
     });
