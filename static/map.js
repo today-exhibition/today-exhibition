@@ -1,4 +1,11 @@
-function makeCard(id, title, img, s_date, e_date, gallery) {
+function makeCard(data) {
+  const id = data['exhibition_id']
+  const title = data['exhibition_title']
+  const img = data['thumbnail_img']
+  const s_date = data['start_date']
+  const e_date = data['end_date']
+  const gallery = data['gallery_name']
+
   let card_content =
   `
   <div class="map card mb-3" style="max-width: 540px;">
@@ -51,7 +58,7 @@ $(document).ready(function () {
       kakao.maps.event.addListener(marker, 'click', function(){
         map.setCenter(this.getPosition());
         $('#card-list').text("");
-        makeCard(this.data['exhibition_id'], this.data['exhibition_title'], this.data['thumbnail_img'], this.data['start_date'], this.data['end_date'], this.data['gallery_name']);
+        makeCard(this.data);
       });
     }
 
@@ -78,7 +85,7 @@ $(document).ready(function () {
       $('#card-list').text("");
       var clustererMarkers = cluster.getMarkers();
       clustererMarkers.forEach(marker => {
-        makeCard(marker.data['exhibition_id'], marker.data['exhibition_title'], marker.data['thumbnail_img'], marker.data['start_date'], marker.data['end_date'], marker.data['gallery_name']);
+        makeCard(marker.data);
       })
     })
 
@@ -88,7 +95,7 @@ $(document).ready(function () {
     for (let i = 0; i < markers.length; i++) {
       var curMarker = markers[i];
       if (bounds.contain(curMarker.getPosition())) {
-        makeCard(curMarker.data['exhibition_id'], curMarker.data['exhibition_title'], curMarker.data['thumbnail_img'], curMarker.data['start_date'], curMarker.data['end_date'], curMarker.data['gallery_name']);
+        makeCard(curMarker.data);
       }
     }
 
@@ -99,7 +106,7 @@ $(document).ready(function () {
       for (let i = 0; i < markers.length; i++) {
         var curMarker = markers[i];
         if (bounds.contain(curMarker.getPosition())) {
-          makeCard(curMarker.data['exhibition_id'], curMarker.data['exhibition_title'], curMarker.data['thumbnail_img'], curMarker.data['start_date'], curMarker.data['end_date'], curMarker.data['gallery_name']);
+          makeCard(curMarker.data);
         }
       }
     });
