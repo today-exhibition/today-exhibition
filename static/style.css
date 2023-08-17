@@ -69,6 +69,7 @@ input::placeholder {
 
 .my-card-body {
   height: 100%;
+  cursor:pointer;
   /* .card-body의 하위요소 상하좌우 정중앙 정렬하기 */
   display: flex;
   justify-content: center;

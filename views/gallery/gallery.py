@@ -19,7 +19,7 @@ def gallery(id):
                 Gallery.parking_yn,
                 Gallery.homepage_url,
                 Gallery.description)\
-                .join(GalleryAddress, Gallery.id == GalleryAddress.gallery_id)\
+                .join(GalleryAddress, Gallery.id == GalleryAddress.gallery_id, isouter = True)\
                 .filter(Gallery.id == id)\
                 .first()
     
