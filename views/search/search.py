@@ -11,22 +11,29 @@ search_bp = Blueprint('search', __name__)
 @search_bp.route('/search')
 def search():
     keyword = request.args.get('keyword', default="", type=str).strip()
-  
-    exhibitions = Exhibition.query \
+
+    option = "user_out"
+    if "user_id" in session:
+        option = "user_in"
+    print(option)
+
+    exhibitions_query = Exhibition.query \
                         .with_entities(
                         Exhibition.id,
                         Exhibition.title,
                         Exhibition.start_date,
                         Exhibition.end_date,
                         Gallery.name,
-                        Exhibition.thumbnail_img
+                        Exhibition.thumbnail_img,
+                        LikeExhibition.exhibition_id,
                         ) \
                         .filter(Exhibition.title.like('%' + keyword + '%')) \
                         .join(Gallery, Exhibition.gallery_id == Gallery.id) \
                         .join(GalleryAddress, Gallery.id == GalleryAddress.gallery_id, isouter = True) \
+                        .join(LikeExhibition, Exhibition.id == LikeExhibition.exhibition_id, isouter = True) \
                         .order_by(Exhibition.start_date) \
-                        .all()
-    
+                        .all() 
+           
     gallerys = Gallery.query \
                 .with_entities(
                 Gallery.id,
@@ -37,13 +44,13 @@ def search():
                 .order_by(Gallery.id) \
                 .all()
 
-    exhibition_count = len(exhibitions)
-    exhibition_list = exhibitions[:3]
+    exhibition_count = len(exhibitions_query)
+    exhibition_list = exhibitions_query[:3]
 
     gallery_count = len(gallerys)
     gallery_list = gallerys[:3]
-    
-    return render_template('search/search.html', exhibition_list=exhibition_list, keyword=keyword, exhibition_count=exhibition_count, gallery_count=gallery_count, gallery_list=gallery_list)
+
+    return render_template('search/search.html', exhibition_list=exhibition_list, keyword=keyword, exhibition_count=exhibition_count, gallery_count=gallery_count, gallery_list=gallery_list,option=option)
 
 @search_bp.route('/search/exhibition/<exhibition_id>/like', methods=['post'])
 def like_exhibition(exhibition_id):
@@ -86,11 +93,13 @@ def search_exhibition():
                         Exhibition.end_date,
                         Gallery.name,
                         Exhibition.thumbnail_img,
-                        func.substr(GalleryAddress.area, 1, 2)
+                        func.substr(GalleryAddress.area, 1, 2),
+                        LikeExhibition.exhibition_id
                         ) \
                         .filter(Exhibition.title.like('%' + keyword + '%')) \
                         .join(Gallery, Exhibition.gallery_id == Gallery.id) \
                         .join(GalleryAddress, Gallery.id == GalleryAddress.gallery_id, isouter = True) \
+                        .join(LikeExhibition, Exhibition.id == LikeExhibition.exhibition_id, isouter = True) \
                         .order_by(Exhibition.start_date) 
                    
     if 'ongoing' in selected_sub_sorts or 'ended' in selected_sub_sorts or 'upcoming' in selected_sub_sorts:
