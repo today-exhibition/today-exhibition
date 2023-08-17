@@ -1,7 +1,7 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, session
 from sqlalchemy import func
 from datetime import datetime
-from models.model import db, Artist, Exhibition, Gallery, GalleryAddress, ArtistExhibition
+from models.model import db, Artist, Exhibition, Gallery, GalleryAddress, ArtistExhibition, FollowingGallery
 
 gallery_bp = Blueprint('gallery', __name__)
 
@@ -9,7 +9,12 @@ gallery_bp = Blueprint('gallery', __name__)
 # ? gallery 테이블에 adderess 컬럼이 사라졌다. -> 반영(2023.08.12)
 @gallery_bp.route('/gallery/<id>')
 def gallery(id):
+    option = "user_out"
+    if "user_id" in session:
+        option = "user_in"
+
     gallery = db.session.query(
+                Gallery.id,
                 Gallery.name,
                 Gallery.thumbnail_img,
                 Gallery.opening_hours,
@@ -18,8 +23,10 @@ def gallery(id):
                 Gallery.contact,
                 Gallery.parking_yn,
                 Gallery.homepage_url,
-                Gallery.description)\
+                Gallery.description,
+                FollowingGallery.gallery_id)\
                 .join(GalleryAddress, Gallery.id == GalleryAddress.gallery_id, isouter = True)\
+                .join(FollowingGallery, Gallery.id == FollowingGallery.gallery_id, isouter = True) \
                 .filter(Gallery.id == id)\
                 .first()
     
@@ -55,4 +62,4 @@ def gallery(id):
                             upcoming_exhibitions=upcoming_exhibitions,
                             upcoming_count=len(upcoming_exhibitions),                    
                             ended_exhibitions=ended_exhibitions,
-                            ended_count=len(ended_exhibitions), id=id)
+                            ended_count=len(ended_exhibitions), id=id, option=option)
