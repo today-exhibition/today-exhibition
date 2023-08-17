@@ -1,11 +1,79 @@
 {% extends 'common/layout.html' %}
+{% block style %}
+<style>
+    .carousel {
+        height: 600px;
+    }
 
+    .carousel-control-button {
+        width: 100px;
+    }
+
+    .carousel-image {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        object-position: center center;
+    }
+
+    .carousel-caption {
+        background-color: #00000080;
+    }
+</style>
+{% endblock %}
 {% block content %}
-<div>
-    {% if nickname %}
-        <h1>안녕하세요 {{ nickname }}님 오늘의 전시입니다.</h1>
-    {% else %}
-        <h1>안녕하세요 오늘의 전시입니다.</h1>
-    {% endif %}
+<div id="carouselExampleIndicators" class="carousel slide">
+    <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
+        <button class="carousel-control-button carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+            data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-button carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+            data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+        <div class="carousel-inner" style="height: 600px;">
+            {% for exhibition in exhibitions %}
+                <a href="{{ url_for('exhibition.exhibition', id=exhibition.id) }}">
+                    {% if loop.index-1 == 0 %}
+                        <div class="carousel-item active" style="height: 100%;">
+                    {% else %}
+                        <div class="carousel-item" style="height: 100%;">
+                    {% endif %}
+                        <img class="carousel-image" src="{{ url_for('static', filename=image_url[loop.index-1]) }}"/>
+                        <div class="carousel-caption">
+                            <h1>{{ exhibition.title }}</h1>
+                            <p>{{ exhibition.start_date }} ~ {{ exhibition.end_date }}</p>
+                            <p>{{ exhibition.gallery_name }}</p>
+                            {% if loop.index-1 == 0 %}
+                            <h5>공성훈, 블라인드 작업</h5>
+                            <p>1990년대부터 2000년대로 이 시기의 한국 현대 미술은 전 세계적 체질 변화 상황과 이와 연관된 한국의 사회 환경을 흡수했다. 
+                                보편적이며 특정적이고, 전 세계적인 차원과 윌 사회 내적 맥락을 함께 고려할 때 제대로 이해할 수 있다.</p>
+                            {% elif loop.index-1 == 1 %}
+                            <h5>금혜원, 푸른영토-부유하는 섬</h5>
+                            <p>1990년대 우리 사회는 지난 시기의 급격한 산업화와 근대화를 통한 고도 성장의 수혜와 폐해가 교차 충돌하고 있었다. 
+                                전근대와 근대가 해결하지 못한 난제들을 품은 상태인 혼돈과 새로움의 역동 속에서 우리 사회는 명증해진 지정학적 역사적 현실을 마주하게 되었다.</p>
+                            {% else %}
+                            <h5>노재운, 버려진</h5>
+                            <p>동시대 미술 작가라 명명할 수 있는 이들은 장르와 영역 사이의 관습적 구분에 갇히지 않고, 국내외 변화 흐름을 재빨리 간파하며, 
+                                다르게 전개된 경제사회적 조건과 상황을 전략적으로 활용할 줄 알았고, 대중문화사회적 환경을 거침없이 받아들이는 복잡다단한 현실의 관계망을 기꺼이 타고 넘나들었다.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+        
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"
+                aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
+                aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
+                aria-label="Slide 3"></button>
+        </div>
+    </div>
 </div>
 {% endblock %}
