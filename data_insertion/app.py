@@ -10,6 +10,7 @@ from models.model import db
 from exhibition_kcisa import insert_exhibition_kcisa
 from gallery_molit import insert_gallery_molit
 from user_generator import create_random_user_data, insert_data
+from like_exhibition_generator import create_random_likes_data
 
 
 app = Flask(__name__)
@@ -29,12 +30,23 @@ def main():
 
 @app.route('/user')
 def user():
-    #! http://127.0.0.1:8080/user 접속시 dummy user data 생성
+    #! http://127.0.0.1:8000/user 접속시 dummy user data 생성
     count = 1000
     for _ in range(count):
         # create_random_user_data('print')
         user_data = create_random_user_data()
         insert_data(user_data)
+    return ""
+
+@app.route('/likes_exhibition')
+def likes():
+    #! http://127.0.0.1:8000/user 접속시 dummy likes data 생성
+    count = 1000
+    for _ in range(count):
+        # create_random_user_data('print')
+        likes_data = create_random_likes_data()
+        db.session.add(likes_data)
+    db.session.commit()
     return ""
 
 if __name__ == "__main__" :
