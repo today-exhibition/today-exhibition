@@ -23,20 +23,7 @@ def convert_xml(xml_data) :
     data = json.loads(json_type)
     return data
 
-def get_address_from_gps(gpsx, gpsy):
-    secrets = load_secrets()
-    kakao_api_key = secrets["map"]["kakao_api_key_py"]
-
-    url = 'https://dapi.kakao.com/v2/local/geo/coord2address'
-    params = {'x': gpsx,
-              'y': gpsy,
-              'libraries': 'services'}
-    header = {'authorization': f'KakaoAK {kakao_api_key}'}
-    response = requests.get(url, headers=header, params=params)
-    address = response.json()
-    area = address['documents'][0]['address']['region_1depth_name']
-    address = address['documents'][0]['address']['address_name']
-
+def get_full_area_name(area) :
     area_dict = {
     '서울': '서울특별시',
     '경기': '경기도',
@@ -56,5 +43,28 @@ def get_address_from_gps(gpsx, gpsy):
     '제주특별자치도': '제주특별자치도',
     '세종특별자치시': '세종특별자치시'
     }
-    area = area_dict[area]
+    if area in area_dict:
+        return area_dict[area]
+    else:
+        return area
+
+def get_address_from_gps(gpsx, gpsy):
+    area = None
+    address = None
+    secrets = load_secrets()
+    kakao_api_key = secrets["map"]["kakao_api_key_py"]
+    
+    url = 'https://dapi.kakao.com/v2/local/geo/coord2address'
+    params = {'x': gpsx,
+            'y': gpsy,
+            'libraries': 'services'}
+    header = {'authorization': f'KakaoAK {kakao_api_key}'}
+    response = requests.get(url, headers=header, params=params)
+    if response.status_code == 200 :
+        address = response.json()
+        print(address)
+        area = address['documents'][0]['address']['region_1depth_name']
+        address = address['documents'][0]['address']['address_name']
+
+        area = get_full_area_name(area)
     return area, address
