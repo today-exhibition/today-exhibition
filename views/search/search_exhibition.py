@@ -21,44 +21,23 @@ def search_exhibition():
     user_id = session.get('user_id', None)
 
     exhibitions_query = Exhibition.query \
-                        .with_entities(
-                            Exhibition.id,
-                            Exhibition.title,
-                            Exhibition.start_date,
-                            Exhibition.end_date,
-                            Gallery.name,
-                            Exhibition.thumbnail_img
-                        ) \
-                        .filter(Exhibition.title.like('%' + keyword + '%')) \
-                        .join(Gallery, Exhibition.gallery_id == Gallery.id) \
-                        .join(GalleryAddress, Gallery.id == GalleryAddress.gallery_id, isouter=True) \
-                        .order_by(Exhibition.start_date) 
-                   
-    if 'ongoing' in selected_sub_sorts or 'ended' in selected_sub_sorts or 'upcoming' in selected_sub_sorts:
-        ongoing_condition = Exhibition.start_date <= current_datetime
-        ended_condition = Exhibition.end_date < current_datetime - timedelta(days=1)
-        upcoming_condition = Exhibition.start_date > current_datetime
-        
-        if 'ongoing' in selected_sub_sorts and 'ended' in selected_sub_sorts and 'upcoming' in selected_sub_sorts:
-            exhibitions_query = exhibitions_query.filter(
-                ongoing_condition | ended_condition | upcoming_condition
-            )
-        elif 'ongoing' in selected_sub_sorts and 'ended' in selected_sub_sorts:
-            exhibitions_query = exhibitions_query.filter(ongoing_condition | ended_condition)
-        elif 'ongoing' in selected_sub_sorts and 'upcoming' in selected_sub_sorts:
-            exhibitions_query = exhibitions_query.filter(ongoing_condition | upcoming_condition)
-        elif 'ended' in selected_sub_sorts and 'upcoming' in selected_sub_sorts:
-            exhibitions_query = exhibitions_query.filter(ended_condition | upcoming_condition)
-        elif 'ongoing' in selected_sub_sorts:
-            exhibitions_query = exhibitions_query.filter(ongoing_condition)
-        elif 'ended' in selected_sub_sorts:
-            exhibitions_query = exhibitions_query.filter(ended_condition)
-        elif 'upcoming' in selected_sub_sorts:
-            exhibitions_query = exhibitions_query.filter(upcoming_condition)
+                                    .with_entities(
+                                        Exhibition.id,
+                                        Exhibition.title,
+                                        Exhibition.start_date,
+                                        Exhibition.end_date,
+                                        Gallery.name,
+                                        Exhibition.thumbnail_img
+                                    ) \
+                                    .filter(Exhibition.title.like('%' + keyword + '%')) \
+                                    .join(Gallery, Exhibition.gallery_id == Gallery.id) \
+                                    .join(GalleryAddress, Gallery.id == GalleryAddress.gallery_id, isouter=True) \
+                                    .order_by(Exhibition.start_date)
     
-
-    if selected_areas:
-        exhibitions_query = exhibitions_query.filter(func.substr(GalleryAddress.area, 1, 2).in_(selected_areas))
+    if sub_sorts:
+        exhibitions_query = sub_sorts_filter(exhibitions_query, current_datetime, selected_sub_sorts)
+    if areas:
+        exhibitions_query = areas_filter(exhibitions_query, selected_areas)
         
     exhibitions = exhibitions_query.all()
     
@@ -69,4 +48,34 @@ def search_exhibition():
     if user_id:
         liked_exhibition_ids = [like.exhibition_id for like in LikeExhibition.query.filter_by(user_id=user_id).all()]
     
-    return render_template('search/search_exhibition.html', exhibitions=exhibitions, keyword=keyword, exhibition_count=exhibition_count, user_id=user_id, liked_exhibition_ids=liked_exhibition_ids)
+    return render_template('search/search_exhibition.html', exhibitions=exhibitions, keyword=keyword, exhibition_count=exhibition_count, user_id=user_id, liked_exhibition_ids=liked_exhibition_ids, sub_sorts=sub_sorts, areas=areas)
+
+
+def sub_sorts_filter(query, current_datetime, selected_sub_sorts=None):
+    if 'ongoing' in selected_sub_sorts or 'ended' in selected_sub_sorts or 'upcoming' in selected_sub_sorts:
+        ongoing_condition = Exhibition.start_date <= current_datetime
+        ended_condition = Exhibition.end_date < current_datetime - timedelta(days=1)
+        upcoming_condition = Exhibition.start_date > current_datetime
+        
+        if 'ongoing' in selected_sub_sorts and 'ended' in selected_sub_sorts and 'upcoming' in selected_sub_sorts:
+            return query.filter(ongoing_condition | ended_condition | upcoming_condition)
+        elif 'ongoing' in selected_sub_sorts and 'ended' in selected_sub_sorts:
+            return query.filter(ongoing_condition | ended_condition)
+        elif 'ongoing' in selected_sub_sorts and 'upcoming' in selected_sub_sorts:
+            return query.filter(ongoing_condition | upcoming_condition)
+        elif 'ended' in selected_sub_sorts and 'upcoming' in selected_sub_sorts:
+            return query.filter(ended_condition | upcoming_condition)
+        elif 'ongoing' in selected_sub_sorts:
+            return query.filter(ongoing_condition)
+        elif 'ended' in selected_sub_sorts:
+            return query.filter(ended_condition)
+        elif 'upcoming' in selected_sub_sorts:
+            return query.filter(upcoming_condition)
+        else:
+            return query
+        
+def areas_filter(query, selected_areas=None):
+    if selected_areas:
+        return query.filter(func.substr(GalleryAddress.area, 1, 2).in_(selected_areas))
+    else:
+        return query

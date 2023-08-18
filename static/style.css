@@ -51,6 +51,10 @@ input::placeholder {
   background-color: #6C757D;
   color: #FFFF;
 }
+.btn-top.selected {
+  background-color: #0D6EFD;
+  color: #FFFF;
+}
 
 /* card */
 
