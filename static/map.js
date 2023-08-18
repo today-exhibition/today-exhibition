@@ -65,8 +65,7 @@ $(document).ready(function () {
     // 마커 클러스터
     var clusterer = new kakao.maps.MarkerClusterer({
       map: map,
-      averageCenter: true, 
-      minLevel: 10,
+      averageCenter: true,
       disableClickZoom: true,
       styles: [{
         width: '32px', height: '32px',
