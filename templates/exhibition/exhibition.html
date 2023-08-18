@@ -27,7 +27,6 @@
     </div>
     <div class="info-container">
         <ul>
-            <li>전시명: {{ exhibition.title }}</li>
             <li>기간: {{ exhibition.start_date }} ~ {{ exhibition.end_date }}</li>
             {% if exhibition.opening_hours %}
             <li>시간: {{ exhibition.opening_hours }}</li>
@@ -52,57 +51,56 @@
 
 <br>
 <!-- 코멘트 작성 -->
-<form action="{{ url_for('exhibition.add_comment', id=id) }}" method="POST">
-    <textarea id="comment" name="content" rows="2" cols="50" placeholder="내용을 입력해주세요."></textarea>
-    <input type="submit" value="등록">
-</form>
+<div class="input-group mb-3">
+    <form action="{{ url_for('exhibition.add_comment', id=id) }}" method="POST" class="w-100">
+        <div class="input-group">
+            <textarea id="comment" name="content" rows="1" class="form-control rounded"
+                placeholder="내용을 입력해주세요."></textarea>
+            <div class="input-group-append">
+                <button type="submit" class="btn btn-outline-secondary rounded" id="button-addon2">등록</button>
+            </div>
+        </div>
+    </form>
+</div>
 
-<!-- 코멘트 조회 -->
 <div class="comment">
-    {% for comment in comments %}
-    <div class="comment-info">
-        <span>관람자: {{ comment.nickname }} | {{ comment.created_at }}</span>
-        {% if "user_id" in session and session["user_id"] == comment.user_id %}
-        <button class="edit-button" data-comment-id="{{ comment.comment_id }}">수정</button>
-        <!-- 수정 폼 -->
-        <form class="edit-form" id="edit-form-{{ comment.comment_id }}" style="display: none;"
-            action="{{ url_for('exhibition.edit_comment', id=id, comment_id=comment.comment_id) }}" method="POST">
-            <textarea name="edited_content" rows="2" cols="50">{{ comment.content }}</textarea>
-            <input type="submit" value="등록">
-        </form>
-        <form class="delete-form"
-            action="{{ url_for('exhibition.delete_comment', id=id, comment_id=comment.comment_id) }}" method="POST"
-            style="display: inline;">
-            <button type="submit" class="delete-button">삭제</button>
-        </form>
-        {% endif %}
-        <br>관람평: {{ comment.content }}
-    </div>
-    <br>
-    {% endfor %}
+    <ul class="list-group list-group-flush">
+        {% for comment in comments %}
+        <li class="list-group-item">
+            <div class="d-flex justify-content-between">
+                <span class="card-title">{{ comment.nickname }} | {{ comment.created_at }}</span>
+            </div>
+            <div class="comment-actions">
+                {% if "user_id" in session and session["user_id"] == comment.user_id %}
+                <div class="comment-content" style="display: {% if comment.editing %}none{% endif %};">
+                    <p class="card-text">{{ comment.content }}</p>
+                </div>
+                <div class="d-flex justify-content-end">
+                    <button class="edit-button btn btn-secondary" data-comment-id="{{ comment.comment_id }}">수정</button>
+                    <form class="edit-form" id="edit-form-{{ comment.comment_id }}" style="display: {% if comment.editing %}block{% else %}none{% endif %};"
+                        action="{{ url_for('exhibition.edit_comment', id=id, comment_id=comment.comment_id) }}"
+                        method="POST">
+                        <div class="d-flex">
+                            <textarea name="edited_content" rows="2" cols="50">{{ comment.content }}</textarea>
+                            <button type="submit" class="save-button btn btn-primary">수정 완료</button>
+                        </div>
+                    </form>
+                    <form class="delete-form"
+                        action="{{ url_for('exhibition.delete_comment', id=id, comment_id=comment.comment_id) }}"
+                        method="POST" style="display: inline;">
+                        <button type="submit" class="delete-button btn btn-danger">삭제</button>
+                    </form>
+                </div>
+                {% else %}
+                <div class="comment-content">
+                    <p class="card-text" style="display: block;">{{ comment.content }}</p>
+                </div>
+                {% endif %}
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
 </div>
 
 
-<!-- 코멘트 수정 클릭 시 토글 -->
-<script>
-    const editButtons = document.querySelectorAll('.edit-button');
-    editButtons.forEach(button => {
-        button.addEventListener('click', event => {
-            event.preventDefault();
-            const commentId = button.getAttribute('data-comment-id');
-            const editForm = document.getElementById(`edit-form-${commentId}`);
-            const submitButton = editForm.querySelector('input[type="submit"]');
-
-            if (editForm.style.display === 'none') {
-                editForm.style.display = 'block';
-                submitButton.value = '등록';
-                button.textContent = '취소';
-            } else {
-                editForm.style.display = 'none';
-                submitButton.value = '수정 완료';
-                button.textContent = '수정';
-            }
-        });
-    });
-</script>
 {% endblock %}
