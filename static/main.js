@@ -32,12 +32,11 @@ function changeLikeState(icon, exhibition_id) {
     data: { exhibition_id: exhibition_id }, 
     success: function (resp) {
       if (resp === "login_required") {
-        alert("로그인 후 이용 가능한 서비스입니다.")
         window.location.href = "/user"; 
-      } else if (resp == "exist") {
+      } else if (resp == "liked") {
         icon.classList.remove("fa-regular");
         icon.classList.add("fa-solid");
-      } else if (resp === "success") {
+      } else if (resp === "unliked") {
         icon.classList.remove("fa-solid");
         icon.classList.add("fa-regular");
       }
@@ -45,7 +44,7 @@ function changeLikeState(icon, exhibition_id) {
   });
 }
 
-function changeGalleryFollow(icon, gallery_id) {
+function GalleryFollow(icon, gallery_id) {
   const url = `/search/gallery/${gallery_id}/following`;
 
   $.ajax({
@@ -54,12 +53,11 @@ function changeGalleryFollow(icon, gallery_id) {
     data: { gallery_id: gallery_id }, 
     success: function (resp) {
       if (resp === "login_required") {
-        alert("로그인 후 이용 가능한 서비스입니다.")
         window.location.href = "/user"; 
-      } else if (resp == "exist") {
+      } else if (resp == "followed") {
         icon.classList.remove("fa-regular");
         icon.classList.add("fa-solid");
-      } else if (resp === "success") {
+      } else if (resp === "unfollowed") {
         icon.classList.remove("fa-solid");
         icon.classList.add("fa-regular");
       }
