@@ -1,3 +1,5 @@
+import math
+
 from datetime import datetime, timedelta
 from flask import Blueprint, request, render_template, session
 from sqlalchemy import func
@@ -12,6 +14,7 @@ def search_exhibition():
     sub_sorts = request.args.get('sub_sort') # ongoing,free
     areas = request.args.get('area') 
     sort = request.args.get('sort') 
+    page = request.args.get('page', default=1, type=int)
 
     selected_sub_sorts = sub_sorts.split(',') if sub_sorts else []
     selected_areas = areas.split(',') if areas else []
@@ -43,14 +46,25 @@ def search_exhibition():
     
     exhibition_count = len(exhibitions)
 
+    total_pages, current_page, page_data = calc_pages(exhibitions, page)
+
     # 사용자가 좋아요한 id 목록
     liked_exhibition_ids = []  
     if user_id:
         liked_exhibition_ids = [like.exhibition_id for like in LikeExhibition.query.filter_by(user_id=user_id).all()]
     
-    return render_template('search/search_exhibition.html', exhibitions=exhibitions, keyword=keyword, exhibition_count=exhibition_count, user_id=user_id, liked_exhibition_ids=liked_exhibition_ids, sub_sorts=sub_sorts, areas=areas)
+    return render_template('search/search_exhibition.html', exhibitions=page_data, keyword=keyword, exhibition_count=exhibition_count, user_id=user_id, liked_exhibition_ids=liked_exhibition_ids, sub_sorts=sub_sorts, areas=areas, sort=sort, total_pages=total_pages, current_page=current_page)
 
+def calc_pages(data, current_page):
+    per_page = 12
+    data_length = len(data)
+    total_pages = math.ceil((data_length / per_page))
+    start_index = per_page * (current_page -1)
+    end_index = start_index + per_page
+    page_data = data[start_index:end_index]
 
+    return total_pages, current_page, page_data
+    
 def sub_sorts_filter(query, current_datetime, selected_sub_sorts=None):
     if 'ongoing' in selected_sub_sorts or 'ended' in selected_sub_sorts or 'upcoming' in selected_sub_sorts:
         ongoing_condition = Exhibition.start_date <= current_datetime

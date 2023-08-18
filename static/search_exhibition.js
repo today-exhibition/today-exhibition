@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", function() {
       const areasParam = selectedAreas.join(",");
       const sortedSort = selectedSort.join(",");
     
-      const url = `/search/exhibition?keyword=${encodeURIComponent(keyword)}&sub_sort=${encodeURIComponent(subSortsParam)}&area=${encodeURIComponent(areasParam)}&sort=${encodeURIComponent(sortedSort)}`;
+      const url = `/search/exhibition?keyword=${keyword}&sub_sort=${subSortsParam}&area=${areasParam}&sort=${sortedSort}`;
     
       window.location.href = url;
     });

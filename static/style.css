@@ -105,3 +105,9 @@ input::placeholder {
 .map.card {
   height: auto; 
 }
+
+/* pagination */
+.pagination {
+  place-content: center;
+  margin: 20px auto
+}
