@@ -17,6 +17,8 @@ def insert_molit_to_db(data_dict):
         
         # gallery
         name = properties['mus_nam']
+        name = name.replace("(", " ")
+        name = name.replace(")", " ")
 
         if '박물관' not in name:
             contact = properties['opr_tel']
