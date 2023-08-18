@@ -1,5 +1,9 @@
 {% extends 'common/layout.html' %}
 
+{% block style %}
+<script src="{{ url_for('static', filename='truncate.js') }}" defer></script>
+{% endblock %}
+
 {% block search %}
   <form action="/search" method="get">
     {% include 'common/block_search.html' %}
