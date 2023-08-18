@@ -11,6 +11,9 @@ from views.gallery.gallery import gallery_bp
 from views.exhibition.exhibition import exhibition_bp
 from views.map.map import map_bp
 from views.search.search import search_bp
+from views.search.search_exhibition import search_exhibition_bp
+from views.search.search_artist import search_artist_bp
+from views.search.search_gallery import search_gallery_bp
 from views.user.user import user_bp
 
 
@@ -34,6 +37,9 @@ app.register_blueprint(gallery_bp)
 app.register_blueprint(exhibition_bp)
 app.register_blueprint(map_bp)
 app.register_blueprint(search_bp)
+app.register_blueprint(search_exhibition_bp)
+app.register_blueprint(search_artist_bp)
+app.register_blueprint(search_gallery_bp)
 app.register_blueprint(user_bp)
 
 if __name__ == "__main__" :

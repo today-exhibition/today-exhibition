@@ -47,7 +47,7 @@
     </div>
     {% endfor %}
   </div>
-  <div><a href="{{ url_for('search.search_exhibition', keyword=keyword) }}">전시 결과 더보기</a></div>
+  <div><a href="{{ url_for('search_exhibition.search_exhibition', keyword=keyword) }}">전시 결과 더보기</a></div>
 
   <hr>
   <h3>작가({{ exhibition_count }})</h3>
@@ -66,7 +66,7 @@
     </div>
     {% endfor %}
   </div>
-  <div><a href="{{ url_for('search.search_artist', keyword=keyword) }}">작가 결과 더보기</a></div>
+  <div><a href="{{ url_for('search_artist.search_artist', keyword=keyword) }}">작가 결과 더보기</a></div>
   
   <hr>
   <h3>미술관({{ gallery_count }})</h3>
@@ -93,6 +93,6 @@
     </div>
     {% endfor %}
   </div>
-  <div><a href="{{ url_for('search.search_gallery', keyword=keyword) }}">미술관 결과 더보기</a></div>
+  <div><a href="{{ url_for('search_gallery.search_gallery', keyword=keyword) }}">미술관 결과 더보기</a></div>
 
 {% endblock %}
