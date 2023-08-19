@@ -41,4 +41,3 @@ function GalleryFollow(icon, gallery_id) {
 }
 
 
-
