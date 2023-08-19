@@ -21,7 +21,7 @@
 
 <hr style="width: 450px; margin: 10px auto;">
 <div style="display: flex; justify-content: center;">
-  <button class="btn btn-outline-primary btn-top {% if areas and 'popularity' in sort %}selected{% endif %}" sub-sort="popularity">인기순</button>
-  <button class="btn btn-outline-primary btn-top {% if areas and 'featured' in sort %}selected{% endif %}" sub-sort="featured">지금 주목 받는 전시</button>
-  <button class="btn btn-outline-primary btn-top {% if areas and 'recommended' in sort %}selected{% endif %}" sub-sort="recommended">추천 전시</button>
+  <button class="btn btn-outline-primary btn-top {% if sort and 'popularity' in sort %}selected{% endif %}" sub-sort="popularity">인기순</button>
+  <button class="btn btn-outline-primary btn-top {% if sort and 'featured' in sort %}selected{% endif %}" sub-sort="featured">지금 주목 받는 전시</button>
+  <button class="btn btn-outline-primary btn-top {% if sort and 'recommended' in sort %}selected{% endif %}" sub-sort="recommended">추천 전시</button>
 </div>
