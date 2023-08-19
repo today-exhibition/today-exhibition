@@ -3,8 +3,6 @@ import datetime
 from flask import Blueprint, render_template, session
 from sqlalchemy import func, case
 
-
-
 from models.model import db, Exhibition, Gallery, GalleryAddress, LikeExhibition
 
 
@@ -28,7 +26,7 @@ def convert_rowlist_to_json(row_list):
             "gallery_name": item.gallery_name,
             "gpsx": item.gpsx,
             "gpsy": item.gpsy,
-            "liked" : item.likes
+            "liked" : item.liked
         })
     result = json.dumps(result, ensure_ascii=False)
     return result
@@ -36,10 +34,10 @@ def convert_rowlist_to_json(row_list):
 def get_exhibition_list(user_id, session, filter_type=None):
     liked_subquery = session.query(
         LikeExhibition.exhibition_id,
-        func.count('*').label('liked')) \
+        func.count('*').label('likes')) \
         .filter(LikeExhibition.user_id == user_id) \
         .group_by(LikeExhibition.exhibition_id) \
-        .subquery('S')
+        .subquery()
 
     query = session.query(
             Exhibition.id.label('exhibition_id'),
@@ -51,8 +49,8 @@ def get_exhibition_list(user_id, session, filter_type=None):
             GalleryAddress.gpsx,
             GalleryAddress.gpsy,
             case(
-                (liked_subquery.c.liked, 1),
-                else_=0).label('likes')) \
+                (liked_subquery.c.likes, 1),
+                else_=0).label('liked')) \
             .join(Gallery, Gallery.id == Exhibition.gallery_id) \
             .join(GalleryAddress, Gallery.id == GalleryAddress.gallery_id) \
             .outerjoin(liked_subquery, liked_subquery.c.exhibition_id == Exhibition.id)
@@ -60,12 +58,14 @@ def get_exhibition_list(user_id, session, filter_type=None):
     if filter_type == 'ending_soon':
         query = query.filter(Exhibition.end_date < datetime.datetime.today() + datetime.timedelta(weeks=2))
     elif filter_type == 'featured':
-        query = query.filter(LikeExhibition.liked_at > datetime.datetime.today() - datetime.timedelta(weeks=1)) \
+        query = query.join(LikeExhibition, LikeExhibition.exhibition_id == Exhibition.id) \
+            .filter(LikeExhibition.liked_at > datetime.datetime.today() - datetime.timedelta(weeks=1)) \
             .group_by(LikeExhibition.exhibition_id) \
             .order_by(func.count('*').desc())
     elif filter_type == 'popular':
-        query = query.group_by(LikeExhibition.exhibition_id) \
-            .order_by(func.count('*').desc()) \
+        query = query.join(LikeExhibition, LikeExhibition.exhibition_id == Exhibition.id) \
+            .group_by(LikeExhibition.exhibition_id) \
+            .order_by(func.count('*').desc())                
                 
     return query.all()
 
@@ -74,7 +74,6 @@ def map() :
     user_id = session["user_id"]
     kakao_map_api_key = load_kakao_map_api()
     exhibition_list = get_exhibition_list(user_id, db.session)
-    print(exhibition_list)
     exhibition_list = convert_rowlist_to_json(exhibition_list)
     return render_template("map/map.html", api_key=kakao_map_api_key, exhibition_list=exhibition_list, type="exhibition")
 
