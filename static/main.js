@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 //==============================================================
 function changeLikeState(icon, exhibition_id) {
-  const url = `/search/exhibition/${exhibition_id}/like`;
+  const url = `/exhibition/${exhibition_id}/like`;;
 
   $.ajax({
     type: "POST", 

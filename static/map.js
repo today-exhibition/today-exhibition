@@ -1,19 +1,24 @@
 function makeCard(data) {
-  const id = data['exhibition_id']
-  const title = data['exhibition_title']
-  const img = data['thumbnail_img']
-  const s_date = data['start_date']
-  const e_date = data['end_date']
-  const gallery = data['gallery_name']
+  const id = data['exhibition_id'];
+  const title = data['exhibition_title'];
+  const img = data['thumbnail_img'];
+  const s_date = data['start_date'];
+  const e_date = data['end_date'];
+  const gallery = data['gallery_name'];
+  var heart = 'fa-regular';
+  if (data['liked'] == 1) {
+    heart = 'fa-solid';
+  }
 
   let card_content =
   `
   <div class="map card mb-3" style="max-width: 540px;">
     <div class="row g-0">
-      <div class="col-md-4">
+      <div class="col-4">
+        <i class="${heart} fa-heart fa-2x" onclick="likeExhibition(this, ${id})"></i>
         <img src="${img}" class="img-fluid rounded-start" alt="${title}">
       </div>
-      <div class="col-md-8">
+      <div class="col-8">
         <div class="card-body" onclick="window.location='/exhibition/${id}'">
           <h5 class="card-title">${title}</h5>
           <p class="card-text">${s_date}~${e_date}</p>
@@ -24,6 +29,27 @@ function makeCard(data) {
   </div>
   `
   $("#card-list").append(card_content);
+}
+
+function likeExhibition(icon, exhibition_id) {
+  const url = `/exhibition/${exhibition_id}/like`;
+
+  $.ajax({
+    type: "POST", 
+    url: url,
+    data: { exhibition_id: exhibition_id },
+    success: function (resp) {
+      if (resp === "login_required") {
+        window.location.href = "/user"; 
+      } else if (resp == "liked") {
+        icon.classList.remove("fa-regular");
+        icon.classList.add("fa-solid");
+      } else if (resp === "unliked") {
+        icon.classList.remove("fa-solid");
+        icon.classList.add("fa-regular");
+      }
+    }
+  });
 }
 
 $(document).ready(function () {
