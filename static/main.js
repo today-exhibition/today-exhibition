@@ -22,14 +22,14 @@ document.addEventListener("DOMContentLoaded", function() {
   })
 })
 
-//==============================================================
-function changeLikeState(icon, exhibition_id) {
-  const url = `/exhibition/${exhibition_id}/like`;;
-
+// 전시 좋아요
+function likeExhibition(icon, exhibition_id) {
+  const url = `/exhibition/${exhibition_id}/like`;
+  
   $.ajax({
     type: "POST", 
-    url: url, 
-    data: { exhibition_id: exhibition_id }, 
+    url: url,
+    data: { exhibition_id: exhibition_id },
     success: function (resp) {
       if (resp === "login_required") {
         window.location.href = "/user"; 
@@ -44,7 +44,8 @@ function changeLikeState(icon, exhibition_id) {
   });
 }
 
-function GalleryFollow(icon, gallery_id) {
+// 미술관 팔로우
+function followGallery(icon, gallery_id) {
   const url = `/search/gallery/${gallery_id}/following`;
 
   $.ajax({
@@ -64,6 +65,3 @@ function GalleryFollow(icon, gallery_id) {
     }
   });
 }
-
-
-

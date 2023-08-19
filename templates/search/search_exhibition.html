@@ -30,9 +30,9 @@
       <div class="card" id="{{ exhibition.id }}">
         {% if user_id %}
           {% if exhibition.id in liked_exhibition_ids %}
-            <i class="fa-solid fa-heart fa-2x" onclick="changeLikeState(this, '{{ exhibition.id }}')"></i>
+            <i class="fa-solid fa-heart fa-2x" onclick="likeExhibition(this, '{{ exhibition.id }}')"></i>
           {% else %}
-            <i class="fa-regular fa-heart fa-2x" onclick="changeLikeState(this, '{{ exhibition.id }}')"></i>
+            <i class="fa-regular fa-heart fa-2x" onclick="likeExhibition(this, '{{ exhibition.id }}')"></i>
           {% endif %}
         {% else %}
           <i class="fa-regular fa-heart fa-2x" onclick="alert('로그인 후 이용 가능한 서비스입니다.')"></i>

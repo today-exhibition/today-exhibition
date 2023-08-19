@@ -31,27 +31,6 @@ function makeCard(data) {
   $("#card-list").append(card_content);
 }
 
-function likeExhibition(icon, exhibition_id) {
-  const url = `/exhibition/${exhibition_id}/like`;
-
-  $.ajax({
-    type: "POST", 
-    url: url,
-    data: { exhibition_id: exhibition_id },
-    success: function (resp) {
-      if (resp === "login_required") {
-        window.location.href = "/user"; 
-      } else if (resp == "liked") {
-        icon.classList.remove("fa-regular");
-        icon.classList.add("fa-solid");
-      } else if (resp === "unliked") {
-        icon.classList.remove("fa-solid");
-        icon.classList.add("fa-regular");
-      }
-    }
-  });
-}
-
 $(document).ready(function () {
   kakao.maps.load(() => {
     // 기본 위치 : 서울시청으로 설정
