@@ -53,6 +53,10 @@ input::placeholder {
 }
 
 /* card */
+.card-container {
+  height: 80vh;
+  overflow-y: scroll;
+}
 
 .card {
   height: 100%; 
