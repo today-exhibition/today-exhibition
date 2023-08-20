@@ -61,9 +61,6 @@ def gallery(id):
 
 @gallery_bp.route('/gallery/<gallery_id>/following', methods=['post'])
 def following_exhibition(gallery_id):
-    if "user_id" not in session:
-        return "login_required"
-    
     existing_following_gallery = FollowingGallery.query.filter(FollowingGallery.user_id == session["user_id"], FollowingGallery.gallery_id == gallery_id).first()
     
     if existing_following_gallery is not None:

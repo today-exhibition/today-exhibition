@@ -51,9 +51,6 @@ def artist(id):
 
 @artist_bp.route('/artist/<artist_id>/following', methods=['post'])
 def following_exhibition(artist_id):
-    if "user_id" not in session:
-        return "login_required"
-    
     existing_following_artist = FollowingArtist.query.filter(FollowingArtist.user_id == session["user_id"], FollowingArtist.artist_id == artist_id).first()
     
     if existing_following_artist is not None:
