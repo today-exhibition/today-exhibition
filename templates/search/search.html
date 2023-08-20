@@ -71,7 +71,7 @@
         <img src="{{ artist.thumbnail_img }}" class="img-fluid rounded-start" alt="{{ artist.name }}">
       </div>
       <div class="col-md-8">
-        <div class="my-card-body">
+        <div class="my-card-body" onclick="window.location='/artist/{{ artist.id }}'">
           <h5 class="card-title">{{ artist.name }}</h5>
         </div>
       </div>
