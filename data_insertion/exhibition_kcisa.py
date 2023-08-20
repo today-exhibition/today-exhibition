@@ -13,7 +13,7 @@ def insert_kcisa_to_db(data_dict):
         if data['realmName'] == '미술' :
             id = data['seq']
             title = data['title'].replace('"', "&quot;")
-            title = data['title'].replace("'", "&apos;")
+            title = title.replace("'", "&apos;")
             start_date = datetime.datetime.strptime(data['startDate'], '%Y%m%d').date()
             end_date = datetime.datetime.strptime(data['endDate'], '%Y%m%d').date()
             thumbnail_img = data['thumbnail']
