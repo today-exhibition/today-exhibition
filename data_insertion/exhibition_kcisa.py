@@ -1,50 +1,41 @@
 import os
 import sys
-import uuid
-import datetime
 
 from utils import load_secrets, fetch_api_data, convert_xml, get_address_from_gps
+from data_utils.encode import encode_exhibition_title, encode_date, encode_gallery_name
+from data_utils.get_data import get_gallery_by_name, get_gallery_id_by_name, get_galleryaddress_by_id
+from data_utils.make_instance import make_gallery_by_name, make_galleryaddress, make_exhibition
 
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
-from models.model import db, Exhibition, Gallery, GalleryAddress
+from models.model import db
+
 
 def insert_kcisa_to_db(data_dict):
     for data in data_dict:
-        if data['realmName'] == '미술' :
-            id = data['seq']
-            title = data['title'].replace('"', "&quot;")
-            title = title.replace("'", "&apos;")
-            start_date = datetime.datetime.strptime(data['startDate'], '%Y%m%d').date()
-            end_date = datetime.datetime.strptime(data['endDate'], '%Y%m%d').date()
-            thumbnail_img = data['thumbnail']
-            
-            gallery_name = data['place']
-            gallery_name = gallery_name.replace("(", " ")
-            gallery_name = gallery_name.replace(")", " ")
-            gallery = Gallery.query \
-                .filter(Gallery.name==gallery_name) \
-                .all()
+        if data['realmName'] == '미술':
+            # Gallery
+            gallery_name = encode_gallery_name(data['place'])
+            gallery = get_gallery_by_name(gallery_name)
             if not gallery:
-                new_gallery = Gallery(id=str(uuid.uuid4()), name=gallery_name)
-                db.session.add(new_gallery)
-            gallery = Gallery.query \
-                .filter(Gallery.name==gallery_name) \
-                .one()
+                make_gallery_by_name(gallery_name)
+            gallery_id = get_gallery_id_by_name(gallery_name)
             
+            # GalleryAddress (gps와 카카오지도 이용)
             gpsx = data['gpsX']
             gpsy = data['gpsY']
             area, address = get_address_from_gps(gpsx, gpsy)
             if area and address :
-                gallery_address = GalleryAddress.query \
-                    .filter(GalleryAddress.gallery_id==gallery.id) \
-                    .all()
+                gallery_address = get_galleryaddress_by_id(gallery_id)
                 if not gallery_address:
-                    new_gallery_address = GalleryAddress(gallery_id=gallery.id, area=area, gpsx=gpsx, gpsy=gpsy, address=address)
-                    db.session.add(new_gallery_address)
+                    make_galleryaddress(gallery_id, area, gpsx, gpsy, address)
 
-            new_exhib = Exhibition(id=id, title=title, start_date=start_date, end_date=end_date,
-                                gallery_id=gallery.id, thumbnail_img=thumbnail_img)
-            db.session.merge(new_exhib)
+            # Exhibition
+            id = data['seq']
+            title = encode_exhibition_title(data['title'])
+            start_date = encode_date(data['startDate'], '%Y%m%d')
+            end_date = encode_date(data['endDate'], '%Y%m%d')
+            thumbnail_img = data['thumbnail']
+            make_exhibition(id, title, start_date, end_date, gallery_id, thumbnail_img)
     db.session.commit()
 
 def insert_exhibition_kcisa() :
