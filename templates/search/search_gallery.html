@@ -35,4 +35,10 @@
     {% endfor %}
   </div>
 
+  <div class="pagination">
+    {% set url = "" %}
+    {% if keyword %}{% set url = url + "&keyword=" + keyword %}{% endif %}
+    {% include 'common/pagenation.html' %}
+  </div>
+
 {% endblock %}

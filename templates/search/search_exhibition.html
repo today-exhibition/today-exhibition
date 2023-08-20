@@ -64,7 +64,13 @@
   </div>
   
   <div class="pagination">
+    {% set url = "" %}
+    {% if keyword %}{% set url = url + "&keyword=" + keyword %}{% endif %}
+    {% if sub_sorts %}{% set url = url + "&sub_sort=" + sub_sorts | urlencode %}{% endif %}
+    {% if areas %}{% set url = url + "&area=" + areas | urlencode %}{% endif %}
+    {% if sort %}{% set url = url + "&sort=" + sort %}{% endif %}
     {% include 'common/pagenation.html' %}
   </div>
+
 
 {% endblock %}

@@ -1,56 +1,56 @@
 <nav aria-label="Page navigation example">
-    <ul class="pagination">
-      {% if total_pages < 6 %}
-        {% for num in range(1, total_pages + 1) %}
-          <li><a class="pagebutton" href="?{% if keyword %}&keyword={{ keyword }}{% endif %}{% if sub_sorts %}&sub_sort={{ sub_sorts | urlencode }}{% endif %}{% if areas %}&area={{ areas | urlencode }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}&page={{ num }}">{{ num }}</a></li>
-        {% endfor %}
-      {% elif current_page < 6 %}
-        {% for num in range(1, 6) %} 
-          <li><a class="pagebutton" href="?{% if keyword %}&keyword={{ keyword }}{% endif %}{% if sub_sorts %}&sub_sort={{ sub_sorts | urlencode }}{% endif %}{% if areas %}&area={{ areas | urlencode }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}&page={{ num }}">{{ num }}</a></li>
-        {% endfor %}
-        <li>
-          <a class="pagebutton" href="?{% if keyword %}&keyword={{ keyword }}{% endif %}{% if sub_sorts %}&sub_sort={{ sub_sorts | urlencode }}{% endif %}{% if areas %}&area={{ areas | urlencode }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}&page=6" aria-label="Next">
-            <span aria-hidden="true">></span>
-          </a>
-        </li>
-      {% elif current_page > total_pages-6 %}
-        <li>
-          <a class="pagebutton" href="?{% if keyword %}&keyword={{ keyword }}{% endif %}{% if sub_sorts %}&sub_sort={{ sub_sorts | urlencode }}{% endif %}{% if areas %}&area={{ areas | urlencode }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}&page=1" aria-label="Previous">
-            <span aria-hidden="true"><<</span>
-          </a>
-        </li>
-        <li>
-          <a class="pagebutton" href="?{% if keyword %}&keyword={{ keyword }}{% endif %}{% if sub_sorts %}&sub_sort={{ sub_sorts | urlencode }}{% endif %}{% if areas %}&area={{ areas | urlencode }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}&page={{ current_page-5 }}" aria-label="Previous">
-            <span aria-hidden="true"><</span>
-          </a>
-        </li>
-        {% for num in range(total_pages-5, total_pages+1) %}
-          <li><a class="pagebutton" href="?{% if keyword %}&keyword={{ keyword }}{% endif %}{% if sub_sorts %}&sub_sort={{ sub_sorts | urlencode }}{% endif %}{% if areas %}&area={{ areas | urlencode }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}&page={{ num }}">{{ num }}</a></li>
-        {% endfor %}
-      {% else %}
-        <li>
-          <a class="pagebutton" href="?{% if keyword %}&keyword={{ keyword }}{% endif %}{% if sub_sorts %}&sub_sort={{ sub_sorts | urlencode }}{% endif %}{% if areas %}&area={{ areas | urlencode }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}&page=1" aria-label="Previous">
-            <span aria-hidden="true"><<</span>
-          </a>
-        </li>
-        <li>
-          <a class="pagebutton" href="?{% if keyword %}&keyword={{ keyword }}{% endif %}{% if sub_sorts %}&sub_sort={{ sub_sorts | urlencode }}{% endif %}{% if areas %}&area={{ areas | urlencode }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}&page={{ current_page-5 }}" aria-label="Previous">
-            <span aria-hidden="true"><</span>
-          </a>
-        </li>
-        {% for num in range(current_page, current_page+5) %}
-          <li><a class="pagebutton" href="?{% if keyword %}&keyword={{ keyword }}{% endif %}{% if sub_sorts %}&sub_sort={{ sub_sorts | urlencode }}{% endif %}{% if areas %}&area={{ areas | urlencode }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}&page={{ num }}">{{ num }}</a></li>
-        {% endfor %}
-        <li>
-          <a class="pagebutton" href="?{% if keyword %}&keyword={{ keyword }}{% endif %}{% if sub_sorts %}&sub_sort={{ sub_sorts | urlencode }}{% endif %}{% if areas %}&area={{ areas | urlencode }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}&page={{ current_page + 5 }}" aria-label="Next">
-            <span aria-hidden="true">></span>
-          </a>
-        </li>
-        <li>
-          <a class="pagebutton" href="?{% if keyword %}&keyword={{ keyword }}{% endif %}{% if sub_sorts %}&sub_sort={{ sub_sorts | urlencode }}{% endif %}{% if areas %}&area={{ areas | urlencode }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}&page={{ total_pages }}" aria-label="Next">
-            <span aria-hidden="true">>></span>
-          </a>
-        </li>
-      {% endif %}
-    </ul>
-  </nav>
+  <ul class="pagination">
+    {% if total_pages < 6 %}
+      {% for num in range(1, total_pages + 1) %}
+        <li><a class="pagebutton" href="?{{ url }}&page={{ num }}">{{ num }}</a></li>
+      {% endfor %}
+    {% elif current_page < 6 %}
+      {% for num in range(1, 6) %} 
+        <li><a class="pagebutton" href="?{{ url }}&page={{ num }}">{{ num }}</a></li>
+      {% endfor %}
+      <li>
+        <a class="pagebutton" href="?{{ url }}&page=6" aria-label="Next">
+          <span aria-hidden="true">></span>
+        </a>
+      </li>
+    {% elif current_page > total_pages-6 %}
+      <li>
+        <a class="pagebutton" href="?{{ url }}&page=1" aria-label="Previous">
+          <span aria-hidden="true"><<</span>
+        </a>
+      </li>
+      <li>
+        <a class="pagebutton" href="?{{ url }}&page={{ current_page-5 }}" aria-label="Previous">
+          <span aria-hidden="true"><</span>
+        </a>
+      </li>
+      {% for num in range(total_pages-5, total_pages+1) %}
+        <li><a class="pagebutton" href="?{{ url }}&page={{ num }}">{{ num }}</a></li>
+      {% endfor %}
+    {% else %}
+      <li>
+        <a class="pagebutton" href="?{{ url }}&page=1" aria-label="Previous">
+          <span aria-hidden="true"><<</span>
+        </a>
+      </li>
+      <li>
+        <a class="pagebutton" href="?{{ url }}&page={{ current_page-5 }}" aria-label="Previous">
+          <span aria-hidden="true"><</span>
+        </a>
+      </li>
+      {% for num in range(current_page, current_page+5) %}
+        <li><a class="pagebutton" href="?{{ url }}&page={{ num }}">{{ num }}</a></li>
+      {% endfor %}
+      <li>
+        <a class="pagebutton" href="?{{ url }}&page={{ current_page + 5 }}" aria-label="Next">
+          <span aria-hidden="true">></span>
+        </a>
+      </li>
+      <li>
+        <a class="pagebutton" href="?{{ url }}&page={{ total_pages }}" aria-label="Next">
+          <span aria-hidden="true">>></span>
+        </a>
+      </li>
+    {% endif %}
+  </ul>
+</nav>
