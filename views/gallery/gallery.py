@@ -8,10 +8,6 @@ gallery_bp = Blueprint('gallery', __name__)
 # [미술관디테일 > 미술관 정보 조회(미술관명, 운영시간, 휴관일, 주소, 연락처, 주차장, 홈페이지, 소개)]
 @gallery_bp.route('/gallery/<id>')
 def gallery(id):
-    option = "user_out"
-    if "user_id" in session:
-        option = "user_in"
-
     gallery = db.session.query(
                 Gallery.id,
                 Gallery.name,
@@ -60,4 +56,4 @@ def gallery(id):
                             upcoming_exhibitions=upcoming_exhibitions,
                             upcoming_count=len(upcoming_exhibitions),                    
                             ended_exhibitions=ended_exhibitions,
-                            ended_count=len(ended_exhibitions), id=id, option=option)
+                            ended_count=len(ended_exhibitions), id=id)

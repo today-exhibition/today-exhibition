@@ -2,7 +2,7 @@ import math
 import datetime
 
 from flask import Blueprint, request, render_template, session
-from sqlalchemy import func, or_
+from sqlalchemy import func, or_, desc
 
 from models.model import Exhibition, Gallery, GalleryAddress, LikeExhibition
 
@@ -32,6 +32,7 @@ def search_exhibition():
                                     ) \
                                     .filter(Exhibition.title.like('%' + keyword + '%')) \
                                     .join(Gallery, Exhibition.gallery_id == Gallery.id) \
+                                    .order_by(desc(Exhibition.start_date)) \
     
     if sub_sorts:
         exhibitions_query = sub_sorts_filter(exhibitions_query, selected_sub_sorts)

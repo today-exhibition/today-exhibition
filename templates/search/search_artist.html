@@ -4,28 +4,42 @@
   <form action="/search/artist" method="get">
     {% include 'common/block_search.html' %}
   </form>
-  <span class="search_result">"{{ keyword }}" 검색결과 {{ exhibition_count }}건</span>
+  <span class="search_result">"{{ keyword }}" 검색결과 {{ artist_count }}건</span>
     {% set type = "artist" %}
     {% include './common/filter.html' %}
 {% endblock %}
 
 {% block content %}
 
-  <h3>작가({{ exhibition_count }})</h3>
+  <h3>작가({{ artist_count }})</h3>
   <div class="card mb-3" style="max-width: 100%;">
-    {% for exhibition in exhibitions %}
+    {% for artist in artists %}
     <div class="row artist-row ">
       <div class="col-md-4 artist-col">
-        <i class="fa-regular fa-bookmark fa-2x"></i>
-        <img src="{{ exhibition.thumbnail_img }}" class="img-fluid rounded-start" alt="{{ exhibition.title }}">
+        {% if user_id %}
+          {% if artist.id in followed_artist_ids %}
+            <i class="fa-solid fa-bookmark fa-2x" onclick="followGallery(this, '{{ artist.id }}')"></i>
+          {% else %}
+            <i class="fa-regular fa-bookmark fa-2x" onclick="followGallery(this, '{{ artist.id }}')"></i>
+          {% endif %}
+        {% else %}
+          <i class="fa-regular fa-bookmark fa-2x" onclick="alert('로그인 후 이용 가능한 서비스입니다.')"></i>
+        {% endif %}
+        <img src="{{ artist.thumbnail_img }}" class="img-fluid rounded-start" alt="{{ artist.name }}">
       </div>
       <div class="col-md-8">
         <div class="my-card-body">
-          <h5 class="card-title">{{ exhibition.title }}</h5>
+          <h5 class="card-title">{{ artist.name }}</h5>
         </div>
       </div>
     </div>
     {% endfor %}
+  </div>
+
+  <div class="pagination">
+    {% set url = "" %}
+    {% if keyword %}{% set url = url + "&keyword=" + keyword %}{% endif %}
+    {% include 'common/pagenation.html' %}
   </div>
 
 {% endblock %}
