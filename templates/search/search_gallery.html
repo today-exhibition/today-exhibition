@@ -10,11 +10,12 @@
 {% endblock %}
 
 {% block content %}
+
   <h3>미술관({{ gallery_count }})</h3>
-  <div class="card mb-3" style="max-width: 100%;">
+  <div class="card mb-3">
     {% for gallery in gallerys %}
-    <div class="row artist-row ">
-      <div class="col-md-4 artist-col">
+    <div class="row gallery-row" id="{{ gallery.id }}">
+      <div class="col-md-4 gallery-col">
         {% if user_id %}
           {% if gallery.id in followed_gallery_ids %}
             <i class="fa-solid fa-bookmark fa-2x" onclick="followGallery(this, '{{ gallery.id }}')"></i>

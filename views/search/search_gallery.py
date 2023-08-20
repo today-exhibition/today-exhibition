@@ -17,10 +17,8 @@ def search_gallery():
                 Gallery.id,
                 Gallery.name,
                 Gallery.thumbnail_img,
-                FollowingGallery.gallery_id
                 ) \
                 .filter(Gallery.name.like('%' + keyword + '%')) \
-                .join(FollowingGallery, Gallery.id == FollowingGallery.gallery_id, isouter = True) \
                 .order_by(Gallery.id) \
                 .all()
     

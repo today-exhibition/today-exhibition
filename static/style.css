@@ -88,13 +88,13 @@ input::placeholder {
   cursor:pointer;
 }
 
-/* artist */
+/* artist gallery */
 
-.artist-row {
+.artist-row, .gallery-row {
   height: 180px;
 }
 
-.artist-col {
+.artist-col, .gallery-col{
   width: 360px;
   height: 180px;
   overflow: hidden;
@@ -102,7 +102,11 @@ input::placeholder {
 }
 
 .artist-col img {
-  width: 100%; /* 현재는 전시의 사진이 들어가 있지만 작가의 사진으로 넣어줄때는 height: 100%; 으로 바꿔주기 */
+  height: 100%; 
+}
+
+.gallery-col img {
+  width: 100%;
 }
 
 /* map */
@@ -115,12 +119,15 @@ input::placeholder {
   place-content: center;
   margin: 20px auto
 }
+
 .pagebutton {
   text-decoration: none;
 }
+
 .pagination li, a{
   font-size: 14px;
 }
+
 .pagination ul{
   margin: 0;
   padding: 0;

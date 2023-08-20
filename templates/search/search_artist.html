@@ -12,10 +12,10 @@
 {% block content %}
 
   <h3>작가({{ artist_count }})</h3>
-  <div class="card mb-3" style="max-width: 100%;">
+  <div class="card mb-3">
     {% for artist in artists %}
     <div class="row artist-row ">
-      <div class="col-md-4 artist-col">
+      <div class="col-md-4 artist-col" id="{{ artist.id }}">
         {% if user_id %}
           {% if artist.id in followed_artist_ids %}
             <i class="fa-solid fa-bookmark fa-2x" onclick="followArtist(this, '{{ artist.id }}')"></i>
@@ -28,7 +28,7 @@
         <img src="{{ artist.thumbnail_img }}" class="img-fluid rounded-start" alt="{{ artist.name }}">
       </div>
       <div class="col-md-8">
-        <div class="my-card-body">
+        <div class="my-card-body" onclick="window.location='/artist/{{ artist.id }}'">
           <h5 class="card-title">{{ artist.name }}</h5>
         </div>
       </div>

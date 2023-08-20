@@ -46,7 +46,6 @@ def search():
                 Gallery.thumbnail_img,
                 ) \
                 .filter(Gallery.name.like('%' + keyword + '%')) \
-                .join(FollowingGallery, Gallery.id == FollowingGallery.gallery_id, isouter = True) \
                 .order_by(Gallery.id) \
                 .all()
 
