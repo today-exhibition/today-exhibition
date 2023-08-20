@@ -15,7 +15,11 @@
                 <div>
                     <form method="POST" action="{{ url_for('user.user') }}">
                         <p>프로필 이미지</p>
+                        {% if user_info.profile_img == None %}
+                        <img id="profile_image" src="{{ url_for('static', filename='/img/icon/user_default.svg') }}" alt="프로필 이미지" width="60" height="60" style="border-radius: 50%;"/>
+                        {% else %}
                         <img id="profile_image" src="{{ user_info.profile_img }}" alt="프로필 이미지" width="60" height="60" style="border-radius: 50%;"/>
+                        {% endif %}
                         <input type="file" id="profile_upload" name="file_upload" accept="image/*" style="display: none;" />
                         <br /><br />
                         <p>닉네임</p>
