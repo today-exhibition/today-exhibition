@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session
 from sqlalchemy import func
 from datetime import datetime
-from models.model import db, Artist, Exhibition, Gallery, ArtistExhibition, GalleryAddress, User, Comment
+from models.model import db, Artist, Exhibition, Gallery, ArtistExhibition, GalleryAddress, User, Comment, LikeExhibition
 import uuid
 
 exhibition_bp = Blueprint('exhibition', __name__)
@@ -78,3 +78,22 @@ def delete_comment(id, comment_id):
         db.session.commit()
 
     return redirect(url_for('exhibition.exhibition', id=id))
+
+@exhibition_bp.route('/exhibition/<exhibition_id>/like', methods=['post'])
+def like_exhibition(exhibition_id):
+    if "user_id" not in session:
+        return "login_required"
+    
+    existing_like = LikeExhibition.query.filter(LikeExhibition.user_id == session["user_id"], LikeExhibition.exhibition_id == exhibition_id).first()
+    
+    if existing_like is not None:
+        db.session.delete(existing_like)
+        db.session.commit()
+        return "unliked"
+    else:
+        user_id = session["user_id"]
+        liked_at = datetime.now()
+        insertdb = LikeExhibition(id=str(uuid.uuid4()), user_id=user_id, exhibition_id=exhibition_id, liked_at=liked_at)
+        db.session.add(insertdb)
+        db.session.commit()
+    return "liked"

@@ -1,7 +1,7 @@
 import json
 import datetime
-from flask import Blueprint, render_template
-from sqlalchemy import func
+from flask import Blueprint, render_template, session
+from sqlalchemy import func, case, and_
 
 from models.model import db, Exhibition, Gallery, GalleryAddress, LikeExhibition
 
@@ -25,26 +25,39 @@ def convert_rowlist_to_json(row_list):
             "end_date": str(item.end_date),
             "gallery_name": item.gallery_name,
             "gpsx": item.gpsx,
-            "gpsy": item.gpsy
+            "gpsy": item.gpsy,
+            "liked" : item.liked
         })
     result = json.dumps(result, ensure_ascii=False)
     return result
 
-def get_exhibition_list(session, filter_type=None):
+def get_exhibition_list(user_id, session, filter_type=None):
+    liked_subquery = session.query(
+        LikeExhibition.exhibition_id,
+        func.count('*').label('likes')) \
+        .filter(LikeExhibition.user_id == user_id) \
+        .group_by(LikeExhibition.exhibition_id) \
+        .subquery()
+
     query = session.query(
-        Exhibition.id.label("exhibition_id"),
-        Exhibition.title.label("exhibition_title"),
-        Exhibition.thumbnail_img,
-        Exhibition.start_date,
-        Exhibition.end_date,
-        Gallery.name.label("gallery_name"),
-        GalleryAddress.gpsx,
-        GalleryAddress.gpsy) \
-        .join(Gallery, Gallery.id == Exhibition.gallery_id) \
-        .join(GalleryAddress, Gallery.id == GalleryAddress.gallery_id)
-    
+            Exhibition.id.label('exhibition_id'),
+            Exhibition.title.label("exhibition_title"),
+            Exhibition.thumbnail_img,
+            Exhibition.start_date,
+            Exhibition.end_date,
+            Gallery.name.label("gallery_name"),
+            GalleryAddress.gpsx,
+            GalleryAddress.gpsy,
+            case(
+                (liked_subquery.c.likes, 1),
+                else_=0).label('liked')) \
+            .join(Gallery, Gallery.id == Exhibition.gallery_id) \
+            .join(GalleryAddress, Gallery.id == GalleryAddress.gallery_id) \
+            .outerjoin(liked_subquery, liked_subquery.c.exhibition_id == Exhibition.id)
+
     if filter_type == 'ending_soon':
-        query = query.filter(Exhibition.end_date < datetime.datetime.today() + datetime.timedelta(weeks=2))
+        query = query.filter(and_(Exhibition.end_date < datetime.datetime.today() + datetime.timedelta(weeks=2), datetime.datetime.today() < Exhibition.end_date)) \
+            .order_by(Exhibition.end_date.asc())
     elif filter_type == 'featured':
         query = query.join(LikeExhibition, LikeExhibition.exhibition_id == Exhibition.id) \
             .filter(LikeExhibition.liked_at > datetime.datetime.today() - datetime.timedelta(weeks=1)) \
@@ -53,39 +66,54 @@ def get_exhibition_list(session, filter_type=None):
     elif filter_type == 'popular':
         query = query.join(LikeExhibition, LikeExhibition.exhibition_id == Exhibition.id) \
             .group_by(LikeExhibition.exhibition_id) \
-            .order_by(func.count('*').desc()) \
+            .order_by(func.count('*').desc())                
                 
     return query.all()
 
 @map_bp.route('/map/')
 def map() :
+    if "user_id" in session:
+        user_id = session["user_id"]
+    else:
+        user_id = None
     kakao_map_api_key = load_kakao_map_api()
-    exhibition_list = get_exhibition_list(db.session)
+    exhibition_list = get_exhibition_list(user_id, db.session)
     exhibition_list = convert_rowlist_to_json(exhibition_list)
     return render_template("map/map.html", api_key=kakao_map_api_key, exhibition_list=exhibition_list, type="exhibition")
 
 #! [곧 종료되는 전시 : 2주 이내에 종료되는 전시]
 @map_bp.route('/map/ending_soon')
 def ending_soon():
+    if "user_id" in session:
+        user_id = session["user_id"]
+    else:
+        user_id = None
     kakao_map_api_key = load_kakao_map_api()
-    
-    exhibition_list = get_exhibition_list(db.session, 'ending_soon')
+    exhibition_list = get_exhibition_list(user_id, db.session, 'ending_soon')
     exhibition_list = convert_rowlist_to_json(exhibition_list)
     return render_template("map/map.html", api_key=kakao_map_api_key, exhibition_list=exhibition_list, type="ending_soon")
 
 #! [지금 주목받는 전시 : 최근 1주 하트 많이 찍힌 전시]
 @map_bp.route('/map/featured')
 def featured():
+    if "user_id" in session:
+        user_id = session["user_id"]
+    else:
+        user_id = None
     kakao_map_api_key = load_kakao_map_api()
-    exhibition_list = get_exhibition_list(db.session, 'featured')
+    exhibition_list = get_exhibition_list(user_id, db.session, 'featured')
     exhibition_list = convert_rowlist_to_json(exhibition_list)
     return render_template("map/map.html", api_key=kakao_map_api_key, exhibition_list=exhibition_list, type="featured")
 
 #! [인기순 : 전체 하트순 전시]
 @map_bp.route('/map/popular')
 def popular():
+    if "user_id" in session:
+        user_id = session["user_id"]
+    else:
+        user_id = None
     kakao_map_api_key = load_kakao_map_api()
-    exhibition_list = get_exhibition_list(db.session, 'popular')    
+    exhibition_list = get_exhibition_list(user_id, db.session, 'popular')    
     exhibition_list = convert_rowlist_to_json(exhibition_list)
     return render_template("map/map.html", api_key=kakao_map_api_key, exhibition_list=exhibition_list, type="popular")
 

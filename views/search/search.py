@@ -56,25 +56,6 @@ def search():
 
     return render_template('search/search.html', exhibition_list=exhibition_list, keyword=keyword, exhibition_count=exhibition_count, gallery_count=gallery_count, gallery_list=gallery_list, user_id=user_id, liked_exhibition_ids=liked_exhibition_ids, followed_gallery_ids=followed_gallery_ids)
 
-@search_bp.route('/search/exhibition/<exhibition_id>/like', methods=['post'])
-def like_exhibition(exhibition_id):
-    if "user_id" not in session:
-        return "login_required"
-    
-    existing_like = LikeExhibition.query.filter(LikeExhibition.user_id == session["user_id"], LikeExhibition.exhibition_id == exhibition_id).first()
-    
-    if existing_like is not None:
-        db.session.delete(existing_like)
-        db.session.commit()
-        return "unliked"
-    else:
-        user_id = session["user_id"]
-        liked_at = datetime.now()
-        insertdb = LikeExhibition(id=str(uuid.uuid4()), user_id=user_id, exhibition_id=exhibition_id, liked_at=liked_at)
-        db.session.add(insertdb)
-        db.session.commit()
-    return "liked"
-
 @search_bp.route('/search/gallery/<gallery_id>/following', methods=['post'])
 def following_exhibition(gallery_id):
     if "user_id" not in session:
