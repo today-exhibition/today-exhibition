@@ -1,13 +1,13 @@
 document.addEventListener("DOMContentLoaded", function() {
     const searchButton = document.getElementById("filter-button");
-    const typeSortButtons = document.querySelectorAll(".btn-type");
-    const areaSortButtons = document.querySelectorAll(".btn-area");
-    const topSortButtons = document.querySelectorAll(".btn-top");
+    const typeSortButtons = document.querySelectorAll(".btn-type"); // 전시중, 종료, 예정
+    const areaSortButtons = document.querySelectorAll(".btn-area"); 
+    const topSortButtons = document.querySelectorAll(".btn-top"); // 인기순, 지금 주목 받는 전시..
   
     // type, area 정렬 버튼 여러개 선택 가능
     typeSortButtons.forEach(button => {
       button.addEventListener('click', () => {
-        button.classList.toggle('selected'); // 'selected'가 있으면 classList에서 없애고, 없으면 만들어줌.
+        button.classList.toggle('selected'); 
       });
     });
   
@@ -28,8 +28,8 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   
     // 검색 버튼 클릭 시 처리
-    searchButton.addEventListener("click", async (event) => {
-      event.preventDefault(); // 폼의 기본 제출 동작 막기
+    searchButton.addEventListener("click", event => {
+      event.preventDefault();
   
       const keywordInput = document.getElementById("keyword-input");
       const keyword = keywordInput.value;
@@ -42,16 +42,15 @@ document.addEventListener("DOMContentLoaded", function() {
                               .filter(button => button.classList.contains("selected"))
                               .map(button => button.getAttribute("sub-sort"));
   
-      const selectedSortButtons = Array.from(topSortButtons)
-                                  .filter(button => button.classList.contains("selected"));
-      const selectedSort = selectedSortButtons.length > 0 ? selectedSortButtons[0].getAttribute("sub-sort") : null;
-  
+      const selectedSort = Array.from(topSortButtons)
+                                  .filter(button => button.classList.contains("selected"))
+                                  .map(button => button.getAttribute("sub-sort"));
+
       const subSortsParam = selectedSubSorts.join(",");
       const areasParam = selectedAreas.join(",");
-      const sortedSort = selectedSort || ""; // selectedSort가 null일 경우 빈 문자열로 초기화
+      const sortedSort = selectedSort.join(",");
     
-      // areasParam이 콤마로 구분된 문자열이므로 encodeURIComponent 적용
-      const url = `/search/exhibition?keyword=${encodeURIComponent(keyword)}&sub_sort=${encodeURIComponent(subSortsParam)}&area=${encodeURIComponent(areasParam)}&sort=${encodeURIComponent(sortedSort)}`;
+      const url = `/search/exhibition?keyword=${keyword}&sub_sort=${subSortsParam}&area=${areasParam}&sort=${sortedSort}`;
     
       window.location.href = url;
     });

@@ -1,7 +1,8 @@
 {% extends 'common/layout.html' %}
 
 {% block style %}
-<script src="{{ url_for('static', filename='search.js') }}" defer></script>
+<script src="{{ url_for('static', filename='search_exhibition.js') }}" defer></script>
+<script src="{{ url_for('static', filename='truncate.js') }}" defer></script>
 {% endblock %}
 
 {% block search %}
@@ -60,6 +61,10 @@
       </div>
     </div>
     {% endfor %}
+  </div>
+  
+  <div class="pagination">
+    {% include 'common/pagenation.html' %}
   </div>
 
 {% endblock %}

@@ -16,6 +16,7 @@ from views.search.search_exhibition import search_exhibition_bp
 from views.search.search_artist import search_artist_bp
 from views.search.search_gallery import search_gallery_bp
 from views.user.user import user_bp
+from views.booking.booking import booking_bp
 
 
 app = Flask(__name__)
@@ -43,6 +44,7 @@ app.register_blueprint(search_exhibition_bp)
 app.register_blueprint(search_artist_bp)
 app.register_blueprint(search_gallery_bp)
 app.register_blueprint(user_bp)
+app.register_blueprint(booking_bp)
 
 if __name__ == "__main__" :
     with app.app_context():

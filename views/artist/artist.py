@@ -26,16 +26,16 @@ def artist(id):
     
 #! [작가디테일 > 진행/예정/종료 전시 상태 (오늘 날짜와 비교)]
     today = datetime.today().date()  #오늘 날짜
-    ongoing_exhibitions = []       #진행중 전시 
-    upcoming_exhibitions = []      #예정중 전시
-    ended_exhibitions = []         #지난 전시
+    ongoing_exhibitions = []         #진행중 전시 
+    upcoming_exhibitions = []        #예정중 전시
+    ended_exhibitions = []           #지난 전시
 
     for exhibition in exhibitions:
-        if exhibition[2] <= today and exhibition[3] >= today:
+        if exhibition.start_date <= today and exhibition.end_date >= today:
             ongoing_exhibitions.append(exhibition)
-        elif exhibition[2] > today:
+        elif exhibition.start_date > today:
             upcoming_exhibitions.append(exhibition)
-        elif exhibition[3] < today:
+        elif exhibition.end_date < today:
             ended_exhibitions.append(exhibition)
 
 
