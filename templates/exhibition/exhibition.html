@@ -3,42 +3,54 @@
 {% block content %}
 <!-- 전시 이름 -->
 <h3>{{exhibition.title}}</h3>
-<style>
-    .exhibition-details {
-        display: flex;
-        align-items: center;
-    }
-
-    .image-container {
-        flex: 0 0 auto;
-        margin-right: 20px;
-        /* 조정 가능한 여백 */
-    }
-
-    .info-container {
-        flex: 1 1 auto;
-    }
-</style>
 
 <!-- 전시 정보 -->
-<div class="exhibition-details">
-    <div class="image-container">
+<div class="exhibition-details row">
+    <div class="image-container col-4 text-center">
         <img src="{{ exhibition.thumbnail_img }}" alt="{{ exhibition.title }}" style="max-height: 300px;">
     </div>
-    <div class="info-container">
-        <ul>
-            <li>기간: {{ exhibition.start_date }} ~ {{ exhibition.end_date }}</li>
+    <div class="info-container col-8">
+        <table class="table">
+            <tr>
+                <th>기간</th>
+                <td colspan="2">{{ exhibition.start_date }} ~ {{ exhibition.end_date }}</td>
+            </tr>
             {% if exhibition.opening_hours %}
-            <li>시간: {{ exhibition.opening_hours }}</li>
+                <tr>
+                    <th>시간</th>
+                    <td colspan="2">{{ exhibition.opening_hours }}</td>
+                </tr>
             {% endif %}
-            <li>장소: {{ exhibition.area }} | {{ exhibition.gallery_name }}</li>
+
+            <tr>
+                <th>장소</th>
+                {% if exhibition.area %}
+                    <td>{{ exhibition.area }}</td>
+                    <td>{{ exhibition.gallery_name }}</td>
+                {% else %}
+                    <td colspan="2">{{ exhibition.gallery_name }}</td>
+                {% endif %}
+            </tr>
+
             {% if exhibition.price %}
-            <li>요금: {{ exhibition.price }}</li>
+                <tr>
+                    <th>요금</th>
+                    <td colspan="2">{{ exhibition.price }}</td>
+                </tr>
             {% endif %}
+
             {% if exhibition.artist_name %}
-            <li>작가: {{ exhibition.artist_name }}</li>
+                <tr>
+                    <th>작가</th>
+                    <td colspan="2">{{ exhibition.artist_name }}</td>
+                </tr>
             {% endif %}
-        </ul>
+        </table>
+        <div class="booking">
+            <form action="{{ url_for('booking.booking_detail', id=id) }}">
+                <input type="submit" value="예매하기">
+            </form>
+        </div>
     </div>
 </div>
 
