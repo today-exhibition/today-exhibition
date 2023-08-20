@@ -1,0 +1,25 @@
+{% extends 'common/layout_side_split.html' %}
+
+{% block side_content %}
+{% include './user/user_side.html' %}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  {% for artist in artist_list %}
+  <div class="col-5">
+    <div class="card" id="{{ artist.id }}">
+      <i class="{% if artist.follows %} fa-solid {% else %} fa-regular {% endif %} fa-bookmark fa-2x"
+        onclick="followArtist(this, '{{ artist.id }}')"></i>
+      <div class="card-body" onclick="window.location='/artist/{{ artist.id }}'">
+        <h5 class="card-title">{{ artist.name }}</h5>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
+
+{% block script %}
+<script src="https://kit.fontawesome.com/840a32f19e.js" crossorigin="anonymous"></script>
+{% endblock %}
