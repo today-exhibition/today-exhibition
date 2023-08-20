@@ -7,6 +7,7 @@ sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from config import DEBUG, SQLALCHEMY_DATABASE_URI, SQLALCHEMY_TRACK_MODIFICATIONS
 from models.model import db
 
+from exhibition_seoul import insert_exhibition_seoul
 from exhibition_kcisa import insert_exhibition_kcisa
 from gallery_molit import insert_gallery_molit
 from user_generator import create_random_user_data, insert_data
@@ -26,6 +27,7 @@ db.init_app(app)
 def main():
     insert_exhibition_kcisa()
     insert_gallery_molit()
+    insert_exhibition_seoul()
     return "success"
 
 @app.route('/user')

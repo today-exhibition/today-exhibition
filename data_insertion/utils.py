@@ -7,11 +7,20 @@ def load_secrets():
         secrets = json.load(secrets_file)
     return secrets
 
-def fetch_api_data(api_url, params):
+def fetch_api_data(api_url, params=""):
     try:
         response = requests.get(api_url, params=params)
         response.raise_for_status()
         return response.text
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching data from the API: {e}")
+        return None
+    
+def fetch_api_data_json(api_url, params=""):
+    try:
+        response = requests.get(api_url, params=params)
+        response.raise_for_status()
+        return response.json()
     except requests.exceptions.RequestException as e:
         print(f"Error fetching data from the API: {e}")
         return None
