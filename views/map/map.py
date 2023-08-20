@@ -72,7 +72,10 @@ def get_exhibition_list(user_id, session, filter_type=None):
 
 @map_bp.route('/map/')
 def map() :
-    user_id = session["user_id"]
+    if "user_id" in session:
+        user_id = session["user_id"]
+    else:
+        user_id = None
     kakao_map_api_key = load_kakao_map_api()
     exhibition_list = get_exhibition_list(user_id, db.session)
     exhibition_list = convert_rowlist_to_json(exhibition_list)
@@ -81,7 +84,10 @@ def map() :
 #! [곧 종료되는 전시 : 2주 이내에 종료되는 전시]
 @map_bp.route('/map/ending_soon')
 def ending_soon():
-    user_id = session["user_id"]
+    if "user_id" in session:
+        user_id = session["user_id"]
+    else:
+        user_id = None
     kakao_map_api_key = load_kakao_map_api()
     exhibition_list = get_exhibition_list(user_id, db.session, 'ending_soon')
     exhibition_list = convert_rowlist_to_json(exhibition_list)
@@ -90,7 +96,10 @@ def ending_soon():
 #! [지금 주목받는 전시 : 최근 1주 하트 많이 찍힌 전시]
 @map_bp.route('/map/featured')
 def featured():
-    user_id = session["user_id"]
+    if "user_id" in session:
+        user_id = session["user_id"]
+    else:
+        user_id = None
     kakao_map_api_key = load_kakao_map_api()
     exhibition_list = get_exhibition_list(user_id, db.session, 'featured')
     exhibition_list = convert_rowlist_to_json(exhibition_list)
@@ -99,7 +108,10 @@ def featured():
 #! [인기순 : 전체 하트순 전시]
 @map_bp.route('/map/popular')
 def popular():
-    user_id = session["user_id"]
+    if "user_id" in session:
+        user_id = session["user_id"]
+    else:
+        user_id = None
     kakao_map_api_key = load_kakao_map_api()
     exhibition_list = get_exhibition_list(user_id, db.session, 'popular')    
     exhibition_list = convert_rowlist_to_json(exhibition_list)
