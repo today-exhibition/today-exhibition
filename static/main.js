@@ -64,10 +64,4 @@ function followGallery(icon, gallery_id) {
       }
     }
   });
-<<<<<<< HEAD
 }
-=======
-}
-
-
->>>>>>> 4a1a1d4dde023cc8a0607a98756ed2ac0f05fa83
