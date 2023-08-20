@@ -1,5 +1,11 @@
 <nav aria-label="Page navigation example">
   <ul class="pagination">
+    <li>
+      <a class="pagebutton" href="?{{ url }}&page=1" aria-label="Previous">
+        <span aria-hidden="true"><<</span>
+      </a>
+    </li>
+    <li>
     {% if total_pages < 6 %}
       {% for num in range(1, total_pages + 1) %}
         <li><a class="pagebutton" href="?{{ url }}&page={{ num }}">{{ num }}</a></li>
@@ -14,12 +20,6 @@
         </a>
       </li>
     {% elif current_page > total_pages-6 %}
-      <li>
-        <a class="pagebutton" href="?{{ url }}&page=1" aria-label="Previous">
-          <span aria-hidden="true"><<</span>
-        </a>
-      </li>
-      <li>
         <a class="pagebutton" href="?{{ url }}&page={{ current_page-5 }}" aria-label="Previous">
           <span aria-hidden="true"><</span>
         </a>
@@ -28,11 +28,6 @@
         <li><a class="pagebutton" href="?{{ url }}&page={{ num }}">{{ num }}</a></li>
       {% endfor %}
     {% else %}
-      <li>
-        <a class="pagebutton" href="?{{ url }}&page=1" aria-label="Previous">
-          <span aria-hidden="true"><<</span>
-        </a>
-      </li>
       <li>
         <a class="pagebutton" href="?{{ url }}&page={{ current_page-5 }}" aria-label="Previous">
           <span aria-hidden="true"><</span>
@@ -46,11 +41,11 @@
           <span aria-hidden="true">></span>
         </a>
       </li>
-      <li>
-        <a class="pagebutton" href="?{{ url }}&page={{ total_pages }}" aria-label="Next">
-          <span aria-hidden="true">>></span>
-        </a>
-      </li>
     {% endif %}
+    <li>
+      <a class="pagebutton" href="?{{ url }}&page={{ total_pages }}" aria-label="Next">
+        <span aria-hidden="true">>></span>
+      </a>
+    </li>
   </ul>
 </nav>
