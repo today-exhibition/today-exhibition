@@ -1,7 +1,7 @@
 import json
 import datetime
 from flask import Blueprint, render_template, session
-from sqlalchemy import func, case
+from sqlalchemy import func, case, and_
 
 from models.model import db, Exhibition, Gallery, GalleryAddress, LikeExhibition
 
@@ -56,7 +56,8 @@ def get_exhibition_list(user_id, session, filter_type=None):
             .outerjoin(liked_subquery, liked_subquery.c.exhibition_id == Exhibition.id)
 
     if filter_type == 'ending_soon':
-        query = query.filter(Exhibition.end_date < datetime.datetime.today() + datetime.timedelta(weeks=2))
+        query = query.filter(and_(Exhibition.end_date < datetime.datetime.today() + datetime.timedelta(weeks=2), datetime.datetime.today() < Exhibition.end_date)) \
+            .order_by(Exhibition.end_date.asc())
     elif filter_type == 'featured':
         query = query.join(LikeExhibition, LikeExhibition.exhibition_id == Exhibition.id) \
             .filter(LikeExhibition.liked_at > datetime.datetime.today() - datetime.timedelta(weeks=1)) \
