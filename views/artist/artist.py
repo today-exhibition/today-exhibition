@@ -1,7 +1,8 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, session
 from sqlalchemy import func
 from datetime import datetime
-from models.model import db, Artist, Exhibition, Gallery, ArtistExhibition
+from models.model import db, Artist, Exhibition, Gallery, ArtistExhibition, FollowingArtist
+import uuid
 
 artist_bp = Blueprint('artist', __name__)
 
@@ -47,4 +48,23 @@ def artist(id):
                             upcoming_count=len(upcoming_exhibitions),                    
                             ended_exhibitions=ended_exhibitions,
                             ended_count=len(ended_exhibitions), id=id)
+
+@artist_bp.route('/artist/<artist_id>/following', methods=['post'])
+def following_exhibition(artist_id):
+    if "user_id" not in session:
+        return "login_required"
+    
+    existing_following_artist = FollowingArtist.query.filter(FollowingArtist.user_id == session["user_id"], FollowingArtist.artist_id == artist_id).first()
+    
+    if existing_following_artist is not None:
+        db.session.delete(existing_following_artist)
+        db.session.commit()
+        return "unfollowed"
+    else:
+        user_id = session["user_id"]
+        followed_at = datetime.now()
+        insertdb = FollowingArtist(id=str(uuid.uuid4()), user_id=user_id, artist_id=artist_id, followed_at=followed_at)
+        db.session.add(insertdb)
+        db.session.commit()
+    return "followed"
                             

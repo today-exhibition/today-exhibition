@@ -70,21 +70,3 @@ def search():
 
     return render_template('search/search.html', exhibition_list=exhibition_list, keyword=keyword, exhibition_count=exhibition_count, gallery_count=gallery_count, gallery_list=gallery_list, user_id=user_id, liked_exhibition_ids=liked_exhibition_ids, followed_gallery_ids=followed_gallery_ids, artist_count=artist_count, artist_list=artist_list, followed_artist_ids=followed_artist_ids)
 
-@search_bp.route('/search/gallery/<gallery_id>/following', methods=['post'])
-def following_exhibition(gallery_id):
-    if "user_id" not in session:
-        return "login_required"
-    
-    existing_following_gallery = FollowingGallery.query.filter(FollowingGallery.user_id == session["user_id"], FollowingGallery.gallery_id == gallery_id).first()
-    
-    if existing_following_gallery is not None:
-        db.session.delete(existing_following_gallery)
-        db.session.commit()
-        return "unfollowed"
-    else:
-        user_id = session["user_id"]
-        followed_at = datetime.now()
-        insertdb = FollowingGallery(id=str(uuid.uuid4()), user_id=user_id, gallery_id=gallery_id, followed_at=followed_at)
-        db.session.add(insertdb)
-        db.session.commit()
-    return "followed"

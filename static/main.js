@@ -20,9 +20,31 @@ function likeExhibition(icon, exhibition_id) {
   });
 }
 
+// 작가 팔로우
+function followArtist(icon, artist_id) {
+  const url = `/artist/${artist_id}/following`;
+
+  $.ajax({
+    type: "POST", 
+    url: url, 
+    data: { artist_id: artist_id }, 
+    success: function (resp) {
+      if (resp === "login_required") {
+        window.location.href = "/user"; 
+      } else if (resp == "followed") {
+        icon.classList.remove("fa-regular");
+        icon.classList.add("fa-solid");
+      } else if (resp === "unfollowed") {
+        icon.classList.remove("fa-solid");
+        icon.classList.add("fa-regular");
+      }
+    }
+  });
+}
+
 // 미술관 팔로우
 function followGallery(icon, gallery_id) {
-  const url = `/search/gallery/${gallery_id}/following`;
+  const url = `/gallery/${gallery_id}/following`;
 
   $.ajax({
     type: "POST", 

@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, session
 from sqlalchemy import func
 from datetime import datetime
 from models.model import db, Artist, Exhibition, Gallery, GalleryAddress, FollowingGallery
+import uuid
 
 gallery_bp = Blueprint('gallery', __name__)
 
@@ -57,3 +58,22 @@ def gallery(id):
                             upcoming_count=len(upcoming_exhibitions),                    
                             ended_exhibitions=ended_exhibitions,
                             ended_count=len(ended_exhibitions), id=id)
+
+@gallery_bp.route('/gallery/<gallery_id>/following', methods=['post'])
+def following_exhibition(gallery_id):
+    if "user_id" not in session:
+        return "login_required"
+    
+    existing_following_gallery = FollowingGallery.query.filter(FollowingGallery.user_id == session["user_id"], FollowingGallery.gallery_id == gallery_id).first()
+    
+    if existing_following_gallery is not None:
+        db.session.delete(existing_following_gallery)
+        db.session.commit()
+        return "unfollowed"
+    else:
+        user_id = session["user_id"]
+        followed_at = datetime.now()
+        insertdb = FollowingGallery(id=str(uuid.uuid4()), user_id=user_id, gallery_id=gallery_id, followed_at=followed_at)
+        db.session.add(insertdb)
+        db.session.commit()
+    return "followed"
