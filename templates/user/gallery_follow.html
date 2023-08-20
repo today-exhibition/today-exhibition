@@ -1,0 +1,25 @@
+{% extends 'common/layout_side_split.html' %}
+
+{% block side_content %}
+{% include './user/user_side.html' %}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  {% for gallery in gallery_list %}
+  <div class="col-5">
+    <div class="card" id="{{ gallery.id }}">
+      <i class="{% if gallery.follows %} fa-solid {% else %} fa-regular {% endif %} fa-bookmark fa-2x"
+        onclick="followGallery(this, '{{ gallery.id }}')"></i>
+      <div class="card-body" onclick="window.location='/gallery/{{ gallery.id }}'">
+        <h5 class="card-title">{{ gallery.name }}</h5>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
+
+{% block script %}
+<script src="https://kit.fontawesome.com/840a32f19e.js" crossorigin="anonymous"></script>
+{% endblock %}
