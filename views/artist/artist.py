@@ -14,6 +14,7 @@ def artist(id):
 
 #! [작가디테일 > 전시 정보 조회(전시명, 미술관명, 전시기간, 전시이미지)]
     exhibitions = db.session.query(
+                Exhibition.id,
                 Exhibition.title, 
                 Gallery.name, 
                 Exhibition.start_date, 
