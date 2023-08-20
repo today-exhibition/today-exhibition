@@ -33,13 +33,13 @@ def insert_seoul_to_db(data_dict):
         gallery_name = gallery_name.replace("(", " ")
         gallery_name = gallery_name.replace(")", " ") 
         gallery = Gallery.query \
-            .filter(or_(*[Gallery.name.like(f'%{name}%') for name in gallery_name])) \
+            .filter(Gallery.name == gallery_name) \
             .all()
         if not gallery:
             new_gallery = Gallery(id=str(uuid.uuid4()), name=gallery_name)
             db.session.add(new_gallery)
         gallery = Gallery.query \
-            .filter(or_(*[Gallery.name.like(f'%{name}%') for name in gallery_name])) \
+            .filter(Gallery.name == gallery_name) \
             .first()
         
         price = None
