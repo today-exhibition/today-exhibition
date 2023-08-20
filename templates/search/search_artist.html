@@ -4,7 +4,9 @@
   <form action="/search/artist" method="get">
     {% include 'common/block_search.html' %}
   </form>
+  {% if keyword %}
   <span class="search_result">"{{ keyword }}" 검색결과 {{ artist_count }}건</span>
+  {% endif %}
     {% set type = "artist" %}
     {% include './common/filter.html' %}
 {% endblock %}

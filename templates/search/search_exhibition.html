@@ -12,7 +12,9 @@
       <button class="btn btn-outline-secondary" type="submit" id="filter-button">검색</button> 
   </div>
   </form>
+  {% if keyword %}
   <span class="search_result">"{{ keyword }}" 검색결과 {{ exhibition_count }}건</span>
+  {% endif %}
   {% set type = "exhibition" %}
   {% include './common/filter.html' %}
 {% endblock %}
