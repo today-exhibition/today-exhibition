@@ -47,11 +47,13 @@
 
     <!-- 전시 소개 -->
     {% if exhibition.description %}
-    <h3>전시소개</h3>
+    <h3 class="fw-bold">전시소개</h3>
     {{ exhibition.description }}
     {% endif %}
 
-    <br>
+    <!-- 간격 추가 -->
+    <div class="mb-5"></div>
+
     <!-- 코멘트 작성 -->
     <h5 class="fw-bold">관람평</h5>
     <div class="input-group mb-3">
@@ -72,35 +74,28 @@
             <li class="list-group-item">
                 <div class="d-flex justify-content-between">
                     <span class="card-title">{{ comment.nickname }} | {{ comment.created_at }}</span>
-                </div>
-                <div class="comment-actions">
-                    {% if "user_id" in session and session["user_id"] == comment.user_id %}
-                    <div class="comment-content" style="display: {% if comment.editing %}none{% endif %};">
-                        <p class="card-text">{{ comment.content }}</p>
-                    </div>
                     <div class="d-flex justify-content-end">
-                        <button class="edit-button btn btn-secondary"
-                            data-comment-id="{{ comment.comment_id }}">수정</button>
+                        <button class="edit-button btn btn-outline text-primary"
+                            data-comment-id="{{ comment.comment_id }}"
+                            onclick="toggleEditForm('{{ comment.comment_id }}')">수정</button>
                         <form class="edit-form" id="edit-form-{{ comment.comment_id }}"
                             style="display: {% if comment.editing %}block{% else %}none{% endif %};"
                             action="{{ url_for('exhibition.edit_comment', id=id, comment_id=comment.comment_id) }}"
                             method="POST">
                             <div class="d-flex">
                                 <textarea name="edited_content" rows="2" cols="50">{{ comment.content }}</textarea>
-                                <button type="submit" class="save-button btn btn-primary">수정 완료</button>
+                                <button type="submit" class="save-button btn btn-outline text-primary">수정 완료</button>
                             </div>
                         </form>
                         <form class="delete-form"
                             action="{{ url_for('exhibition.delete_comment', id=id, comment_id=comment.comment_id) }}"
-                            method="POST" style="display: inline;">
-                            <button type="submit" class="delete-button btn btn-danger">삭제</button>
+                            method="POST">
+                            <button type="submit" class="delete-button btn btn-outline text-danger">삭제</button>
                         </form>
                     </div>
-                    {% else %}
-                    <div class="comment-content">
-                        <p class="card-text" style="display: block;">{{ comment.content }}</p>
-                    </div>
-                    {% endif %}
+                </div>
+                <div class="comment-content">
+                    <p class="card-text">{{ comment.content }}</p>
                 </div>
             </li>
             {% endfor %}
