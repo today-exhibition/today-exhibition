@@ -28,6 +28,6 @@ def search_artist():
     if user_id:
         followed_artist_ids = [follow.artist_id for follow in FollowingArtist.query.filter_by(user_id=user_id).all()]
     
-    total_pages, current_page, page_data = calc_pages(artists, page)
+    total_pages, current_page, page_data, page_list = calc_pages(artists, page)
 
-    return render_template('search/search_artist.html', artists=page_data, keyword=keyword, artist_count=artist_count, user_id=user_id, followed_artist_ids=followed_artist_ids, total_pages=total_pages, current_page=current_page)
+    return render_template('search/search_artist.html', artists=page_data, keyword=keyword, artist_count=artist_count, user_id=user_id, followed_artist_ids=followed_artist_ids, total_pages=total_pages, current_page=current_page, page_list=page_list)
