@@ -7,7 +7,7 @@
 {% block search %}
   <form action="/search" method="get">
     {% include 'common/block_search.html' %}
-    <span class="search_result">"{{ keyword }}" 검색결과 {{ exhibition_count + exhibition_count + gallery_count }}건</span>
+    <span class="search_result">"{{ keyword }}" 검색결과 {{ exhibition_count + artist_count + gallery_count }}건</span>
   </form>
     {% include './common/filter.html' %}
 {% endblock %}
@@ -54,17 +54,25 @@
   <div><a href="{{ url_for('search_exhibition.search_exhibition', keyword=keyword) }}">전시 결과 더보기</a></div>
 
   <hr>
-  <h3>작가({{ exhibition_count }})</h3>
-  <div class="card mb-3" style="max-width: 100%;">
-    {% for exhibition in exhibition_list %}
-    <div class="row artist-row ">
+  <h3>작가({{ artist_count }})</h3>
+  <div class="card mb-3">
+    {% for artist in artist_list %}
+    <div class="row artist-row" id="{{ artist.id }}">
       <div class="col-md-4 artist-col">
-        <i class="fa-regular fa-bookmark fa-2x"></i>
-        <img src="{{ exhibition.thumbnail_img }}" class="img-fluid rounded-start" alt="{{ exhibition.title }}">
+        {% if user_id %}
+          {% if artist.id in followed_artist_ids %}
+            <i class="fa-solid fa-bookmark fa-2x" onclick="followArtist(this, '{{ artist.id }}')"></i>
+          {% else %}
+            <i class="fa-regular fa-bookmark fa-2x" onclick="followArtist(this, '{{ artist.id }}')"></i>
+          {% endif %}
+        {% else %}
+          <i class="fa-regular fa-bookmark fa-2x" onclick="alert('로그인 후 이용 가능한 서비스입니다.')"></i>
+        {% endif %}
+        <img src="{{ artist.thumbnail_img }}" class="img-fluid rounded-start" alt="{{ artist.name }}">
       </div>
       <div class="col-md-8">
         <div class="my-card-body">
-          <h5 class="card-title">{{ exhibition.title }}</h5>
+          <h5 class="card-title">{{ artist.name }}</h5>
         </div>
       </div>
     </div>
@@ -74,10 +82,10 @@
   
   <hr>
   <h3>미술관({{ gallery_count }})</h3>
-  <div class="card mb-3" style="max-width: 100%;">
+  <div class="card mb-3">
     {% for gallery in gallery_list %}
-    <div class="row artist-row">
-      <div class="col-md-4 artist-col" id="{{ gallery.id }}">
+    <div class="row gallery-row" id="{{ gallery.id }}">
+      <div class="col-md-4 gallery-col">
         {% if user_id %}
           {% if gallery.id in followed_gallery_ids %}
             <i class="fa-solid fa-bookmark fa-2x" onclick="followGallery(this, '{{ gallery.id }}')"></i>

@@ -3,15 +3,6 @@
 {% block content %}
 <!-- 미술관 이름 -->
 <h3 class="fw-bold">{{ gallery.name }}</h3>
-{% if option == "user_out" %}
-<i class="fa-regular fa-bookmark fa-2x" onclick="changeGalleryFollow(this, '{{ gallery.id }}')"></i>
-{% else %}
-{% if gallery.gallery_id %}
-<i class="fa-solid fa-bookmark fa-2x" onclick="changeGalleryFollow(this, '{{ gallery.id }}')"></i>
-{% else %}
-<i class="fa-regular fa-bookmark fa-2x" onclick="changeGalleryFollow(this, '{{ gallery.id }}')"></i>
-{% endif %}
-{% endif %}
 
 <!-- 미술관 정보 -->
 <div class="container">

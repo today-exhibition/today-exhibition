@@ -2,16 +2,13 @@ from flask import Blueprint, render_template, session
 from sqlalchemy import func
 from datetime import datetime
 from models.model import db, Artist, Exhibition, Gallery, GalleryAddress, FollowingGallery
+import uuid
 
 gallery_bp = Blueprint('gallery', __name__)
 
 # [미술관디테일 > 미술관 정보 조회(미술관명, 운영시간, 휴관일, 주소, 연락처, 주차장, 홈페이지, 소개)]
 @gallery_bp.route('/gallery/<id>')
 def gallery(id):
-    option = "user_out"
-    if "user_id" in session:
-        option = "user_in"
-
     gallery = db.session.query(
                 Gallery.id,
                 Gallery.name,
@@ -60,4 +57,20 @@ def gallery(id):
                             upcoming_exhibitions=upcoming_exhibitions,
                             upcoming_count=len(upcoming_exhibitions),                    
                             ended_exhibitions=ended_exhibitions,
-                            ended_count=len(ended_exhibitions), id=id, option=option)
+                            ended_count=len(ended_exhibitions), id=id)
+
+@gallery_bp.route('/gallery/<gallery_id>/following', methods=['post'])
+def following_exhibition(gallery_id):
+    existing_following_gallery = FollowingGallery.query.filter(FollowingGallery.user_id == session["user_id"], FollowingGallery.gallery_id == gallery_id).first()
+    
+    if existing_following_gallery is not None:
+        db.session.delete(existing_following_gallery)
+        db.session.commit()
+        return "unfollowed"
+    else:
+        user_id = session["user_id"]
+        followed_at = datetime.now()
+        insertdb = FollowingGallery(id=str(uuid.uuid4()), user_id=user_id, gallery_id=gallery_id, followed_at=followed_at)
+        db.session.add(insertdb)
+        db.session.commit()
+    return "followed"

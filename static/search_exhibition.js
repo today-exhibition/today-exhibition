@@ -20,10 +20,15 @@ document.addEventListener("DOMContentLoaded", function() {
     // top 정렬 버튼 하나 선택 가능
     topSortButtons.forEach(button => {
       button.addEventListener('click', () => {
+        const buttonSelected = button.classList.contains('selected');
+    
         topSortButtons.forEach(btn => {
           btn.classList.remove('selected');
         });
-        button.classList.add('selected');
+    
+        if (!buttonSelected) {
+          button.classList.add('selected');
+        }
       });
     });
   
@@ -48,9 +53,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
       const subSortsParam = selectedSubSorts.join(",");
       const areasParam = selectedAreas.join(",");
-      const sortedSort = selectedSort.join(",");
     
-      const url = `/search/exhibition?keyword=${keyword}&sub_sort=${subSortsParam}&area=${areasParam}&sort=${sortedSort}`;
+      const url = `/search/exhibition?keyword=${keyword}&sub_sort=${subSortsParam}&area=${areasParam}&sort=${selectedSort}`;
     
       window.location.href = url;
     });

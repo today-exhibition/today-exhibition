@@ -1,8 +1,8 @@
 import math
+import datetime
 
-from datetime import datetime, timedelta
 from flask import Blueprint, request, render_template, session
-from sqlalchemy import func
+from sqlalchemy import func, or_, desc
 
 from models.model import Exhibition, Gallery, GalleryAddress, LikeExhibition
 
@@ -19,8 +19,6 @@ def search_exhibition():
     selected_sub_sorts = sub_sorts.split(',') if sub_sorts else []
     selected_areas = areas.split(',') if areas else []
 
-    current_datetime = datetime.now() 
-
     user_id = session.get('user_id', None)
 
     exhibitions_query = Exhibition.query \
@@ -34,14 +32,15 @@ def search_exhibition():
                                     ) \
                                     .filter(Exhibition.title.like('%' + keyword + '%')) \
                                     .join(Gallery, Exhibition.gallery_id == Gallery.id) \
-                                    .join(GalleryAddress, Gallery.id == GalleryAddress.gallery_id, isouter=True) \
-                                    .order_by(Exhibition.start_date)
+                                    .order_by(desc(Exhibition.start_date)) \
     
     if sub_sorts:
-        exhibitions_query = sub_sorts_filter(exhibitions_query, current_datetime, selected_sub_sorts)
+        exhibitions_query = sub_sorts_filter(exhibitions_query, selected_sub_sorts)
     if areas:
         exhibitions_query = areas_filter(exhibitions_query, selected_areas)
-        
+    if sort:
+        exhibitions_query = sort_filter(exhibitions_query, sort)
+   
     exhibitions = exhibitions_query.all()
     
     exhibition_count = len(exhibitions)
@@ -55,6 +54,7 @@ def search_exhibition():
     
     return render_template('search/search_exhibition.html', exhibitions=page_data, keyword=keyword, exhibition_count=exhibition_count, user_id=user_id, liked_exhibition_ids=liked_exhibition_ids, sub_sorts=sub_sorts, areas=areas, sort=sort, total_pages=total_pages, current_page=current_page)
 
+# 페이지 계산
 def calc_pages(data, current_page):
     per_page = 12
     data_length = len(data)
@@ -64,32 +64,42 @@ def calc_pages(data, current_page):
     page_data = data[start_index:end_index]
 
     return total_pages, current_page, page_data
-    
-def sub_sorts_filter(query, current_datetime, selected_sub_sorts=None):
-    if 'ongoing' in selected_sub_sorts or 'ended' in selected_sub_sorts or 'upcoming' in selected_sub_sorts:
-        ongoing_condition = Exhibition.start_date <= current_datetime
-        ended_condition = Exhibition.end_date < current_datetime - timedelta(days=1)
-        upcoming_condition = Exhibition.start_date > current_datetime
-        
-        if 'ongoing' in selected_sub_sorts and 'ended' in selected_sub_sorts and 'upcoming' in selected_sub_sorts:
-            return query.filter(ongoing_condition | ended_condition | upcoming_condition)
-        elif 'ongoing' in selected_sub_sorts and 'ended' in selected_sub_sorts:
-            return query.filter(ongoing_condition | ended_condition)
-        elif 'ongoing' in selected_sub_sorts and 'upcoming' in selected_sub_sorts:
-            return query.filter(ongoing_condition | upcoming_condition)
-        elif 'ended' in selected_sub_sorts and 'upcoming' in selected_sub_sorts:
-            return query.filter(ended_condition | upcoming_condition)
-        elif 'ongoing' in selected_sub_sorts:
-            return query.filter(ongoing_condition)
-        elif 'ended' in selected_sub_sorts:
-            return query.filter(ended_condition)
-        elif 'upcoming' in selected_sub_sorts:
-            return query.filter(upcoming_condition)
-        else:
-            return query
-        
-def areas_filter(query, selected_areas=None):
-    if selected_areas:
-        return query.filter(func.substr(GalleryAddress.area, 1, 2).in_(selected_areas))
+
+# 전시중, 전시종료, 전시예정    
+def sub_sorts_filter(query, selected_sub_sorts):
+    sorts = []
+
+    if 'ongoing' in selected_sub_sorts:
+        sorts.append(Exhibition.start_date <= datetime.datetime.today())
+    if 'ended' in selected_sub_sorts:
+        sorts.append(Exhibition.end_date < datetime.datetime.today() - datetime.timedelta(days=1))
+    if 'upcoming' in selected_sub_sorts:
+        sorts.append(Exhibition.start_date > datetime.datetime.today())
+
+    if sorts:
+        return query.filter(or_(*sorts))
     else:
         return query
+
+# 지역        
+def areas_filter(query, selected_areas):
+    if selected_areas:
+        query = query.join(GalleryAddress, Gallery.id == GalleryAddress.gallery_id, isouter=True) \
+                    .filter(func.substr(GalleryAddress.area, 1, 2).in_(selected_areas))
+    return query
+    
+# 인기순(전체 하트순), 지금 주목받는 전시(일주일 동안 하트순), 추천 전시(큐레이팅 전시)
+def sort_filter(query, selected_sort):
+    if selected_sort == 'popularity':
+        query = query.join(LikeExhibition, LikeExhibition.exhibition_id == Exhibition.id) \
+                    .group_by(LikeExhibition.exhibition_id) \
+                    .order_by(func.count('*').desc()) 
+    if selected_sort == 'featured':
+        query = query.join(LikeExhibition, LikeExhibition.exhibition_id == Exhibition.id) \
+                    .filter(LikeExhibition.liked_at > datetime.datetime.today() - datetime.timedelta(weeks=1)) \
+                    .group_by(LikeExhibition.exhibition_id) \
+                    .order_by(func.count('*').desc())
+    if selected_sort == 'recommended':
+        query = query.order_by(func.random())
+
+    return query
