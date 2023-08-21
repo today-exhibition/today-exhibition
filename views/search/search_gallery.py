@@ -1,6 +1,6 @@
 from flask import Blueprint, request, render_template, session
 
-from models.model import Gallery, FollowingGallery
+from models.model import db, Gallery, FollowingGallery
 from views.search.search_exhibition import calc_pages
 
 search_gallery_bp = Blueprint('search_gallery', __name__)
@@ -12,15 +12,14 @@ def search_gallery():
 
     user_id = session.get('user_id', None)
 
-    gallerys = Gallery.query \
-                .with_entities(
-                Gallery.id,
-                Gallery.name,
-                Gallery.thumbnail_img,
-                ) \
-                .filter(Gallery.name.like('%' + keyword + '%')) \
-                .order_by(Gallery.id) \
-                .all()
+    gallerys = db.session.query(
+        Gallery.id,
+        Gallery.name,
+        Gallery.thumbnail_img,
+        ) \
+        .filter(Gallery.name.like('%' + keyword + '%')) \
+        .order_by(Gallery.id) \
+        .all()
     
     gallery_count = len(gallerys)
 

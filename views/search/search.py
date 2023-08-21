@@ -1,6 +1,3 @@
-from datetime import datetime
-import uuid
-
 from flask import Blueprint, request, render_template, session
 from sqlalchemy import desc
 
@@ -14,40 +11,37 @@ def search():
 
     user_id = session.get('user_id', None)
 
-    exhibitions = Exhibition.query \
-                        .with_entities(
-                            Exhibition.id,
-                            Exhibition.title,
-                            Exhibition.start_date,
-                            Exhibition.end_date,
-                            Gallery.name,
-                            Exhibition.thumbnail_img
-                        ) \
-                        .filter(Exhibition.title.like('%' + keyword + '%')) \
-                        .join(Gallery, Exhibition.gallery_id == Gallery.id) \
-                        .join(GalleryAddress, Gallery.id == GalleryAddress.gallery_id, isouter=True) \
-                        .order_by(desc(Exhibition.start_date)) \
-                        .all()
+    exhibitions = db.session.query(
+        Exhibition.id,
+        Exhibition.title,
+        Exhibition.start_date,
+        Exhibition.end_date,
+        Gallery.name,
+        Exhibition.thumbnail_img
+        ) \
+        .filter(Exhibition.title.like('%' + keyword + '%')) \
+        .join(Gallery, Exhibition.gallery_id == Gallery.id) \
+        .join(GalleryAddress, Gallery.id == GalleryAddress.gallery_id, isouter=True) \
+        .order_by(desc(Exhibition.start_date)) \
+        .all()
     
-    artists = Artist.query \
-                .with_entities(
-                    Artist.id,
-                    Artist.name,
-                    Artist.thumbnail_img
-                ) \
-                .filter(Artist.name.like('%' + keyword + '%')) \
-                .order_by(Artist.id) \
-                .all()
+    artists = db.session.query(
+        Artist.id,
+        Artist.name,
+        Artist.thumbnail_img
+        ) \
+        .filter(Artist.name.like('%' + keyword + '%')) \
+        .order_by(Artist.id) \
+        .all()
            
-    gallerys = Gallery.query \
-                .with_entities(
-                Gallery.id,
-                Gallery.name,
-                Gallery.thumbnail_img,
-                ) \
-                .filter(Gallery.name.like('%' + keyword + '%')) \
-                .order_by(Gallery.id) \
-                .all()
+    gallerys = db.session.query(
+        Gallery.id,
+        Gallery.name,
+        Gallery.thumbnail_img,
+        ) \
+        .filter(Gallery.name.like('%' + keyword + '%')) \
+        .order_by(Gallery.id) \
+        .all()
 
     exhibition_count = len(exhibitions)
     exhibition_list = exhibitions[:3]
