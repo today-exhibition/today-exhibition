@@ -7,13 +7,15 @@
 {% block content %}
 <div class="row">
   {% for gallery in gallery_list %}
-  <div class="col-5">
-    <div class="card" id="{{ gallery.id }}">
-      <i class="{% if gallery.follows %} fa-solid {% else %} fa-regular {% endif %} fa-bookmark fa-2x"
-        onclick="followGallery(this, '{{ gallery.id }}')"></i>
-      <div class="card-body" onclick="window.location='/gallery/{{ gallery.id }}'">
-        <h5 class="card-title">{{ gallery.name }}</h5>
+  <div class="col-6 col-sm-4 col-lg-3">
+    <div class="gallery-card">
+      <div class="img-container">
+        <img id="profile_image" src="{{ url_for('static', filename='/img/icon/gallery_default2.svg') }}" alt="미술관 이미지"
+          width="100%" />
       </div>
+      <i class="{% if gallery.follows %} fa-solid {% else %} fa-regular {% endif %} fa-bookmark fa-2x follow-gallery"
+        onclick="followGallery(this, '{{ gallery.id }}')"></i>
+      <a href="/gallery/{{ gallery.id }}">{{ gallery.name }}</a>
     </div>
   </div>
   {% endfor %}
