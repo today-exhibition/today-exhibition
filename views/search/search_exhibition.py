@@ -45,14 +45,14 @@ def search_exhibition():
     
     exhibition_count = len(exhibitions)
 
-    total_pages, current_page, page_data = calc_pages(exhibitions, page)
+    total_pages, current_page, page_data, page_list = calc_pages(exhibitions, page)
 
     # 사용자가 좋아요한 id 목록
     liked_exhibition_ids = []  
     if user_id:
         liked_exhibition_ids = [like.exhibition_id for like in LikeExhibition.query.filter_by(user_id=user_id).all()]
     
-    return render_template('search/search_exhibition.html', exhibitions=page_data, keyword=keyword, exhibition_count=exhibition_count, user_id=user_id, liked_exhibition_ids=liked_exhibition_ids, sub_sorts=sub_sorts, areas=areas, sort=sort, total_pages=total_pages, current_page=current_page)
+    return render_template('search/search_exhibition.html', exhibitions=page_data, keyword=keyword, exhibition_count=exhibition_count, user_id=user_id, liked_exhibition_ids=liked_exhibition_ids, sub_sorts=sub_sorts, areas=areas, sort=sort, total_pages=total_pages, current_page=current_page, page_list=page_list)
 
 # 페이지 계산
 def calc_pages(data, current_page):
@@ -62,8 +62,18 @@ def calc_pages(data, current_page):
     start_index = per_page * (current_page -1)
     end_index = start_index + per_page
     page_data = data[start_index:end_index]
+    page_list = calc_page_list(current_page, total_pages)
 
-    return total_pages, current_page, page_data
+    return total_pages, current_page, page_data, page_list
+
+def calc_page_list(current_page, total_page):
+    if current_page <= 2:
+        page_list = [_ for _ in range(1, min(total_page+1, 6))]
+    elif current_page == total_page or current_page == total_page - 1:
+        page_list = [_ for _ in range(max(1, total_page-4), total_page+1)]
+    else:
+        page_list = [_ for _ in range(current_page-2, current_page+2+1)]
+    return page_list
 
 # 전시중, 전시종료, 전시예정    
 def sub_sorts_filter(query, selected_sub_sorts):

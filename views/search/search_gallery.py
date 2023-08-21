@@ -28,6 +28,6 @@ def search_gallery():
     if user_id:
         followed_gallery_ids = [follow.gallery_id for follow in FollowingGallery.query.filter_by(user_id=user_id).all()]
 
-    total_pages, current_page, page_data = calc_pages(gallerys, page)
+    total_pages, current_page, page_data, page_list = calc_pages(gallerys, page)
 
-    return render_template('search/search_gallery.html', gallerys=page_data, keyword=keyword, gallery_count=gallery_count, user_id=user_id, followed_gallery_ids=followed_gallery_ids, total_pages=total_pages, current_page=current_page)
+    return render_template('search/search_gallery.html', gallerys=page_data, keyword=keyword, gallery_count=gallery_count, user_id=user_id, followed_gallery_ids=followed_gallery_ids, total_pages=total_pages, current_page=current_page, page_list=page_list)
