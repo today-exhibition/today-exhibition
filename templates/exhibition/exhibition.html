@@ -2,13 +2,13 @@
 
 {% block content %}
 <!-- 전시 이름 -->
-<h3 class="fw-bold">{{ exhibition.title }}</h3>
+<h3 class="fw-bold">{{ exhibition.title|safe  }}</h3>
 
 <!-- 전시 정보 -->
 <div class="container">
     <div class="row">
         <div class="col-md-6 d-flex justify-content-center align-items-center">
-            <img src="{{ exhibition.thumbnail_img }}" alt="{{ exhibition.title }}" class="img-fluid"
+            <img src="{{ exhibition.thumbnail_img }}" alt="{{ exhibition.title|safe }}" class="img-fluid"
                 style="max-height: 400px;">
         </div>
         <div class="col-md-6">
@@ -48,7 +48,7 @@
     <!-- 전시 소개 -->
     {% if exhibition.description %}
     <h3 class="fw-bold">전시소개</h3>
-    {{ exhibition.description }}
+    {{ exhibition.description|safe }}
     {% endif %}
 
     <!-- 간격 추가 -->

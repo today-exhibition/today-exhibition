@@ -44,7 +44,7 @@
                     {% endif %}
                         <img class="carousel-image" src="{{ url_for('static', filename=image_url[loop.index-1]) }}"/>
                         <div class="carousel-caption">
-                            <h1>{{ exhibition.title }}</h1>
+                            <h1>{{ exhibition.title|safe }}</h1>
                             <p>{{ exhibition.start_date }} ~ {{ exhibition.end_date }}</p>
                             <p>{{ exhibition.gallery_name }}</p>
                             {% if loop.index-1 == 0 %}
