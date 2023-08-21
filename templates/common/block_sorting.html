@@ -1,0 +1,27 @@
+<div style="display: flex; justify-content: center;">
+  <div id="moreCategories">
+      <div style="display: flex; justify-content: center;">
+      <button class="btn btn-outline-secondary btn-type {% if sub_sorts and 'ongoing' in sub_sorts %}selected{% endif %}" sub-sort="ongoing">전시중</button>
+      <button class="btn btn-outline-secondary btn-type {% if sub_sorts and 'ended' in sub_sorts %}selected{% endif %}" sub-sort="ended">전시종료</button>
+      <button class="btn btn-outline-secondary btn-type {% if sub_sorts and 'upcoming' in sub_sorts %}selected{% endif %}" sub-sort="upcoming">전시예정</button>
+      </div>
+
+      <div style="display: flex; justify-content: center;">
+          <button class="btn btn-outline-secondary btn-area {% if areas and '서울' in areas %}selected{% endif %}" sub-sort="서울">서울</button>
+          <button class="btn btn-outline-secondary btn-area {% if areas and '경기' in areas %}selected{% endif %}" sub-sort="경기">경기</button>
+          <button class="btn btn-outline-secondary btn-area {% if areas and '강원' in areas %}selected{% endif %}" sub-sort="강원">강원</button>
+          <button class="btn btn-outline-secondary btn-area {% if areas and '대전' in areas %}selected{% endif %}" sub-sort="대전">대전</button>
+          <button class="btn btn-outline-secondary btn-area {% if areas and '광주' in areas %}selected{% endif %}" sub-sort="광주">광주</button>
+          <button class="btn btn-outline-secondary btn-area {% if areas and '부산' in areas %}selected{% endif %}" sub-sort="부산">부산</button>
+          <button class="btn btn-outline-secondary btn-area {% if areas and '대구' in areas %}selected{% endif %}" sub-sort="대구">대구</button>
+          <button class="btn btn-outline-secondary btn-area {% if areas and '제주' in areas %}selected{% endif %}" sub-sort="제주">제주</button>
+      </div>
+  </div>
+</div>
+
+<hr style="width: 450px; margin: 10px auto;">
+<div style="display: flex; justify-content: center;">
+  <button class="btn btn-outline-primary btn-top {% if sort and 'popularity' in sort %}selected{% endif %}" sub-sort="popularity">인기순</button>
+  <button class="btn btn-outline-primary btn-top {% if sort and 'featured' in sort %}selected{% endif %}" sub-sort="featured">지금 주목 받는 전시</button>
+  <button class="btn btn-outline-primary btn-top {% if sort and 'recommended' in sort %}selected{% endif %}" sub-sort="recommended">추천 전시</button>
+</div>

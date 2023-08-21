@@ -1,0 +1,27 @@
+{% extends 'common/layout_side_split.html' %}
+
+{% block side_content %}
+{% include './user/user_side.html' %}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  {% for artist in artist_list %}
+  <div class="col-6 col-sm-4 col-lg-3">
+    <div class="gallery-card">
+      <div class="img-container">
+        <img id="profile_image" src="{{ url_for('static', filename='/img/icon/artist_default.svg') }}" alt="작가 이미지"
+          width="100%" />
+      </div>
+      <i class="{% if artist.follows %} fa-solid {% else %} fa-regular {% endif %} fa-bookmark fa-2x follow-gallery"
+        onclick="followArtist(this, '{{ artist.id }}')"></i>
+      <a href="/artist/{{ artist.id }}">{{ artist.name }}</a>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
+
+{% block script %}
+<script src="https://kit.fontawesome.com/840a32f19e.js" crossorigin="anonymous"></script>
+{% endblock %}

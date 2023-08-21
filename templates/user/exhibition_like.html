@@ -1,0 +1,38 @@
+{% extends 'common/layout_side_split.html' %}
+
+{% block side_content %}
+{% include './user/user_side.html' %}
+{% endblock %}
+
+{% block content %}
+<div class="row row-cols-1 row-cols-md-4 g-5">
+  {% for exhibition in exhibition_list %}
+  <div class="col">
+    <div class="card" id="{{ exhibition.id }}">
+      <i class="{% if exhibition.likes %} fa-solid {% else %} fa-regular{% endif %} fa-heart fa-2x"
+        onclick="likeExhibition(this, '{{ exhibition.id }}')"></i>
+      <img src="{{ exhibition.thumbnail_img }}" class="card-img-top" alt="{{ exhibition.title|safe }}" />
+      <div class="card-body" onclick="window.location='/exhibition/{{ exhibition.id }}'">
+        <h5 class="card-title">{{ exhibition.title|safe }}</h5>
+        <ul>
+          <li>
+            <strong>기간:</strong>
+            <p class="card-text gallery-date">
+              {{ exhibition.start_date }} ~ {{ exhibition.end_date }}
+            </p>
+          </li>
+          <li>
+            <strong>장소:</strong>
+            <p class="card-text gallery-place">{{ exhibition.name }}</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
+
+{% block script %}
+<script src="https://kit.fontawesome.com/840a32f19e.js" crossorigin="anonymous"></script>
+{% endblock %}

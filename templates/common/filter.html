@@ -1,0 +1,11 @@
+<div style="display: flex; justify-content: center;">
+    <a href="{{ url_for('search_exhibition.search_exhibition', keyword=keyword) }}" name="exhibition" class="btn btn-outline-secondary {% if type == 'exhibition' %}selected{% endif %}">
+        전시
+    </a>
+    <a href="{{ url_for('search_artist.search_artist', keyword=keyword) }}" name="artist" class="btn btn-outline-secondary {% if type == 'artist' %}selected{% endif %}">
+        작가
+    </a>
+    <a href="{{ url_for('search_gallery.search_gallery', keyword=keyword) }}" name="gallery" class="btn btn-outline-secondary {% if type == 'gallery' %}selected{% endif %}">
+        미술관
+    </a>
+</div>

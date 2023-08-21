@@ -1,0 +1,11 @@
+.pagination .active {
+    font-weight: bold;
+}
+
+.pagination {
+    --bs-pagination-font-size: 12px;
+    --bs-pagination-border-width: None;
+    --bs-pagination-active-color: #152432;
+    --bs-pagination-active-bg: None;
+    --bs-pagination-disabled-color: #152432;
+}

@@ -1,0 +1,47 @@
+{% extends 'common/layout.html' %}
+
+{% block search %}
+  <form action="/search/gallery" method="get">
+    {% include 'common/block_search.html' %}
+  </form>
+  {% if keyword %}
+  <span class="search_result">"{{ keyword }}" 검색결과 {{ gallery_count }}건</span>
+  {% endif %}
+  {% set type = "gallery" %}
+  {% include './common/filter.html' %}
+{% endblock %}
+
+{% block content %}
+
+  <h3>미술관({{ gallery_count }})</h3>
+  <div class="card mb-3">
+    {% for gallery in gallerys %}
+    <div class="row gallery-row" id="{{ gallery.id }}">
+      <div class="col-md-4 gallery-col">
+        {% if user_id %}
+          {% if gallery.id in followed_gallery_ids %}
+            <i class="fa-solid fa-bookmark fa-2x" onclick="followGallery(this, '{{ gallery.id }}')"></i>
+          {% else %}
+            <i class="fa-regular fa-bookmark fa-2x" onclick="followGallery(this, '{{ gallery.id }}')"></i>
+          {% endif %}
+        {% else %}
+          <i class="fa-regular fa-bookmark fa-2x" onclick="alert('로그인 후 이용 가능한 서비스입니다.')"></i>
+        {% endif %}
+        <img src="{{ gallery.thumbnail_img }}" class="img-fluid rounded-start" alt="{{ gallery.name }}">
+      </div>
+      <div class="col-md-8">
+        <div class="my-card-body" onclick="window.location='/gallery/{{ gallery.id }}'">
+          <h5 class="card-title">{{ gallery.name }}</h5>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="pagination">
+    {% set url = "" %}
+    {% if keyword %}{% set url = url + "&keyword=" + keyword %}{% endif %}
+    {% include 'common/pagenation.html' %}
+  </div>
+
+{% endblock %}

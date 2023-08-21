@@ -1,0 +1,148 @@
+{% extends 'common/layout.html' %}
+
+{% block content %}
+<!-- 미술관 이름 -->
+<h3 class="fw-bold">{{ gallery.name }}</h3>
+
+<!-- 미술관 정보 -->
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <img src="{{ url_for('static', filename='/img/icon/gallery_default2.svg') }}" alt="{{gallery.name}}" class="img-fluid" style="width: 250px;">
+        </div>
+        <div class="col-md-6">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th class="col-md-3">운영시간</th>
+                        <td>{{ gallery.opening_hours or '-' }}</td>
+                    </tr>
+                    <tr>
+                        <th class="col-md-3">휴관일</th>
+                        <td>{{ gallery.holiday_info or '-' }}</td>
+                    </tr>
+                    <tr>
+                        <th class="col-md-3">주소</th>
+                        <td>{{ gallery.address or '-' }}</td>
+                    </tr>
+                    <tr>
+                        <th class="col-md-3">연락처</th>
+                        <td>{{ gallery.contact or '-' }}</td>
+                    </tr>
+                    <tr>
+                        <th class="col-md-3">주차장</th>
+                        <td>{{ gallery.parking_yn or '-' }}</td>
+                    </tr>
+                    <tr>
+                        <th class="col-md-3">홈페이지</th>
+                        <td>
+                            {% if gallery.homepage_url %}
+                            <a href="{{ gallery.homepage_url }}" target="_blank">바로가기</a>
+                            {% else %}
+                            {{ '-' }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<!-- 미술관 소개 -->
+{% if gallery.description %}
+<h3 class="fw-bold">{{ gallery.name }} 소개</h3>
+<div class="detail_description">{{ gallery.description|safe }}</div>
+{% endif %}
+
+<!-- 전시 정보 -->
+<div class="container mb-5">
+    <h3 class="fw-bold">{{ gallery.name }} 전시회 정보</h3>
+    <h5 class="fw-bold">진행중 전시회 ({{ ongoing_count }})</h5>
+    {% if ongoing_exhibitions %}
+    <div class="row row-cols-2 row-cols-md-2 row-cols-lg-3 g-5">
+        {% for exhibition in ongoing_exhibitions %}
+        <div class="col">
+            <div class="card" onclick="window.location='/exhibition/{{ exhibition.id }}'">
+                <img src="{{ exhibition.thumbnail_img }}" class="card-img-top" alt="{{ exhibition.title|safe }}">
+                <div class="card-body" onclick="window.location='/exhibition/{{ exhibition.id }}'">
+                    <h5 class="card-title text-truncate">{{ exhibition.title|safe }}</h5>
+                    <ul>
+                        <li><strong>기간:</strong>
+                            <p class="card-text gallery-date">{{ exhibition.start_date }} ~ {{ exhibition.end_date }}
+                            </p>
+                        </li>
+                        <li><strong>장소:</strong>
+                            <p class="card-text gallery-place">{{ exhibition.name }}</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>진행중인 전시회가 없습니다.</p>
+    {% endif %}
+</div>
+
+<div class="container mb-5">
+    <h5 class="fw-bold">예정중 전시회 ({{ upcoming_count }})</h5>
+    {% if upcoming_exhibitions %}
+    <div class="row row-cols-1 row-cols-md-3 g-5">
+        {% for exhibition in upcoming_exhibitions %}
+        <div class="col">
+            <div class="card" onclick="window.location='/exhibition/{{ exhibition.id }}'">
+                <img src="{{ exhibition.thumbnail_img }}" class="card-img-top" alt="{{ exhibition.title|safe }}">
+                <div class="card-body" onclick="window.location='/exhibition/{{ exhibition.id }}'">
+                    <h5 class="card-title text-truncate">{{ exhibition.title|safe }}</h5>
+                    <ul>
+                        <li><strong>기간:</strong>
+                            <p class="card-text gallery-date">{{ exhibition.start_date }} ~ {{ exhibition.end_date }}
+                            </p>
+                        </li>
+                        <li><strong>장소:</strong>
+                            <p class="card-text gallery-place">{{ exhibition.name }}</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>예정중인 전시회가 없습니다.</p>
+    {% endif %}
+</div>
+
+<div class="container mb-5">
+    <h5 class="fw-bold">지난 전시회 ({{ ended_count }})</h5>
+    {% if ended_exhibitions %}
+    <div class="row row-cols-1 row-cols-md-3 g-5">
+        {% for exhibition in ended_exhibitions %}
+        <div class="col">
+            <div class="card" onclick="window.location='/exhibition/{{ exhibition.id }}'">
+                <img src="{{ exhibition.thumbnail_img }}" class="card-img-top" alt="{{ exhibition.title }}">
+                <div class="card-body" onclick="window.location='/exhibition/{{ exhibition.id }}'">
+                    <h5 class="card-title text-truncate">{{ exhibition.title|safe }}</h5>
+                    <ul>
+                        <li><strong>기간:</strong>
+                            <p class="card-text gallery-date">{{ exhibition.start_date }} ~ {{ exhibition.end_date }}
+                            </p>
+                        </li>
+                        <li><strong>장소:</strong>
+                            <p class="card-text gallery-place">{{ exhibition.name }}</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>지난 전시회가 없습니다.</p>
+    {% endif %}
+</div>
+
+{% endblock %}
