@@ -70,7 +70,7 @@
         {% else %}
           <i class="fa-regular fa-bookmark fa-2x" onclick="alert('로그인 후 이용 가능한 서비스입니다.')"></i>
         {% endif %}
-        <img src="{{ artist.thumbnail_img }}" class="img-fluid rounded-start" alt="{{ artist.name }}">
+        <img src="{{ url_for('static', filename='/img/icon/artist_default.svg') }}" class="img-fluid rounded-start" alt="{{ artist.name }}">
       </div>
       <div class="col-md-8">
         <div class="my-card-body" onclick="window.location='/artist/{{ artist.id }}'">
@@ -97,7 +97,7 @@
         {% else %}
           <i class="fa-regular fa-bookmark fa-2x" onclick="alert('로그인 후 이용 가능한 서비스입니다.')"></i>
         {% endif %}
-        <img src="{{ gallery.thumbnail_img }}" class="img-fluid rounded-start" alt="{{ gallery.name }}">
+        <img src="{{ url_for('static', filename='/img/icon/gallery_default2.svg') }}" class="img-fluid rounded-start" alt="{{ gallery.name }}" style="width: 150px;">
       </div>
       <div class="col-md-8">
         <div class="my-card-body" onclick="window.location='/gallery/{{ gallery.id }}'">
