@@ -9,12 +9,22 @@ exhibition_bp = Blueprint('exhibition', __name__)
 #! [전시디테일]
 @exhibition_bp.route('/exhibition/<id>')
 def exhibition(id):
+    artists = db.session.query(
+    Artist.id,
+    Artist.name)\
+    .join(ArtistExhibition, ArtistExhibition.artist_id == Artist.id)\
+    .join(Exhibition, Exhibition.id == ArtistExhibition.exhibition_id)\
+    .filter(Exhibition.id == id)\
+    .all()
+
 #! [전시디테일 > 전시 정보 조회(전시명, 기간, 시간, 지역, 장소, 요금, 소개, 포스터)]
-    exhibition = db.session.query(Exhibition.title,
+    exhibition = db.session.query(
+        Exhibition.title,
         Exhibition.start_date,
         Exhibition.end_date,
         Gallery.opening_hours,
         GalleryAddress.area,
+        Gallery.id.label("gallery_id"),
         Gallery.name.label("gallery_name"),
         Exhibition.price,
         Artist.name.label("artist_name"),
@@ -24,7 +34,8 @@ def exhibition(id):
         .join(GalleryAddress, Gallery.id == GalleryAddress.gallery_id, isouter = True)\
         .join(ArtistExhibition, ArtistExhibition.exhibition_id == Exhibition.id, isouter = True)\
         .join(Artist, Artist.id == ArtistExhibition.artist_id, isouter = True)\
-        .filter(Exhibition.id == id).first()
+        .filter(Exhibition.id == id) \
+        .first()
 
 #! [전시디테일 > 전시 코멘트 조회(닉네임, 작성일, 내용)]
     comments = db.session.query(
@@ -35,9 +46,10 @@ def exhibition(id):
         Comment.user_id)\
         .join(User, Comment.user_id == User.id)\
         .join(Exhibition, Comment.exhibition_id == Exhibition.id)\
-        .filter(Exhibition.id == id).all()
+        .filter(Exhibition.id == id)\
+        .all()
 
-    return render_template('exhibition/exhibition.html', exhibition=exhibition, comments=comments, id=id)
+    return render_template('exhibition/exhibition.html', artists=artists, exhibition=exhibition, comments=comments, id=id)
 
 #! [전시디테일 > 전시 코멘트 작성(UUID, 닉네임, 작성일, 내용)]
 @exhibition_bp.route('/exhibition/<id>/add_comment', methods=['POST'])

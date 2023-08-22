@@ -24,7 +24,12 @@
             </tr>
             <tr>
               <th class="col-md-3">장소</th>
-              <td>{{ exhibition.area or '-' }} | {{ exhibition.gallery_name or '-' }}</td>
+              <td>
+                {% if exhibition.area %}
+                  {{ exhibition.area }} |
+                {% endif %}
+                <a href="/gallery/{{exhibition.gallery_id}}">{{ exhibition.gallery_name or '-' }}</a>
+              </td>
             </tr>
             <tr>
               <th class="col-md-3">요금</th>
@@ -32,7 +37,14 @@
             </tr>
             <tr>
               <th class="col-md-3">작가</th>
-              <td>{{ exhibition.artist_name or '-' }}</td>
+              <td>
+                {% for artist in artists %}
+                  <a href="/artist/{{artist.id}}">{{ artist.name or '-' }}</a>
+                  {% if not loop.last %}
+                    , 
+                  {% endif %}
+                {% endfor %}
+              </td>
             </tr>
           </tbody>
         </table>
@@ -44,7 +56,6 @@
       </div>
     </div>
   </div>
-
 
     <!-- 전시 소개 -->
     {% if exhibition.description %}
