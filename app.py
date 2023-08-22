@@ -2,7 +2,7 @@ import os
 from flask import Flask
 from flask_session import Session
 
-from config import DEBUG, SQLALCHEMY_DATABASE_URI, SQLALCHEMY_TRACK_MODIFICATIONS, SECRET_KEY
+from config import DEBUG, SQLALCHEMY_DATABASE_URI, SQLALCHEMY_TRACK_MODIFICATIONS, SECRET_KEY, PORT
 from models.model import db
 
 from views.main.main import main_bp
@@ -54,4 +54,4 @@ app.register_blueprint(booking_bp)
 if __name__ == "__main__" :
     with app.app_context():
         db.create_all()
-    app.run(port=8000)
+    app.run(port=PORT)

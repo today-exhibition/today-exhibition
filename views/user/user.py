@@ -1,10 +1,11 @@
+from config import NAVER_CALLBACK_URL, KAKAO_CALLBACK_URL
+
 from flask import Blueprint, render_template, redirect, url_for, session, request, Response
 from utils import load_secrets
 
 import requests, datetime
 
 from models.model import db, User, LoginType
-
 
 
 user_bp = Blueprint('user', __name__)
@@ -51,14 +52,12 @@ def login():
     
     if "naver_login" in request.form:
         NAVER_CLIENT_ID = social_keys["naver_client_id"]
-        callback_url = "http://127.0.0.1:8000/login/callback/naver"
-        url = f"https://nid.naver.com/oauth2.0/authorize?client_id={NAVER_CLIENT_ID}&response_type=code&redirect_uri={callback_url}"
-        return redirect(url)
+        redirect_request_url = f"https://nid.naver.com/oauth2.0/authorize?client_id={NAVER_CLIENT_ID}&response_type=code&redirect_uri={NAVER_CALLBACK_URL}"
+        return redirect(redirect_request_url)
     elif "kakao_login" in request.form:
         KAKAO_CLIENT_ID = social_keys["kakao_client_id"]
-        callback_url = "http://127.0.0.1:8000/login/callback/kakao"
-        url = f"https://kauth.kakao.com/oauth/authorize?response_type=code&client_id={KAKAO_CLIENT_ID}&redirect_uri={callback_url}"
-        return redirect(url)
+        redirect_request_url = f"https://kauth.kakao.com/oauth/authorize?response_type=code&client_id={KAKAO_CLIENT_ID}&redirect_uri={KAKAO_CALLBACK_URL}"
+        return redirect(redirect_request_url)
     return Response("Bad Request", status=400)
 
 @user_bp.route('/login/callback/naver')
@@ -69,11 +68,12 @@ def naver_callback():
         
         NAVER_CLIENT_ID = social_keys["naver_client_id"]
         NAVER_CLIENT_SECRET = social_keys["naver_client_secret"]
+        request_auth_url = f"https://nid.naver.com/oauth2.0/token?client_id={NAVER_CLIENT_ID}&client_secret={NAVER_CLIENT_SECRET}&grant_type=authorization_code&code={code}"
         
         params = request.args.to_dict()
         code = params.get("code")
         
-        token_request = requests.get(f"https://nid.naver.com/oauth2.0/token?client_id={NAVER_CLIENT_ID}&client_secret={NAVER_CLIENT_SECRET}&grant_type=authorization_code&code={code}")
+        token_request = requests.get(request_auth_url)
         token_json = token_request.json()
         
         ACCESS_TOKEN = token_json.get("access_token", None)
@@ -94,12 +94,12 @@ def kakao_callback():
     
     KAKAO_CLIENT_ID = social_keys["kakao_client_id"]
     KAKAO_CLIENT_SECRET = social_keys["kakao_client_id"]
+    request_auth_url = f"https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id={KAKAO_CLIENT_ID}&client_secret={KAKAO_CLIENT_SECRET}&redirect_uri={KAKAO_CALLBACK_URL}&code={code}"
     
     params = request.args.to_dict()
     code = params.get("code")
     
-    callback_url = "http://127.0.0.1:8000/login/callback/kakao"
-    token_request = requests.get(f"https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id={KAKAO_CLIENT_ID}&client_secret={KAKAO_CLIENT_SECRET}&redirect_uri={callback_url}&code={code}")
+    token_request = requests.get(request_auth_url)
     token_json = token_request.json()
     
     ACCESS_TOKEN = token_json.get("access_token", None)
