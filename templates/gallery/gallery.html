@@ -60,7 +60,7 @@
   <!-- 진행중 전시 -->
   <div class="container mb-5">
     <h3 class="fw-bold">{{ gallery.name }} 전시회 정보</h3>
-    <h5 class="fw-bold">진행중 전시회 ({{ ongoing_count }})</h5>
+    <h5 class="fw-bold">진행중 전시회 ({{ ongoing_exhibitions|length }})</h5>
     {% if ongoing_exhibitions %}
       <div class="row row-cols-2 row-cols-md-2 row-cols-lg-3 g-5">
         {% for exhibition in ongoing_exhibitions %}
@@ -90,7 +90,7 @@
 
   <!-- 예정중 전시 -->
   <div class="container mb-5">
-    <h5 class="fw-bold">예정중 전시회 ({{ upcoming_count }})</h5>
+    <h5 class="fw-bold">예정중 전시회 ({{ upcoming_exhibitions|length }})</h5>
     {% if upcoming_exhibitions %}
       <div class="row row-cols-1 row-cols-md-3 g-5">
         {% for exhibition in upcoming_exhibitions %}
@@ -120,7 +120,7 @@
 
   <!-- 지난 전시 -->
   <div class="container mb-5">
-    <h5 class="fw-bold">지난 전시회 ({{ ended_count }})</h5>
+    <h5 class="fw-bold">지난 전시회 ({{ ended_exhibitions|length }})</h5>
     {% if ended_exhibitions %}
       <div class="row row-cols-1 row-cols-md-3 g-5">
         {% for exhibition in ended_exhibitions %}

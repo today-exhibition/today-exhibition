@@ -35,7 +35,8 @@ def gallery(id):
         Exhibition.end_date, 
         Exhibition.thumbnail_img)\
         .join(Gallery, Exhibition.gallery_id == Gallery.id)\
-        .filter(Gallery.id == id).all()
+        .filter(Gallery.id == id)\
+        .all()
     
     # [미술관디테일 > 진행/예정/종료 전시 상태 (오늘 날짜와 비교)]
     today = datetime.today().date()  #오늘 날짜
@@ -53,11 +54,8 @@ def gallery(id):
 
     return render_template('gallery/gallery.html', gallery=gallery, 
                             ongoing_exhibitions=ongoing_exhibitions,
-                            ongoing_count=len(ongoing_exhibitions),
-                            upcoming_exhibitions=upcoming_exhibitions,
-                            upcoming_count=len(upcoming_exhibitions),                    
-                            ended_exhibitions=ended_exhibitions,
-                            ended_count=len(ended_exhibitions), id=id)
+                            upcoming_exhibitions=upcoming_exhibitions,                  
+                            ended_exhibitions=ended_exhibitions, id=id)
 
 # [미술관디테일 > 미술관 팔로우]
 @gallery_bp.route('/gallery/<gallery_id>/following', methods=['post'])
