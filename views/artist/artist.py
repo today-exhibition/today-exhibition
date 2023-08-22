@@ -10,21 +10,21 @@ artist_bp = Blueprint('artist', __name__)
 @artist_bp.route('/artist/<id>')
 def artist(id):
     artist = db.session.query(
-            Artist.name)\
-                .filter(Artist.id == id).first()
+        Artist.name)\
+        .filter(Artist.id == id).first()
 
 #! [작가디테일 > 전시 정보 조회(전시명, 미술관명, 전시기간, 전시이미지)]
     exhibitions = db.session.query(
-                Exhibition.id,
-                Exhibition.title, 
-                Gallery.name, 
-                Exhibition.start_date, 
-                Exhibition.end_date, 
-                Exhibition.thumbnail_img)\
-                .join(Gallery, Exhibition.gallery_id == Gallery.id)\
-                .join(ArtistExhibition, ArtistExhibition.exhibition_id == Exhibition.id)\
-                .join(Artist, Artist.id == ArtistExhibition.artist_id)\
-                .filter(Artist.id == id).all()
+        Exhibition.id,
+        Exhibition.title, 
+        Gallery.name, 
+        Exhibition.start_date, 
+        Exhibition.end_date, 
+        Exhibition.thumbnail_img)\
+        .join(Gallery, Exhibition.gallery_id == Gallery.id)\
+        .join(ArtistExhibition, ArtistExhibition.exhibition_id == Exhibition.id)\
+        .join(Artist, Artist.id == ArtistExhibition.artist_id)\
+        .filter(Artist.id == id).all()
     
 #! [작가디테일 > 진행/예정/종료 전시 상태 (오늘 날짜와 비교)]
     today = datetime.today().date()  #오늘 날짜
@@ -51,7 +51,9 @@ def artist(id):
 
 @artist_bp.route('/artist/<artist_id>/following', methods=['post'])
 def following_exhibition(artist_id):
-    existing_following_artist = FollowingArtist.query.filter(FollowingArtist.user_id == session["user_id"], FollowingArtist.artist_id == artist_id).first()
+    existing_following_artist = FollowingArtist.query\
+        .filter(FollowingArtist.user_id == session["user_id"], FollowingArtist.artist_id == artist_id)\
+        .first()
     
     if existing_following_artist is not None:
         db.session.delete(existing_following_artist)

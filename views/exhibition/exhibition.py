@@ -11,31 +11,31 @@ exhibition_bp = Blueprint('exhibition', __name__)
 def exhibition(id):
 #! [전시디테일 > 전시 정보 조회(전시명, 기간, 시간, 지역, 장소, 요금, 소개, 포스터)]
     exhibition = db.session.query(Exhibition.title,
-                                  Exhibition.start_date,
-                                  Exhibition.end_date,
-                                  Gallery.opening_hours,
-                                  GalleryAddress.area,
-                                  Gallery.name.label("gallery_name"),
-                                  Exhibition.price,
-                                  Artist.name.label("artist_name"),
-                                  Exhibition.description,
-                                  Exhibition.thumbnail_img) \
-                .join(Gallery, Exhibition.gallery_id == Gallery.id)\
-                .join(GalleryAddress, Gallery.id == GalleryAddress.gallery_id, isouter = True)\
-                .join(ArtistExhibition, ArtistExhibition.exhibition_id == Exhibition.id, isouter = True)\
-                .join(Artist, Artist.id == ArtistExhibition.artist_id, isouter = True)\
-                .filter(Exhibition.id == id).first()
+        Exhibition.start_date,
+        Exhibition.end_date,
+        Gallery.opening_hours,
+        GalleryAddress.area,
+        Gallery.name.label("gallery_name"),
+        Exhibition.price,
+        Artist.name.label("artist_name"),
+        Exhibition.description,
+        Exhibition.thumbnail_img) \
+        .join(Gallery, Exhibition.gallery_id == Gallery.id)\
+        .join(GalleryAddress, Gallery.id == GalleryAddress.gallery_id, isouter = True)\
+        .join(ArtistExhibition, ArtistExhibition.exhibition_id == Exhibition.id, isouter = True)\
+        .join(Artist, Artist.id == ArtistExhibition.artist_id, isouter = True)\
+        .filter(Exhibition.id == id).first()
 
 #! [전시디테일 > 전시 코멘트 조회(닉네임, 작성일, 내용)]
     comments = db.session.query(
-                User.nickname,
-                Comment.content,
-                func.substr(Comment.created_at, 1, 10).label("created_at"),
-                Comment.id.label("comment_id"),
-                Comment.user_id)\
-                .join(User, Comment.user_id == User.id)\
-                .join(Exhibition, Comment.exhibition_id == Exhibition.id)\
-                .filter(Exhibition.id == id).all()
+        User.nickname,
+        Comment.content,
+        func.substr(Comment.created_at, 1, 10).label("created_at"),
+        Comment.id.label("comment_id"),
+        Comment.user_id)\
+        .join(User, Comment.user_id == User.id)\
+        .join(Exhibition, Comment.exhibition_id == Exhibition.id)\
+        .filter(Exhibition.id == id).all()
 
     return render_template('exhibition/exhibition.html', exhibition=exhibition, comments=comments, id=id)
 
@@ -43,6 +43,7 @@ def exhibition(id):
 @exhibition_bp.route('/exhibition/<id>/add_comment', methods=['POST'])
 def add_comment(id):
     if "user_id" not in session:
+
         return render_template("user/login.html")  # /login 페이지로 리다이렉트
     
     user_id = session["user_id"]
@@ -81,16 +82,21 @@ def delete_comment(id, comment_id):
 
 @exhibition_bp.route('/exhibition/<exhibition_id>/like', methods=['post'])
 def like_exhibition(exhibition_id):
-    existing_like = LikeExhibition.query.filter(LikeExhibition.user_id == session["user_id"], LikeExhibition.exhibition_id == exhibition_id).first()
+    existing_like = LikeExhibition.query\
+        .filter(LikeExhibition.user_id == session["user_id"], LikeExhibition.exhibition_id == exhibition_id)\
+        .first()
     
     if existing_like is not None:
         db.session.delete(existing_like)
         db.session.commit()
+
         return "unliked"
+    
     else:
         user_id = session["user_id"]
         liked_at = datetime.now()
         insertdb = LikeExhibition(id=str(uuid.uuid4()), user_id=user_id, exhibition_id=exhibition_id, liked_at=liked_at)
         db.session.add(insertdb)
         db.session.commit()
+
     return "liked"

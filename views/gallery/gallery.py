@@ -10,32 +10,32 @@ gallery_bp = Blueprint('gallery', __name__)
 @gallery_bp.route('/gallery/<id>')
 def gallery(id):
     gallery = db.session.query(
-                Gallery.id,
-                Gallery.name,
-                Gallery.thumbnail_img,
-                Gallery.opening_hours,
-                Gallery.holiday_info,
-                GalleryAddress.address,
-                Gallery.contact,
-                Gallery.parking_yn,
-                Gallery.homepage_url,
-                Gallery.description,
-                FollowingGallery.gallery_id)\
-                .join(GalleryAddress, Gallery.id == GalleryAddress.gallery_id, isouter = True)\
-                .join(FollowingGallery, Gallery.id == FollowingGallery.gallery_id, isouter = True) \
-                .filter(Gallery.id == id)\
-                .first()
+        Gallery.id,
+        Gallery.name,
+        Gallery.thumbnail_img,
+        Gallery.opening_hours,
+        Gallery.holiday_info,
+        GalleryAddress.address,
+        Gallery.contact,
+        Gallery.parking_yn,
+        Gallery.homepage_url,
+        Gallery.description,
+        FollowingGallery.gallery_id)\
+        .join(GalleryAddress, Gallery.id == GalleryAddress.gallery_id, isouter = True)\
+        .join(FollowingGallery, Gallery.id == FollowingGallery.gallery_id, isouter = True) \
+        .filter(Gallery.id == id)\
+        .first()
     
 # [미술관디테일 > 전시 정보 조회(전시명, 미술관명, 전시기간, 전시이미지)]
     exhibitions = db.session.query(
-                Exhibition.id,
-                Exhibition.title, 
-                Gallery.name, 
-                Exhibition.start_date, 
-                Exhibition.end_date, 
-                Exhibition.thumbnail_img)\
-                .join(Gallery, Exhibition.gallery_id == Gallery.id)\
-                .filter(Gallery.id == id).all()
+        Exhibition.id,
+        Exhibition.title, 
+        Gallery.name, 
+        Exhibition.start_date, 
+        Exhibition.end_date, 
+        Exhibition.thumbnail_img)\
+        .join(Gallery, Exhibition.gallery_id == Gallery.id)\
+        .filter(Gallery.id == id).all()
     
 # [미술관디테일 > 진행/예정/종료 전시 상태 (오늘 날짜와 비교)]
     today = datetime.today().date()  #오늘 날짜
@@ -61,16 +61,21 @@ def gallery(id):
 
 @gallery_bp.route('/gallery/<gallery_id>/following', methods=['post'])
 def following_exhibition(gallery_id):
-    existing_following_gallery = FollowingGallery.query.filter(FollowingGallery.user_id == session["user_id"], FollowingGallery.gallery_id == gallery_id).first()
+    existing_following_gallery = FollowingGallery.query\
+        .filter(FollowingGallery.user_id == session["user_id"], FollowingGallery.gallery_id == gallery_id)\
+        .first()
     
     if existing_following_gallery is not None:
         db.session.delete(existing_following_gallery)
         db.session.commit()
+
         return "unfollowed"
+    
     else:
         user_id = session["user_id"]
         followed_at = datetime.now()
         insertdb = FollowingGallery(id=str(uuid.uuid4()), user_id=user_id, gallery_id=gallery_id, followed_at=followed_at)
         db.session.add(insertdb)
         db.session.commit()
+
     return "followed"
