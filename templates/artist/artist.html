@@ -4,7 +4,7 @@
   <!-- 작가 이름 -->
   <h3 class="fw-bold">{{ artist.name }}</h3>
 
-  <!-- 전시 정보 -->
+  <!-- 진행중 전시 -->
   <div class="container mb-5">
     <h5 class="fw-bold">진행중 전시회 ({{ ongoing_count }})</h5>
     {% if ongoing_exhibitions %}
@@ -34,6 +34,7 @@
     {% endif %}
   </div>
 
+  <!-- 예정중 전시 -->
   <div class="container mb-5">
     <h5 class="fw-bold">예정중 전시회 ({{ upcoming_count }})</h5>
     {% if upcoming_exhibitions %}
@@ -63,6 +64,7 @@
     {% endif %}
   </div>
 
+  <!-- 지난 전시 -->
   <div class="container mb-5">
     <h5 class="fw-bold">지난 전시회 ({{ ended_count }})</h5>
     {% if ended_exhibitions %}

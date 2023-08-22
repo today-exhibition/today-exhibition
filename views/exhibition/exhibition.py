@@ -6,9 +6,10 @@ import uuid
 
 exhibition_bp = Blueprint('exhibition', __name__)
 
-#! [전시디테일]
+
 @exhibition_bp.route('/exhibition/<id>')
 def exhibition(id):
+    # [전시디테일 > 작가 정보 조회]
     artists = db.session.query(
     Artist.id,
     Artist.name)\
@@ -17,7 +18,7 @@ def exhibition(id):
     .filter(Exhibition.id == id)\
     .all()
 
-#! [전시디테일 > 전시 정보 조회(전시명, 기간, 시간, 지역, 장소, 요금, 소개, 포스터)]
+    # [전시디테일 > 전시 정보 조회]
     exhibition = db.session.query(
         Exhibition.title,
         Exhibition.start_date,
@@ -37,7 +38,7 @@ def exhibition(id):
         .filter(Exhibition.id == id) \
         .first()
 
-#! [전시디테일 > 전시 코멘트 조회(닉네임, 작성일, 내용)]
+    # [전시디테일 > 전시 코멘트 조회]
     comments = db.session.query(
         User.nickname,
         Comment.content,
@@ -51,7 +52,7 @@ def exhibition(id):
 
     return render_template('exhibition/exhibition.html', artists=artists, exhibition=exhibition, comments=comments, id=id)
 
-#! [전시디테일 > 전시 코멘트 작성(UUID, 닉네임, 작성일, 내용)]
+# [전시디테일 > 전시 코멘트 작성]
 @exhibition_bp.route('/exhibition/<id>/add_comment', methods=['POST'])
 def add_comment(id):
     if "user_id" not in session:
@@ -61,14 +62,13 @@ def add_comment(id):
     user_id = session["user_id"]
     content = request.form['content']
     created_at = datetime.now()
-
-    # Comment 테이블에 새로운 코멘트 추가
     new_comment = Comment(id=str(uuid.uuid4()), user_id=user_id, exhibition_id=id, content=content, created_at=created_at)
     db.session.add(new_comment)
     db.session.commit()
 
     return redirect(url_for('exhibition.exhibition', id=id))
 
+# [전시디테일 > 전시 코멘트 수정]
 @exhibition_bp.route('/exhibition/<id>/edit_comment/<comment_id>', methods=['POST'])
 def edit_comment(id, comment_id):
     user_id = session.get('user_id')
@@ -81,6 +81,7 @@ def edit_comment(id, comment_id):
 
     return redirect(url_for('exhibition.exhibition', id=id))
 
+# [전시디테일 > 전시 코멘트 삭제]
 @exhibition_bp.route('/exhibition/<id>/delete_comment/<comment_id>', methods=['POST'])
 def delete_comment(id, comment_id):
     user_id = session.get('user_id')
@@ -92,6 +93,7 @@ def delete_comment(id, comment_id):
 
     return redirect(url_for('exhibition.exhibition', id=id))
 
+# [전시디테일 > 전시 좋아요]
 @exhibition_bp.route('/exhibition/<exhibition_id>/like', methods=['post'])
 def like_exhibition(exhibition_id):
     existing_like = LikeExhibition.query\

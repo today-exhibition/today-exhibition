@@ -6,14 +6,14 @@ import uuid
 
 artist_bp = Blueprint('artist', __name__)
 
-#! [작가디테일 > 작가 정보 조회(작가명, 작가이미지)] #작가 이미지 삭제(8/11)
 @artist_bp.route('/artist/<id>')
 def artist(id):
+    # [작가디테일 > 작가 정보 조회]
     artist = db.session.query(
         Artist.name)\
         .filter(Artist.id == id).first()
 
-#! [작가디테일 > 전시 정보 조회(전시명, 미술관명, 전시기간, 전시이미지)]
+    # [작가디테일 > 전시 정보 조회]
     exhibitions = db.session.query(
         Exhibition.id,
         Exhibition.title, 
@@ -26,7 +26,7 @@ def artist(id):
         .join(Artist, Artist.id == ArtistExhibition.artist_id)\
         .filter(Artist.id == id).all()
     
-#! [작가디테일 > 진행/예정/종료 전시 상태 (오늘 날짜와 비교)]
+    # [작가디테일 > 진행/예정/종료 전시 상태 (오늘 날짜와 비교)]
     today = datetime.today().date()  #오늘 날짜
     ongoing_exhibitions = []         #진행중 전시 
     upcoming_exhibitions = []        #예정중 전시
@@ -49,6 +49,7 @@ def artist(id):
                             ended_exhibitions=ended_exhibitions,
                             ended_count=len(ended_exhibitions), id=id)
 
+# [작가디테일 > 작가 팔로우]
 @artist_bp.route('/artist/<artist_id>/following', methods=['post'])
 def following_exhibition(artist_id):
     existing_following_artist = FollowingArtist.query\
@@ -65,5 +66,4 @@ def following_exhibition(artist_id):
         insertdb = FollowingArtist(id=str(uuid.uuid4()), user_id=user_id, artist_id=artist_id, followed_at=followed_at)
         db.session.add(insertdb)
         db.session.commit()
-    return "followed"
-                            
+    return "followed"                          
