@@ -1,51 +1,55 @@
 {% extends 'common/layout_side_split.html' %}
 
 {% block side_content %}
-    {% include './user/user_side.html' %}
+{% include './user/user_side.html' %}
 {% endblock %}
 
 {% block content %}
-    <div class="container ms-5">
-        <div>
-            <h1>내 정보 수정</h1>
-            <p>프로필을 수정할 수 있습니다.</p>
-        </div>
-        <div>
-            <div>
-                <div>
-                    <form method="POST" action="{{ url_for('user.user') }}">
-                        <p>프로필 이미지</p>
-                        {% if user_info.profile_img == None %}
-                        <img id="profile_image" src="{{ url_for('static', filename='/img/icon/user_default.svg') }}" alt="프로필 이미지" width="60" height="60" style="border-radius: 50%;"/>
-                        {% else %}
-                        <img id="profile_image" src="{{ user_info.profile_img }}" alt="프로필 이미지" width="60" height="60" style="border-radius: 50%;"/>
-                        {% endif %}
-                        <input type="file" id="profile_upload" name="file_upload" accept="image/*" style="display: none;" />
-                        <br /><br />
-                        <p>닉네임</p>
-                        {% if error_message %}
-                            <div class="error_message"><p>{{ error_message }}</p></div>
-                        {% endif %}
-                        <input type="text" value="{{ user_info.nickname }}" name="input_nickname"/>
-                        <br />
-                        <input type="submit" class="btn btn-primary" value="적용하기" name="submit"/>
-                    </form>
-                </div>
-                <br />
-                <div>
-                    <p>회원 탈퇴</p>
-                    <a href="https://nid.naver.com/internalToken/view/tokenList/pc/ko" style="text-decoration: none;">
-                        <input type="image" src="{{ url_for('static', filename='/img/naver/naver_circle_logo.png') }}" width="60" />
-                    </a>
-                    <a href="https://accounts.kakao.com/weblogin/account/partner" style="text-decoration: none;">
-                        <input type="image" src="{{ url_for('static', filename='/img/kakao/kakao_circle_logo.png') }}" width="60" />
-                    </a>
-                    <form method="POST" action="{{ url_for('user.logout') }}">
-                        <input type="submit" class="btn btn-primary" value="로그아웃" name="logout" />
-                    </form>
-                </div>
+<div class="container ms-5">
+  <div>
+    <h1>내 정보 수정</h1>
+    <p>프로필을 수정할 수 있습니다.</p>
+  </div>
+  <div>
+    <div>
+      <div>
+        <form method="POST" action="{{ url_for('user.user') }}">
+          <p>프로필 이미지</p>
+          {% if user_info.profile_img == None %}
+            <img id="profile_image" src="{{ url_for('static', filename='/img/icon/user_default.svg') }}" alt="프로필 이미지"
+              width="60" height="60" style="border-radius: 50%;" />
+          {% else %}
+            <img id="profile_image" src="{{ user_info.profile_img }}" alt="프로필 이미지" width="60" height="60"
+              style="border-radius: 50%;" />
+          {% endif %}
+          <input type="file" id="profile_upload" name="file_upload" accept="image/*" style="display: none;" />
+          <br /><br />
+          <p>닉네임</p>
+          {% if error_message %}
+            <div class="error_message">
+              <p>{{ error_message }}</p>
             </div>
-            
-        </div>
+          {% endif %}
+          <input type="text" value="{{ user_info.nickname }}" name="input_nickname" />
+          <br />
+          <input type="submit" class="btn btn-primary" value="적용하기" name="submit" />
+        </form>
+      </div>
+      <br />
+      <div>
+        <p>회원 탈퇴</p>
+        <a href="https://nid.naver.com/internalToken/view/tokenList/pc/ko" style="text-decoration: none;">
+          <input type="image" src="{{ url_for('static', filename='/img/naver/naver_circle_logo.png') }}" width="60" />
+        </a>
+        <a href="https://accounts.kakao.com/weblogin/account/partner" style="text-decoration: none;">
+          <input type="image" src="{{ url_for('static', filename='/img/kakao/kakao_circle_logo.png') }}" width="60" />
+        </a>
+        <form method="POST" action="{{ url_for('user.logout') }}">
+          <input type="submit" class="btn btn-primary" value="로그아웃" name="logout" />
+        </form>
+      </div>
     </div>
+
+  </div>
+</div>
 {% endblock %}
