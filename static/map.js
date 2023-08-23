@@ -1,3 +1,5 @@
+import constants from '/static/constants.js';
+
 function makeCard(data) {
   const id = data['exhibition_id'];
   const title = data['exhibition_title'];
@@ -54,7 +56,7 @@ $(document).ready(function () {
       var marker = new kakao.maps.Marker({
         position: new kakao.maps.LatLng(exhibition.gpsy, exhibition.gpsx),
         clickable: true,
-        image: new kakao.maps.MarkerImage('/static/img/marker.svg', new kakao.maps.Size(32, 32))
+        image: new kakao.maps.MarkerImage(constants.markerImagePath, new kakao.maps.Size(32, 32))
       });
       marker.data = exhibition;
       markers.push(marker);
@@ -74,13 +76,14 @@ $(document).ready(function () {
       disableClickZoom: true,
       styles: [{
         width: '32px', height: '32px',
-        background: 'url(/static/img/clusterer.svg) no-repeat',
+        backgroundImage: `url(${constants.clustererImagePath})`,
+        backgroundRepeat: 'no-repeat',
         textAlign: 'center',
         lineHeight: '31px',
         color: '#EFF1F3'
       }]
     });    
-    
+    // 마커 클러스터에 마커 추가
     clusterer.addMarkers(markers);
     
     // 마커클러스터 클릭 시 해당 카드 리스트만 조회

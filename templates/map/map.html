@@ -25,5 +25,5 @@
 <script>
   var exhibitionsArray = JSON.parse('{{ exhibition_list|safe }}');
 </script>
-<script src="{{ url_for('static', filename='map.js')}}"></script>
+<script type="module" src="{{ url_for('static', filename='map.js')}}"></script>
 {% endblock %}
