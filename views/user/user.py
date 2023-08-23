@@ -16,9 +16,7 @@ def validate_and_update_nickname(user, input_nickname):
         return "닉네임을 입력해주세요."
     
     if user.nickname != input_nickname:
-        existing_user = User.query.filter_by(nickname=input_nickname).first()
-        
-        if existing_user:
+        if check_duplicate_nickname(input_nickname) == True:
             return "입력한 닉네임은 이미 사용 중이거나 유효하지 않습니다."
 
         user.nickname = input_nickname
@@ -74,10 +72,17 @@ def request_user_data(data, social_type) -> User:
     
     return user
 
+# 랜덤 닉네임 생성
+def generate_random_nickname():
+    return ''.join(str(random.randint(0, 9)) for _ in range(16))
+
+# 닉네임 중복 확인
+def check_duplicate_nickname(nickname):
+    return User.query.filter_by(nickname=nickname).first() is not None
+
 # 신규 유저인 경우 db에 데이터 넣기
 def user_signin(user_data: User) -> None:
     user_id = user_data.id
-    
     user = User.query.filter_by(id=user_id).first()
     if not user:
         regist_user = User(
@@ -89,6 +94,13 @@ def user_signin(user_data: User) -> None:
             gender = user_data.gender,
             login_type = user_data.login_type
         )
+        
+        # nickname 중복 확인 후 중복이면 random값 부여
+        while check_duplicate_nickname(regist_user.nickname):
+            random_nickname = generate_random_nickname()
+            if not check_duplicate_nickname(random_nickname):
+                regist_user.nickname = random_nickname
+                break
 
         db.session.add(regist_user)
         db.session.commit()
