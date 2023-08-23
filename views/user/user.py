@@ -124,19 +124,21 @@ def social_signin(data, social_type):
 
 @user_bp.route('/user', methods=['GET', 'POST'])
 def user():
-    # 로그인 여부 확인
+    # 로그인 여부 확인 후 True -> profile, Flase -> login
     if not "user_id" in session:
         return render_template("user/login.html")
     
     user_id = session.get("user_id")
     user = User.query.get(user_id)
     
+    # 프로필 수정
     if request.method == "POST":
         input_nickname = request.form.get("input_nickname")
         error_message = validate_and_update_nickname(user, input_nickname)
         
         if error_message:
             user_info = db.session.query(User.nickname, User.profile_img).filter_by(id=user_id).first()
+            
             return render_template("user/user.html", user_info=user_info, error_message=error_message)
     
     user_info = db.session.query(User.nickname, User.profile_img).filter_by(id=user_id).first()
@@ -151,11 +153,15 @@ def login():
     if "naver_login" in request.form:
         NAVER_CLIENT_ID = social_keys["naver_client_id"]
         redirect_request_url = f"https://nid.naver.com/oauth2.0/authorize?client_id={NAVER_CLIENT_ID}&response_type=code&redirect_uri={NAVER_CALLBACK_URL}"
+        
         return redirect(redirect_request_url)
+    
     elif "kakao_login" in request.form:
         KAKAO_CLIENT_ID = social_keys["kakao_client_id"]
         redirect_request_url = f"https://kauth.kakao.com/oauth/authorize?response_type=code&client_id={KAKAO_CLIENT_ID}&redirect_uri={KAKAO_CALLBACK_URL}"
+        
         return redirect(redirect_request_url)
+    
     return Response("Bad Request", status=400)
 
 @user_bp.route('/login/callback/naver')
@@ -183,6 +189,7 @@ def naver_callback():
         data = profile_request.json()
     except:
         return redirect(url_for('main.main'))
+    
     return social_signin(data, "naver")
 
 @user_bp.route('/login/callback/kakao')
@@ -214,4 +221,5 @@ def logout():
     if request.method == "POST":
         if "user_id" in session:
             session.clear()
+            
     return redirect(url_for('main.main'))
