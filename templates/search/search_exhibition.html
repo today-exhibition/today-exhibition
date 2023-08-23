@@ -1,31 +1,29 @@
 {% extends 'common/layout.html' %}
 
 {% block style %}
-<script src="{{ url_for('static', filename='search_exhibition.js') }}" defer></script>
-<script src="{{ url_for('static', filename='truncate.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='search_exhibition.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='truncate.js') }}" defer></script>
 {% endblock %}
 
 {% block search %}
-  <form action="/search/exhibition" method="get">
+  <form action="/search/exhibition" method="GET">
     <div class="input-group mb-3" style="width: 500px; margin: 0 auto; padding-top: 50px;">
       <input type="text" name="keyword" class="form-control" placeholder="검색어를 입력해주세요" value="{{ keyword }}" id="keyword-input">   
       <button class="btn btn-outline-secondary" type="submit" id="filter-button">검색</button> 
-  </div>
+    </div>
   </form>
   {% if keyword %}
-  <span class="search_result">"{{ keyword }}" 검색결과 {{ exhibition_count }}건</span>
+    <span class="search_result">"{{ keyword }}" 검색결과 {{ exhibition_count }}건</span>
   {% endif %}
   {% set type = "exhibition" %}
   {% include './common/filter.html' %}
 {% endblock %}
-
 
 {% block sorting %}
   {% include 'common/block_sorting.html' %}
 {% endblock %}
 
 {% block content %}
-
   <h3>전시({{ exhibition_count }})</h3>
   <div class="row row-cols-1 row-cols-md-3 g-5">
     {% for exhibition in exhibitions %}
@@ -43,10 +41,8 @@
         <img src="{{ exhibition.thumbnail_img }}"
           class="card-img-top"
           alt="{{ exhibition.title|safe }}"/>
-
         <div class="card-body" onclick="window.location='/exhibition/{{ exhibition.id }}'">
           <h5 class="card-title">{{ exhibition.title|safe }}</h5>
-
           <ul>
             <li>
               <strong>기간:</strong>
@@ -64,7 +60,7 @@
     </div>
     {% endfor %}
   </div>
-  
+  <!-- 페이지네이션 -->
   <div class="pagination">
     {% set url = "" %}
     {% if keyword %}{% set url = url + "&keyword=" + keyword %}{% endif %}
@@ -73,6 +69,4 @@
     {% if sort %}{% set url = url + "&sort=" + sort %}{% endif %}
     {% include 'common/pagenation.html' %}
   </div>
-
-
 {% endblock %}

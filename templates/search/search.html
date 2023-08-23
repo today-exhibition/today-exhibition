@@ -1,21 +1,21 @@
 {% extends 'common/layout.html' %}
 
 {% block style %}
-<script src="{{ url_for('static', filename='truncate.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='truncate.js') }}" defer></script>
 {% endblock %}
 
 {% block search %}
-  <form action="/search" method="get">
+  <form action="/search" method="GET">
     {% include 'common/block_search.html' %}
     {% if keyword %}
-    <span class="search_result">"{{ keyword }}" 검색결과 {{ exhibition_count + artist_count + gallery_count }}건</span>
+      <span class="search_result">"{{ keyword }}" 검색결과 {{ exhibition_count + artist_count + gallery_count }}건</span>
     {% endif %}
   </form>
-    {% include './common/filter.html' %}
+  {% include './common/filter.html' %}
 {% endblock %}
 
 {% block content %}
-
+  <!-- 전시 -->
   <h3>전시({{ exhibition_count }})</h3>
   <div class="row row-cols-1 row-cols-md-3 g-5">
     {% for exhibition in exhibition_list %}
@@ -35,7 +35,6 @@
           alt="{{ exhibition.title|safe }}"/>
         <div class="card-body" onclick="window.location='/exhibition/{{ exhibition.id }}'">
           <h5 class="card-title">{{ exhibition.title|safe }}</h5>
-
           <ul>
             <li>
               <strong>기간:</strong>
@@ -53,9 +52,11 @@
     </div>
     {% endfor %}
   </div>
-  <div><a href="{{ url_for('search_exhibition.search_exhibition', keyword=keyword) }}">전시 결과 더보기</a></div>
-
+  <div>
+    <a href="{{ url_for('search_exhibition.search_exhibition', keyword=keyword) }}">전시 결과 더보기</a>
+  </div>
   <hr>
+  <!-- 작가 -->
   <h3>작가({{ artist_count }})</h3>
   <div class="card mb-3">
     {% for artist in artist_list %}
@@ -80,9 +81,11 @@
     </div>
     {% endfor %}
   </div>
-  <div><a href="{{ url_for('search_artist.search_artist', keyword=keyword) }}">작가 결과 더보기</a></div>
-  
+  <div>
+    <a href="{{ url_for('search_artist.search_artist', keyword=keyword) }}">작가 결과 더보기</a>
+  </div>
   <hr>
+  <!-- 미술관 -->
   <h3>미술관({{ gallery_count }})</h3>
   <div class="card mb-3">
     {% for gallery in gallery_list %}
@@ -107,6 +110,7 @@
     </div>
     {% endfor %}
   </div>
-  <div><a href="{{ url_for('search_gallery.search_gallery', keyword=keyword) }}">미술관 결과 더보기</a></div>
-
+  <div>
+    <a href="{{ url_for('search_gallery.search_gallery', keyword=keyword) }}">미술관 결과 더보기</a>
+  </div>
 {% endblock %}
