@@ -25,9 +25,9 @@
           <input type="file" id="profile_upload" name="file_upload" accept="image/*" style="display: none;" />
           <br /><br />
           <p>닉네임</p>
-          {% if error_message %}
-            <div class="error_message">
-              <p>{{ error_message }}</p>
+          {% if message %}
+            <div class="message">
+              <p>{{ message }}</p>
             </div>
           {% endif %}
           <input type="text" value="{{ user_info.nickname }}" name="input_nickname" />

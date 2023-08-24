@@ -15,13 +15,13 @@ def validate_and_update_nickname(user, input_nickname):
     if input_nickname == "":
         return "닉네임을 입력해주세요."
     
-    if user.nickname != input_nickname:
-        if check_duplicate_nickname(input_nickname) == True:
-            return "입력한 닉네임은 이미 사용 중이거나 유효하지 않습니다."
-
+    if check_duplicate_nickname(input_nickname) == True or user.nickname == input_nickname:
+        return "입력한 닉네임은 이미 사용 중이거나 유효하지 않습니다."
+    else:
         user.nickname = input_nickname
         db.session.commit()
-    return None
+        
+        return "수정되었습니다."
 
 # 유저 데이터 가져오기
 def request_user_data(data, social_type) -> User:
@@ -134,12 +134,12 @@ def user():
     # 프로필 수정
     if request.method == "POST":
         input_nickname = request.form.get("input_nickname")
-        error_message = validate_and_update_nickname(user, input_nickname)
+        message = validate_and_update_nickname(user, input_nickname)
         
-        if error_message:
+        if message:
             user_info = db.session.query(User.nickname, User.profile_img).filter_by(id=user_id).first()
             
-            return render_template("user/user.html", user_info=user_info, error_message=error_message)
+            return render_template("user/user.html", user_info=user_info, message=message)
     
     user_info = db.session.query(User.nickname, User.profile_img).filter_by(id=user_id).first()
     
