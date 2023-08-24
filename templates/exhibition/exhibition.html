@@ -2,13 +2,12 @@
 
 {% block content %}
   <!-- 전시 이름 -->
-  <h3 class="fw-bold">{{ exhibition.title|safe }}</h3>
-
+  <h3 class="fw-bold">{{ data.exhibition.title|safe }}</h3>
   <!-- 전시 정보 -->
   <div class="container">
     <div class="row">
       <div class="col-md-6 d-flex justify-content-center align-items-center">
-        <img src="{{ exhibition.thumbnail_img }}" alt="{{ exhibition.title|safe }}" class="img-fluid"
+        <img src="{{ data.exhibition.thumbnail_img }}" alt="{{ data.exhibition.title|safe }}" class="img-fluid"
           style="max-height: 400px;">
       </div>
       <div class="col-md-6">
@@ -16,29 +15,29 @@
           <tbody>
             <tr>
               <th class="col-md-3">기간</th>
-              <td>{{ exhibition.start_date or '-' }} ~ {{ exhibition.end_date or '-'}}</td>
+              <td>{{ data.exhibition.start_date or '-' }} ~ {{ data.exhibition.end_date or '-'}}</td>
             </tr>
             <tr>
               <th class="col-md-3">시간</th>
-              <td>{{ exhibition.opening_hours or '-' }}</td>
+              <td>{{ data.exhibition.opening_hours or '-' }}</td>
             </tr>
             <tr>
               <th class="col-md-3">장소</th>
               <td>
-                {% if exhibition.area %}
-                  {{ exhibition.area }} |
+                {% if data.exhibition.area %}
+                  {{ data.exhibition.area }} |
                 {% endif %}
-                <a href="/gallery/{{exhibition.gallery_id}}">{{ exhibition.gallery_name or '-' }}</a>
+                <a href="/gallery/{{data.exhibition.gallery_id}}">{{ data.exhibition.gallery_name or '-' }}</a>
               </td>
             </tr>
             <tr>
               <th class="col-md-3">요금</th>
-              <td>{{ exhibition.price or '-' }}</td>
+              <td>{{ data.exhibition.price or '-' }}</td>
             </tr>
             <tr>
               <th class="col-md-3">작가</th>
               <td>
-                {% for artist in artists %}
+                {% for artist in data.artists %}
                   <a href="/artist/{{artist.id}}">{{ artist.name or '-' }}</a>
                   {% if not loop.last %}
                     , 
@@ -49,27 +48,24 @@
           </tbody>
         </table>
         <div class="booking">
-          <form action="{{ url_for('booking.booking_detail', id=id) }}">
+          <form action="{{ url_for('booking.booking_detail', id=data.id) }}">
             <input type="submit" value="예매하기">
           </form>
         </div>
       </div>
     </div>
   </div>
-
     <!-- 전시 소개 -->
-    {% if exhibition.description %}
+    {% if data.exhibition.description %}
       <h3 class="fw-bold">전시소개</h3>
-      {{ exhibition.description|safe }}
+      {{ data.exhibition.description|safe }}
     {% endif %}
-
     <!-- 간격 추가 -->
     <div class="mb-5"></div>
-
     <!-- 코멘트 작성 -->
     <h5 class="fw-bold">관람평</h5>
     <div class="input-group mb-3">
-      <form action="{{ url_for('exhibition.add_comment', id=id) }}" method="POST" class="w-100">
+      <form action="{{ url_for('exhibition.add_comment', id=data.id) }}" method="POST" class="w-100">
         <div class="input-group">
           <textarea id="comment" name="content" rows="1" class="form-control rounded"
             placeholder="내용을 입력해주세요."></textarea>
@@ -79,11 +75,10 @@
         </div>
       </form>
     </div>
-
     <!-- 코멘트 수정 및 삭제 -->
     <div class="comment">
       <ul class="list-group list-group-flush">
-        {% for comment in comments %}
+        {% for comment in data.comments %}
           <li class="list-group-item">
             <div class="d-flex justify-content-between">
               <span class="card-title">{{ comment.nickname }} | {{ comment.created_at }}</span>
@@ -92,14 +87,14 @@
                   onclick="toggleEditForm('{{ comment.comment_id }}')">수정</button>
                 <form class="edit-form" id="edit-form-{{ comment.comment_id }}"
                   style="display: {% if comment.editing %}block{% else %}none{% endif %};"
-                  action="{{ url_for('exhibition.edit_comment', id=id, comment_id=comment.comment_id) }}" method="POST">
+                  action="{{ url_for('exhibition.edit_comment', id=data.id, comment_id=comment.comment_id) }}" method="POST">
                   <div class="d-flex">
                     <textarea name="edited_content" rows="2" cols="50">{{ comment.content }}</textarea>
                     <button type="submit" class="save-button btn btn-outline text-primary">수정 완료</button>
                   </div>
                 </form>
                 <form class="delete-form"
-                  action="{{ url_for('exhibition.delete_comment', id=id, comment_id=comment.comment_id) }}" method="POST">
+                  action="{{ url_for('exhibition.delete_comment', id=data.id, comment_id=comment.comment_id) }}" method="POST">
                   <button type="submit" class="delete-button btn btn-outline text-danger">삭제</button>
                 </form>
               </div>

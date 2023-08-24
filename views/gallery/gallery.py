@@ -24,8 +24,7 @@ def gallery(id):
         .join(GalleryAddress, Gallery.id == GalleryAddress.gallery_id, isouter = True)\
         .join(FollowingGallery, Gallery.id == FollowingGallery.gallery_id, isouter = True) \
         .filter(Gallery.id == id)\
-        .first()
-    
+        .first()    
     # [미술관디테일 > 전시 정보 조회]
     exhibitions = db.session.query(
         Exhibition.id,
@@ -36,14 +35,12 @@ def gallery(id):
         Exhibition.thumbnail_img)\
         .join(Gallery, Exhibition.gallery_id == Gallery.id)\
         .filter(Gallery.id == id)\
-        .all()
-    
+        .all()    
     # [미술관디테일 > 진행/예정/종료 전시 상태 (오늘 날짜와 비교)]
     today = datetime.today().date()  #오늘 날짜
     ongoing_exhibitions = []         #진행중 전시 
     upcoming_exhibitions = []        #예정중 전시
     ended_exhibitions = []           #지난 전시
-
     for exhibition in exhibitions:
         if exhibition.start_date <= today and exhibition.end_date >= today:
             ongoing_exhibitions.append(exhibition)
@@ -51,11 +48,27 @@ def gallery(id):
             upcoming_exhibitions.append(exhibition)
         elif exhibition.end_date < today:
             ended_exhibitions.append(exhibition)
+    # [미술관디테일 > json형식(미술관, 전시상태)]
+    data = {
+        "id": id,
+        "gallery": {
+            "id": gallery.id,
+            "name": gallery.name,
+            "thumbnail_img": gallery.thumbnail_img,
+            "opening_hours": gallery.opening_hours,
+            "holiday_info": gallery.holiday_info,
+            "address": gallery.address,
+            "contact": gallery.contact,
+            "parking_yn": gallery.parking_yn,
+            "homepage_url": gallery.homepage_url,
+            "description": gallery.description,
+        },
+        "ongoing_exhibitions": ongoing_exhibitions,
+        "upcoming_exhibitions": upcoming_exhibitions,
+        "ended_exhibitions": ended_exhibitions
+    }
 
-    return render_template('gallery/gallery.html', gallery=gallery, 
-                            ongoing_exhibitions=ongoing_exhibitions,
-                            upcoming_exhibitions=upcoming_exhibitions,                  
-                            ended_exhibitions=ended_exhibitions, id=id)
+    return render_template('gallery/gallery.html', data=data)
 
 # [미술관디테일 > 미술관 팔로우]
 @gallery_bp.route('/gallery/<gallery_id>/following', methods=['post'])

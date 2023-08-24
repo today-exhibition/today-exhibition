@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session
+from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify
 from sqlalchemy import func
 from datetime import datetime
 from models.model import db, Artist, Exhibition, Gallery, ArtistExhibition, GalleryAddress, User, Comment, LikeExhibition
@@ -11,13 +11,12 @@ exhibition_bp = Blueprint('exhibition', __name__)
 def exhibition(id):
     # [전시디테일 > 작가 정보 조회]
     artists = db.session.query(
-    Artist.id,
-    Artist.name)\
-    .join(ArtistExhibition, ArtistExhibition.artist_id == Artist.id)\
-    .join(Exhibition, Exhibition.id == ArtistExhibition.exhibition_id)\
-    .filter(Exhibition.id == id)\
-    .all()
-
+        Artist.id,
+        Artist.name)\
+        .join(ArtistExhibition, ArtistExhibition.artist_id == Artist.id)\
+        .join(Exhibition, Exhibition.id == ArtistExhibition.exhibition_id)\
+        .filter(Exhibition.id == id)\
+        .all()
     # [전시디테일 > 전시 정보 조회]
     exhibition = db.session.query(
         Exhibition.title,
@@ -37,7 +36,6 @@ def exhibition(id):
         .join(Artist, Artist.id == ArtistExhibition.artist_id, isouter = True)\
         .filter(Exhibition.id == id) \
         .first()
-
     # [전시디테일 > 전시 코멘트 조회]
     comments = db.session.query(
         User.nickname,
@@ -49,8 +47,37 @@ def exhibition(id):
         .join(Exhibition, Comment.exhibition_id == Exhibition.id)\
         .filter(Exhibition.id == id)\
         .all()
+    # [전시디테일 > json 형식(작가, 전시, 코멘트)]
+    data = {
+        "id":id,
+        "artists": [
+            {"id": artist.id, "name": artist.name} for artist in artists
+        ],
+        "exhibition": {
+            "title": exhibition.title,
+            "start_date": exhibition.start_date,
+            "end_date": exhibition.end_date,
+            "opening_hours": exhibition.opening_hours,
+            "area": exhibition.area,
+            "gallery_id": exhibition.gallery_id,
+            "gallery_name": exhibition.gallery_name,
+            "price": exhibition.price,
+            "artist_name": exhibition.artist_name,
+            "description": exhibition.description,
+            "thumbnail_img": exhibition.thumbnail_img
+        },
+        "comments": [
+            {
+                "nickname": comment.nickname,
+                "content": comment.content,
+                "created_at": comment.created_at,
+                "comment_id": comment.comment_id,
+                "user_id": comment.user_id
+            } for comment in comments
+        ]
+    }
 
-    return render_template('exhibition/exhibition.html', artists=artists, exhibition=exhibition, comments=comments, id=id)
+    return render_template('exhibition/exhibition.html', data=data)
 
 # [전시디테일 > 전시 코멘트 작성]
 @exhibition_bp.route('/exhibition/<id>/add_comment', methods=['POST'])
