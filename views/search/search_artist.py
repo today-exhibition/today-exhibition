@@ -1,7 +1,8 @@
 from flask import Blueprint, request, render_template, session
 
-from models.model import db, Artist, FollowingArtist
+from models.model import FollowingArtist
 from views.search.search_exhibition import calc_pages
+from views.search.search import get_search_artists
 
 search_artist_bp = Blueprint('search_artist', __name__)
 
@@ -12,14 +13,7 @@ def search_artist():
 
     user_id = session.get('user_id', None)
 
-    artists = db.session.query(
-        Artist.id,
-        Artist.name,
-        Artist.thumbnail_img,
-        ) \
-        .filter(Artist.name.like('%' + keyword + '%')) \
-        .order_by(Artist.id) \
-        .all()
+    artists = get_search_artists(keyword).all()
     
     artist_count = len(artists)
 

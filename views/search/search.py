@@ -11,39 +11,15 @@ def search():
 
     user_id = session.get('user_id', None)
 
-    exhibitions = db.session.query(
-        Exhibition.id,
-        Exhibition.title,
-        Exhibition.start_date,
-        Exhibition.end_date,
-        Gallery.name,
-        Exhibition.thumbnail_img
-        ) \
-        .filter(Exhibition.title.like('%' + keyword + '%')) \
-        .join(Gallery, Exhibition.gallery_id == Gallery.id) \
+    exhibitions = get_search_exhibitions(keyword) \
         .join(GalleryAddress, Gallery.id == GalleryAddress.gallery_id, isouter=True) \
-        .order_by(desc(Exhibition.start_date)) \
         .all()
     
-    artists = db.session.query(
-        Artist.id,
-        Artist.name,
-        Artist.thumbnail_img
-        ) \
-        .filter(Artist.name.like('%' + keyword + '%')) \
-        .order_by(Artist.id) \
-        .all()
+    artists = get_search_artists(keyword).all()
            
-    gallerys = db.session.query(
-        Gallery.id,
-        Gallery.name,
-        Gallery.thumbnail_img,
-        ) \
-        .filter(Gallery.name.like('%' + keyword + '%')) \
-        .order_by(Gallery.id) \
-        .all()
+    gallerys = get_search_gallerys(keyword).all()
 
-    exhibition_count = len(exhibitions)
+    exhibition_count = len(exhibitions) # 진자에서 length 사용하기 
     exhibition_list = exhibitions[:3]
 
     gallery_count = len(gallerys)
@@ -62,4 +38,41 @@ def search():
         followed_artist_ids = [follow.artist_id for follow in FollowingArtist.query.filter_by(user_id=user_id).all()]
 
     return render_template('search/search.html', exhibition_list=exhibition_list, keyword=keyword, exhibition_count=exhibition_count, gallery_count=gallery_count, gallery_list=gallery_list, user_id=user_id, liked_exhibition_ids=liked_exhibition_ids, followed_gallery_ids=followed_gallery_ids, artist_count=artist_count, artist_list=artist_list, followed_artist_ids=followed_artist_ids)
+
+def get_search_exhibitions(keyword):
+    exhibitions_query = db.session.query(
+        Exhibition.id,
+        Exhibition.title,
+        Exhibition.start_date,
+        Exhibition.end_date,
+        Gallery.name,
+        Exhibition.thumbnail_img
+        ) \
+        .filter(Exhibition.title.like('%' + keyword + '%')) \
+        .join(Gallery, Exhibition.gallery_id == Gallery.id) \
+        .order_by(desc(Exhibition.start_date)) 
+    
+    return exhibitions_query
+
+def get_search_artists(keyword):
+    artists_query = db.session.query(
+    Artist.id,
+    Artist.name,
+    Artist.thumbnail_img
+    ) \
+    .filter(Artist.name.like('%' + keyword + '%')) \
+    .order_by(Artist.id) 
+
+    return artists_query
+
+def get_search_gallerys(keyword):
+    gallerys_query = db.session.query(
+        Gallery.id,
+        Gallery.name,
+        Gallery.thumbnail_img,
+        ) \
+        .filter(Gallery.name.like('%' + keyword + '%')) \
+        .order_by(Gallery.id)
+    
+    return gallerys_query
 

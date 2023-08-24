@@ -4,7 +4,8 @@ import datetime
 from flask import Blueprint, request, render_template, session
 from sqlalchemy import func, or_, desc
 
-from models.model import db, Exhibition, Gallery, GalleryAddress, LikeExhibition
+from models.model import Exhibition, Gallery, GalleryAddress, LikeExhibition
+from views.search.search import get_search_exhibitions
 
 search_exhibition_bp = Blueprint('search_exhibition', __name__)
 
@@ -21,17 +22,7 @@ def search_exhibition():
 
     user_id = session.get('user_id', None)
 
-    exhibitions_query = db.session.query(
-        Exhibition.id,
-        Exhibition.title,
-        Exhibition.start_date,
-        Exhibition.end_date,
-        Gallery.name,
-        Exhibition.thumbnail_img
-        ) \
-        .filter(Exhibition.title.like('%' + keyword + '%')) \
-        .join(Gallery, Exhibition.gallery_id == Gallery.id) \
-        .order_by(desc(Exhibition.start_date)) \
+    exhibitions_query = get_search_exhibitions(keyword)
     
     if sub_sorts:
         exhibitions_query = sub_sorts_filter(exhibitions_query, selected_sub_sorts)
