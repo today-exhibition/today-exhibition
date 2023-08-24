@@ -14,19 +14,12 @@ def search():
     exhibitions = get_search_exhibitions(keyword) \
         .join(GalleryAddress, Gallery.id == GalleryAddress.gallery_id, isouter=True) \
         .all()
-    
-    artists = get_search_artists(keyword).all()
-           
+    artists = get_search_artists(keyword).all()    
     gallerys = get_search_gallerys(keyword).all()
 
-    exhibition_count = len(exhibitions) # 진자에서 length 사용하기 
-    exhibition_list = exhibitions[:3]
-
+    exhibition_count = len(exhibitions)
     gallery_count = len(gallerys)
-    gallery_list = gallerys[:3]
-
     artist_count = len(artists)
-    artist_list = artists[:3]
 
     # 사용자가 좋아요, 팔로우한 id 목록
     liked_exhibition_ids = []
@@ -37,7 +30,21 @@ def search():
         followed_gallery_ids = [follow.gallery_id for follow in FollowingGallery.query.filter_by(user_id=user_id).all()]
         followed_artist_ids = [follow.artist_id for follow in FollowingArtist.query.filter_by(user_id=user_id).all()]
 
-    return render_template('search/search.html', exhibition_list=exhibition_list, keyword=keyword, exhibition_count=exhibition_count, gallery_count=gallery_count, gallery_list=gallery_list, user_id=user_id, liked_exhibition_ids=liked_exhibition_ids, followed_gallery_ids=followed_gallery_ids, artist_count=artist_count, artist_list=artist_list, followed_artist_ids=followed_artist_ids)
+    data = {
+        "exhibition_list": exhibitions[:3],
+        "gallery_list": gallerys[:3],
+        "artist_list": artists[:3],
+        "exhibition_count": exhibition_count,
+        "gallery_count": gallery_count,
+        "artist_count": artist_count,
+        "liked_exhibition_ids": liked_exhibition_ids,
+        "followed_gallery_ids": followed_gallery_ids,
+        "followed_artist_ids": followed_artist_ids,
+        "keyword": keyword,
+        "user_id": user_id
+    }
+
+    return render_template('search/search.html', data=data)
 
 def get_search_exhibitions(keyword):
     exhibitions_query = db.session.query(

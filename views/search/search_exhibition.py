@@ -41,8 +41,22 @@ def search_exhibition():
     liked_exhibition_ids = []  
     if user_id:
         liked_exhibition_ids = [like.exhibition_id for like in LikeExhibition.query.filter_by(user_id=user_id).all()]
+
+    data = {
+        "exhibitions": page_data,
+        "keyword": keyword,
+        "exhibition_count": exhibition_count,
+        "user_id": user_id,
+        "liked_exhibition_ids": liked_exhibition_ids,
+        "sub_sorts": sub_sorts,
+        "areas": areas,
+        "sort": sort,
+        "total_pages": total_pages,
+        "current_page": current_page,
+        "page_list": page_list
+    }
     
-    return render_template('search/search_exhibition.html', exhibitions=page_data, keyword=keyword, exhibition_count=exhibition_count, user_id=user_id, liked_exhibition_ids=liked_exhibition_ids, sub_sorts=sub_sorts, areas=areas, sort=sort, total_pages=total_pages, current_page=current_page, page_list=page_list)
+    return render_template('search/search_exhibition.html', data=data)
 
 # 페이지 계산
 def calc_pages(data, current_page):

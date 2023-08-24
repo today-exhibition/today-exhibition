@@ -23,4 +23,15 @@ def search_artist():
     
     total_pages, current_page, page_data, page_list = calc_pages(artists, page)
 
-    return render_template('search/search_artist.html', artists=page_data, keyword=keyword, artist_count=artist_count, user_id=user_id, followed_artist_ids=followed_artist_ids, total_pages=total_pages, current_page=current_page, page_list=page_list)
+    data = {
+        "artists": page_data,
+        "keyword": keyword,
+        "artist_count": artist_count,
+        "user_id": user_id,
+        "followed_artist_ids": followed_artist_ids,
+        "total_pages": total_pages,
+        "current_page": current_page,
+        "page_list": page_list
+    }
+
+    return render_template('search/search_artist.html', data=data)

@@ -8,12 +8,12 @@
 {% block search %}
   <form action="/search/exhibition" method="GET">
     <div class="input-group mb-3" style="width: 500px; margin: 0 auto; padding-top: 50px;">
-      <input type="text" name="keyword" class="form-control" placeholder="검색어를 입력해주세요" value="{{ keyword }}" id="keyword-input">   
+      <input type="text" name="data.keyword" class="form-control" placeholder="검색어를 입력해주세요" value="{{ data.keyword }}" id="keyword-input">   
       <button class="btn btn-outline-secondary" type="submit" id="filter-button">검색</button> 
     </div>
   </form>
-  {% if keyword %}
-    <span class="search_result">"{{ keyword }}" 검색결과 {{ exhibition_count }}건</span>
+  {% if data.keyword %}
+    <span class="search_result">"{{ data.keyword }}" 검색결과 {{ data.exhibition_count }}건</span>
   {% endif %}
   {% set type = "exhibition" %}
   {% include './common/filter.html' %}
@@ -24,13 +24,13 @@
 {% endblock %}
 
 {% block content %}
-  <h3>전시({{ exhibition_count }})</h3>
+  <h3>전시({{ data.exhibition_count }})</h3>
   <div class="row row-cols-1 row-cols-md-3 g-5">
-    {% for exhibition in exhibitions %}
+    {% for exhibition in data.exhibitions %}
     <div class="col">
       <div class="card" id="{{ exhibition.id }}">
-        {% if user_id %}
-          {% if exhibition.id in liked_exhibition_ids %}
+        {% if data.user_id %}
+          {% if exhibition.id in data.liked_exhibition_ids %}
             <i class="fa-solid fa-heart fa-2x" onclick="likeExhibition(this, '{{ exhibition.id }}')"></i>
           {% else %}
             <i class="fa-regular fa-heart fa-2x" onclick="likeExhibition(this, '{{ exhibition.id }}')"></i>
@@ -63,10 +63,10 @@
   <!-- 페이지네이션 -->
   <div class="pagination">
     {% set url = "" %}
-    {% if keyword %}{% set url = url + "&keyword=" + keyword %}{% endif %}
-    {% if sub_sorts %}{% set url = url + "&sub_sort=" + sub_sorts | urlencode %}{% endif %}
-    {% if areas %}{% set url = url + "&area=" + areas | urlencode %}{% endif %}
-    {% if sort %}{% set url = url + "&sort=" + sort %}{% endif %}
+    {% if data.keyword %}{% set url = url + "&keyword=" + data.keyword %}{% endif %}
+    {% if data.sub_sorts %}{% set url = url + "&sub_sort=" + data.sub_sorts | urlencode %}{% endif %}
+    {% if data.areas %}{% set url = url + "&area=" + data.areas | urlencode %}{% endif %}
+    {% if data.sort %}{% set url = url + "&sort=" + data.sort %}{% endif %}
     {% include 'common/pagenation.html' %}
   </div>
 {% endblock %}

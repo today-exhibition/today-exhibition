@@ -1,7 +1,7 @@
 <nav aria-label="Page navigation example">
   <ul class="pagination">
     <li class="page-item">
-      {% if current_page > 1 %}
+      {% if data.current_page > 1 %}
       <a class="page-link pagebutton" href="?{{ url }}&page=1" aria-label="Previous">
       {% else %}
       <a class="page-link pagebutton disabled" aria-label="Previous">
@@ -11,19 +11,19 @@
     </li>
 
     <li class="page-item">
-      {% if current_page == 1 %}
+      {% if data.current_page == 1 %}
       <a class="page-link pagebutton disabled" aria-label="Previous">
-      {% elif current_page <= 5 %}
+      {% elif data.current_page <= 5 %}
       <a class="page-link pagebutton" href="?{{ url }}&page=1" aria-label="Previous">
       {% else %}
-      <a class="page-link pagebutton" href="?{{ url }}&page={{ current_page-5 }}" aria-label="Previous">
+      <a class="page-link pagebutton" href="?{{ url }}&page={{ data.current_page-5 }}" aria-label="Previous">
       {% endif %}
         <span aria-hidden="true"><</span>
       </a>
     </li>
 
-    {% for p in page_list %}
-    {% if current_page == p %}
+    {% for p in data.page_list %}
+    {% if data.current_page == p %}
     <li class="page-item active">
       <a class="page-link pagebutton">{{ p }}</a>
     </li>
@@ -35,20 +35,20 @@
     {% endfor %}
 
     <li class="page-item">
-      {% if current_page == total_pages %}
+      {% if data.current_page == data.total_pages %}
       <a class="page-link pagebutton disabled" aria-label="Previous">
-      {% elif current_page >= total_pages-5 %}
-      <a class="page-link pagebutton" href="?{{ url }}&page={{ total_pages }}" aria-label="Previous">
+      {% elif data.current_page >= data.total_pages-5 %}
+      <a class="page-link pagebutton" href="?{{ url }}&page={{ data.total_pages }}" aria-label="Previous">
       {% else %}
-      <a class="page-link pagebutton" href="?{{ url }}&page={{ current_page+5 }}" aria-label="Previous">
+      <a class="page-link pagebutton" href="?{{ url }}&page={{ data.current_page+5 }}" aria-label="Previous">
       {% endif %}
         <span aria-hidden="true">></span>
       </a>
     </li>
 
     <li class="page-item">
-      {% if current_page < total_pages %}
-      <a class="page-link pagebutton" href="?{{ url }}&page={{ total_pages }}" aria-label="Previous">
+      {% if data.current_page < data.total_pages %}
+      <a class="page-link pagebutton" href="?{{ url }}&page={{ data.total_pages }}" aria-label="Previous">
       {% else %}
       <a class="page-link pagebutton disabled" aria-label="Previous">
       {% endif %}
