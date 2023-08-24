@@ -10,8 +10,9 @@ from models.model import db, User, LoginType
 
 user_bp = Blueprint('user', __name__)
 
-# 닉네임 검증
-def validate_and_update_nickname(user, input_nickname):
+# 유저 닉네임 업데이트
+def update_user_nickname(user, input_nickname):
+    # 유저 닉네임 검증
     if input_nickname == "":
         return "닉네임을 입력해주세요."
     
@@ -134,12 +135,11 @@ def user():
     # 프로필 수정
     if request.method == "POST":
         input_nickname = request.form.get("input_nickname")
-        message = validate_and_update_nickname(user, input_nickname)
+        message = update_user_nickname(user, input_nickname)
+        # 유저 정보 가져오기
+        user_info = db.session.query(User.nickname, User.profile_img).filter_by(id=user_id).first()
         
-        if message:
-            user_info = db.session.query(User.nickname, User.profile_img).filter_by(id=user_id).first()
-            
-            return render_template("user/user.html", user_info=user_info, message=message)
+        return render_template("user/user.html", user_info=user_info, message=message)
     
     user_info = db.session.query(User.nickname, User.profile_img).filter_by(id=user_id).first()
     
