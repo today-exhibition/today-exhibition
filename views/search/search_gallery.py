@@ -1,8 +1,7 @@
 from flask import Blueprint, request, render_template, session
 
-from models.model import FollowingGallery
 from views.search.search_exhibition import calc_pages
-from views.search.search import get_search_gallerys
+from views.search.search import get_search_gallerys, get_followed_gallery_ids
 
 search_gallery_bp = Blueprint('search_gallery', __name__)
 
@@ -10,15 +9,11 @@ search_gallery_bp = Blueprint('search_gallery', __name__)
 def search_gallery():
     keyword = request.args.get('keyword', default="", type=str).strip()
     page = request.args.get('page', default=1, type=int)
-
     user_id = session.get('user_id', None)
 
     gallerys = get_search_gallerys(keyword).all()
     gallery_count = len(gallerys)
-
-    followed_gallery_ids = []
-    if user_id:
-        followed_gallery_ids = [follow.gallery_id for follow in FollowingGallery.query.filter_by(user_id=user_id).all()]
+    followed_gallery_ids = get_followed_gallery_ids(user_id)
 
     total_pages, current_page, page_data, page_list = calc_pages(gallerys, page)
     

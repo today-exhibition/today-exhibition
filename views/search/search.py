@@ -8,7 +8,6 @@ search_bp = Blueprint('search', __name__)
 @search_bp.route('/search')
 def search():
     keyword = request.args.get('keyword', default="", type=str).strip()
-
     user_id = session.get('user_id', None)
 
     exhibitions = get_search_exhibitions(keyword) \
@@ -17,18 +16,15 @@ def search():
     artists = get_search_artists(keyword).all()    
     gallerys = get_search_gallerys(keyword).all()
 
+    # 각 데이터 검색 결과 개수
     exhibition_count = len(exhibitions)
     gallery_count = len(gallerys)
     artist_count = len(artists)
 
     # 사용자가 좋아요, 팔로우한 id 목록
-    liked_exhibition_ids = []
-    followed_gallery_ids = []  
-    followed_artist_ids = []
-    if user_id:
-        liked_exhibition_ids = [like.exhibition_id for like in LikeExhibition.query.filter_by(user_id=user_id).all()]
-        followed_gallery_ids = [follow.gallery_id for follow in FollowingGallery.query.filter_by(user_id=user_id).all()]
-        followed_artist_ids = [follow.artist_id for follow in FollowingArtist.query.filter_by(user_id=user_id).all()]
+    liked_exhibition_ids = get_liked_exhibition_ids(user_id)
+    followed_gallery_ids = get_followed_gallery_ids(user_id)
+    followed_artist_ids = get_followed_artist_ids(user_id)
 
     data = {
         "exhibition_list": exhibitions[:3],
@@ -63,12 +59,12 @@ def get_search_exhibitions(keyword):
 
 def get_search_artists(keyword):
     artists_query = db.session.query(
-    Artist.id,
-    Artist.name,
-    Artist.thumbnail_img
-    ) \
-    .filter(Artist.name.like('%' + keyword + '%')) \
-    .order_by(Artist.id) 
+        Artist.id,
+        Artist.name,
+        Artist.thumbnail_img
+        ) \
+        .filter(Artist.name.like('%' + keyword + '%')) \
+        .order_by(Artist.id) 
 
     return artists_query
 
@@ -82,4 +78,19 @@ def get_search_gallerys(keyword):
         .order_by(Gallery.id)
     
     return gallerys_query
+
+def get_liked_exhibition_ids(user_id):
+    if user_id:
+        return [like.exhibition_id for like in LikeExhibition.query.filter_by(user_id=user_id).all()]
+    return []
+
+def get_followed_gallery_ids(user_id):
+    if user_id:
+        return [follow.gallery_id for follow in FollowingGallery.query.filter_by(user_id=user_id).all()]
+    return []
+
+def get_followed_artist_ids(user_id):
+    if user_id:
+        return [follow.artist_id for follow in FollowingArtist.query.filter_by(user_id=user_id).all()]
+    return []
 

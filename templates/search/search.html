@@ -15,7 +15,7 @@
 {% endblock %}
 
 {% block content %}
-  <!-- 전시 -->
+  <!-- 전시 데이터 -->
   <h3>전시({{ data.exhibition_count }})</h3>
   <div class="row row-cols-1 row-cols-md-3 g-5">
     {% for exhibition in data.exhibition_list %}
@@ -56,7 +56,7 @@
     <a href="{{ url_for('search_exhibition.search_exhibition', keyword=keyword) }}">전시 결과 더보기</a>
   </div>
   <hr>
-  <!-- 작가 -->
+  <!-- 작가 데이터 -->
   <h3>작가({{ data.artist_count }})</h3>
   <div class="card mb-3">
     {% for artist in data.artist_list %}
@@ -85,7 +85,7 @@
     <a href="{{ url_for('search_artist.search_artist', keyword=keyword) }}">작가 결과 더보기</a>
   </div>
   <hr>
-  <!-- 미술관 -->
+  <!-- 미술관 데이터 -->
   <h3>미술관({{ data.gallery_count }})</h3>
   <div class="card mb-3">
     {% for gallery in data.gallery_list %}

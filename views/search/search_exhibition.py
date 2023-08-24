@@ -2,25 +2,24 @@ import math
 import datetime
 
 from flask import Blueprint, request, render_template, session
-from sqlalchemy import func, or_, desc
+from sqlalchemy import func, or_
 
 from models.model import Exhibition, Gallery, GalleryAddress, LikeExhibition
-from views.search.search import get_search_exhibitions
+from views.search.search import get_search_exhibitions, get_liked_exhibition_ids
 
 search_exhibition_bp = Blueprint('search_exhibition', __name__)
 
 @search_exhibition_bp.route('/search/exhibition')
 def search_exhibition():
     keyword = request.args.get('keyword', default="", type=str).strip()
-    sub_sorts = request.args.get('sub_sort') # ongoing,free
-    areas = request.args.get('area') 
-    sort = request.args.get('sort') 
     page = request.args.get('page', default=1, type=int)
+    user_id = session.get('user_id', None)
+    sub_sorts = request.args.get('sub_sort') # ongoing, ended, upcoming
+    areas = request.args.get('area') # 서울, 경기, 강원, 대전
+    sort = request.args.get('sort') # popularity, featured, recommended
 
     selected_sub_sorts = sub_sorts.split(',') if sub_sorts else []
     selected_areas = areas.split(',') if areas else []
-
-    user_id = session.get('user_id', None)
 
     exhibitions_query = get_search_exhibitions(keyword)
     
@@ -32,15 +31,10 @@ def search_exhibition():
         exhibitions_query = sort_filter(exhibitions_query, sort)
    
     exhibitions = exhibitions_query.all()
-    
     exhibition_count = len(exhibitions)
+    liked_exhibition_ids = get_liked_exhibition_ids(user_id)
 
     total_pages, current_page, page_data, page_list = calc_pages(exhibitions, page)
-
-    # 사용자가 좋아요한 id 목록
-    liked_exhibition_ids = []  
-    if user_id:
-        liked_exhibition_ids = [like.exhibition_id for like in LikeExhibition.query.filter_by(user_id=user_id).all()]
 
     data = {
         "exhibitions": page_data,
@@ -92,10 +86,8 @@ def sub_sorts_filter(query, selected_sub_sorts):
         sorts.append(Exhibition.start_date > datetime.datetime.today())
 
     if sorts:
-
         return query.filter(or_(*sorts))
     else:
-
         return query
 
 # 지역        
