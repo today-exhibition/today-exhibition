@@ -1,28 +1,28 @@
 {% extends 'common/layout.html' %}
 
 {% block style %}
-<script src="{{ url_for('static', filename='truncate.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='truncate.js') }}" defer></script>
 {% endblock %}
 
 {% block search %}
-  <form action="/search" method="get">
+  <form action="/search" method="GET">
     {% include 'common/block_search.html' %}
-    {% if keyword %}
-    <span class="search_result">"{{ keyword }}" 검색결과 {{ exhibition_count + artist_count + gallery_count }}건</span>
+    {% if data.keyword %}
+      <span class="search_result">"{{ data.keyword }}" 검색결과 {{ data.exhibition_count + data.artist_count + data.gallery_count }}건</span>
     {% endif %}
   </form>
-    {% include './common/filter.html' %}
+  {% include './common/filter.html' %}
 {% endblock %}
 
 {% block content %}
-
-  <h3>전시({{ exhibition_count }})</h3>
+  <!-- 전시 데이터 -->
+  <h3>전시({{ data.exhibition_count }})</h3>
   <div class="row row-cols-1 row-cols-md-3 g-5">
-    {% for exhibition in exhibition_list %}
+    {% for exhibition in data.exhibition_list %}
     <div class="col">
       <div class="card" id="{{ exhibition.id }}">
-        {% if user_id %}
-          {% if exhibition.id in liked_exhibition_ids %}
+        {% if data.user_id %}
+          {% if exhibition.id in data.liked_exhibition_ids %}
             <i class="fa-solid fa-heart fa-2x" onclick="likeExhibition(this, '{{ exhibition.id }}')"></i>
           {% else %}
             <i class="fa-regular fa-heart fa-2x" onclick="likeExhibition(this, '{{ exhibition.id }}')"></i>
@@ -35,7 +35,6 @@
           alt="{{ exhibition.title|safe }}"/>
         <div class="card-body" onclick="window.location='/exhibition/{{ exhibition.id }}'">
           <h5 class="card-title">{{ exhibition.title|safe }}</h5>
-
           <ul>
             <li>
               <strong>기간:</strong>
@@ -53,16 +52,18 @@
     </div>
     {% endfor %}
   </div>
-  <div><a href="{{ url_for('search_exhibition.search_exhibition', keyword=keyword) }}">전시 결과 더보기</a></div>
-
+  <div>
+    <a href="{{ url_for('search_exhibition.search_exhibition', keyword=keyword) }}">전시 결과 더보기</a>
+  </div>
   <hr>
-  <h3>작가({{ artist_count }})</h3>
+  <!-- 작가 데이터 -->
+  <h3>작가({{ data.artist_count }})</h3>
   <div class="card mb-3">
-    {% for artist in artist_list %}
+    {% for artist in data.artist_list %}
     <div class="row artist-row" id="{{ artist.id }}">
       <div class="col-md-4 artist-col">
-        {% if user_id %}
-          {% if artist.id in followed_artist_ids %}
+        {% if data.user_id %}
+          {% if artist.id in data.followed_artist_ids %}
             <i class="fa-solid fa-bookmark fa-2x" onclick="followArtist(this, '{{ artist.id }}')"></i>
           {% else %}
             <i class="fa-regular fa-bookmark fa-2x" onclick="followArtist(this, '{{ artist.id }}')"></i>
@@ -80,16 +81,18 @@
     </div>
     {% endfor %}
   </div>
-  <div><a href="{{ url_for('search_artist.search_artist', keyword=keyword) }}">작가 결과 더보기</a></div>
-  
+  <div>
+    <a href="{{ url_for('search_artist.search_artist', keyword=keyword) }}">작가 결과 더보기</a>
+  </div>
   <hr>
-  <h3>미술관({{ gallery_count }})</h3>
+  <!-- 미술관 데이터 -->
+  <h3>미술관({{ data.gallery_count }})</h3>
   <div class="card mb-3">
-    {% for gallery in gallery_list %}
+    {% for gallery in data.gallery_list %}
     <div class="row gallery-row" id="{{ gallery.id }}">
       <div class="col-md-4 gallery-col">
-        {% if user_id %}
-          {% if gallery.id in followed_gallery_ids %}
+        {% if data.user_id %}
+          {% if gallery.id in data.followed_gallery_ids %}
             <i class="fa-solid fa-bookmark fa-2x" onclick="followGallery(this, '{{ gallery.id }}')"></i>
           {% else %}
             <i class="fa-regular fa-bookmark fa-2x" onclick="followGallery(this, '{{ gallery.id }}')"></i>
@@ -107,6 +110,7 @@
     </div>
     {% endfor %}
   </div>
-  <div><a href="{{ url_for('search_gallery.search_gallery', keyword=keyword) }}">미술관 결과 더보기</a></div>
-
+  <div>
+    <a href="{{ url_for('search_gallery.search_gallery', keyword=keyword) }}">미술관 결과 더보기</a>
+  </div>
 {% endblock %}
