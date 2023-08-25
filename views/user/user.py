@@ -147,7 +147,7 @@ def update_user_refresh_token(data):
 
 @user_bp.route('/user', methods=['GET', 'POST'])
 def user():
-    # 로그인 여부 확인 후 True -> profile, Flase -> login
+    # 로그인 여부 확인 후 True -> profile, False -> login
     if not "user_id" in session:
         return render_template("user/login.html")
     print(session)
