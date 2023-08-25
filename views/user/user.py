@@ -150,7 +150,6 @@ def user():
     # 로그인 여부 확인 후 True -> profile, False -> login
     if not "user_id" in session:
         return render_template("user/login.html")
-    print(session)
     user_id = session.get("user_id")
     user = User.query.get(user_id)
     
@@ -248,9 +247,46 @@ def logout():
             
     return redirect(url_for('main.main'))
 
-@user_bp.route('/user/delete', methods=['GET', 'POST'])
+@user_bp.route('/user/delete', methods=['POST'])
 def delete():
     secrets = load_secrets()
     social_keys = secrets.get("social")
+    user_id = session.get("user_id")
     
-    return ""
+    if "naver_delete" in request.form:
+        NAVER_CLIENT_ID = social_keys["naver_client_id"]
+        NAVER_CLIENT_SECRET = social_keys["naver_client_secret"]
+        
+        # user_id로 user_token db 조회 후 refresh_token으로 access_token 새롭게 받은 후 delete 진행
+        user_info = db.session.query(User).filter_by(id=user_id).first()
+        user_id = user_info.id
+        ACCESS_TOKEN = update_naver_access_token(user_id, social_keys)
+        request_delete_url = f"https://nid.naver.com/oauth2.0/token?grant_type=delete&client_id={NAVER_CLIENT_ID}&client_secret={NAVER_CLIENT_SECRET}&access_token={ACCESS_TOKEN}&service_provider=NAVER"
+        
+        delete_request = requests.get(request_delete_url)
+        
+        # delete request 요청이 성공적인 경우
+        if delete_request.json()["result"] == "success":
+            # 유저 id로 조회된 컬럼 삭제
+            db.session.delete(user_info)
+            db.session.commit()
+            session.clear()
+        
+    if "kakao_delete" in request.form:
+        pass
+    
+    return redirect(url_for('main.main'))
+
+# update access token
+def update_naver_access_token(id, social_keys):
+    NAVER_CLIENT_ID = social_keys["naver_client_id"]
+    NAVER_CLIENT_SECRET = social_keys["naver_client_secret"]
+    
+    user_token_info = db.session.query(UserToken).filter_by(id=id).first()
+    USER_REFRESH_TOKEN = user_token_info.refresh_token
+    
+    request_update_url = f"https://nid.naver.com/oauth2.0/token?grant_type=refresh_token&client_id={NAVER_CLIENT_ID}&client_secret={NAVER_CLIENT_SECRET}&refresh_token={USER_REFRESH_TOKEN}"
+    token_request = requests.get(request_update_url)
+    token_json = token_request.json()
+    access_token = token_json["access_token"]
+    return access_token
