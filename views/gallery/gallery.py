@@ -1,35 +1,36 @@
 from flask import Blueprint, render_template, session
 from sqlalchemy import func
 from datetime import datetime
-from models.model import db, Exhibition, Gallery, GalleryAddress, FollowingGallery
+from models.model import db, Gallery, GalleryAddress, FollowingGallery
 from views.artist.artist import get_exhibition_data, get_exhibition_status
+from views.search.search import get_followed_artist_ids, get_followed_gallery_ids
 import uuid
 
 gallery_bp = Blueprint('gallery', __name__)
 
-# 미술관 디테일 (미술관, 전시상태)
+# 미술관 디테일 (미술관, 전시상태, 작가팔로우, 미술관팔로우)
 @gallery_bp.route('/gallery/<id>')
 def gallery(id):
     gallery = get_gallery_data(id)
     exhibitions = get_exhibition_data(id)\
         .filter(Gallery.id == id)\
         .all() 
-    exhibition_status = get_exhibition_status(exhibitions)  
+    exhibition_status = get_exhibition_status(exhibitions)
+    
+    user_id = session.get('user_id', None)
+    followed_artist_ids = get_followed_artist_ids(user_id)
+    followed_gallery_ids = get_followed_gallery_ids(user_id)
 
     data = {
         "id": id,
         "gallery": gallery,
-        "exhibition_status": exhibition_status
+        "exhibition_status": exhibition_status,
+        "user_id": user_id,
+        "followed_artist_ids": followed_artist_ids,
+        "followed_gallery_ids": followed_gallery_ids
         }
 
     return render_template('gallery/gallery.html', data=data)
-    
-# 미술관디테일 > 미술관 팔로우
-@gallery_bp.route('/gallery/<gallery_id>/following', methods=['post'])
-def following_exhibition(gallery_id):
-    result = following_gallery(gallery_id)
-
-    return "result"
 
 # [함수] 미술관 정보
 def get_gallery_data(id):
@@ -51,8 +52,15 @@ def get_gallery_data(id):
         .first()
     
     return gallery
+    
+# 미술관 팔로우
+@gallery_bp.route('/gallery/<gallery_id>/following', methods=['post'])
+def following_gallery(gallery_id):
+    result = following_gallery(gallery_id)
 
-# [함수] 미술관 팔로우
+    return result
+
+# [함수] 미술관 팔로우 처리
 def following_gallery(gallery_id):
     existing_following_gallery = FollowingGallery.query\
         .filter(FollowingGallery.user_id == session["user_id"], FollowingGallery.gallery_id == gallery_id)\
@@ -63,6 +71,7 @@ def following_gallery(gallery_id):
         db.session.commit()
 
         return "unfollowed"
+    
     else:
         user_id = session["user_id"]
         followed_at = datetime.now()

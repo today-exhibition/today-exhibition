@@ -2,11 +2,12 @@ from flask import Blueprint, render_template, session
 from sqlalchemy import func
 from datetime import datetime
 from models.model import db, Artist, Exhibition, Gallery, ArtistExhibition, FollowingArtist
+from views.search.search import get_followed_artist_ids, get_liked_exhibition_ids
 import uuid
 
 artist_bp = Blueprint('artist', __name__)
 
-# 작가 디테일(작가명, 전시 상태)
+# 작가 디테일(작가명, 전시상태, 작가팔로우, 전시좋아요)
 @artist_bp.route('/artist/<id>')
 def artist(id):
     artist = get_artist_data(id)\
@@ -17,22 +18,23 @@ def artist(id):
         .join(Artist, Artist.id == ArtistExhibition.artist_id)\
         .filter(Artist.id == id)\
         .all()    
-    exhibition_status = get_exhibition_status(exhibitions)    
+    exhibition_status = get_exhibition_status(exhibitions)   
+    
+    user_id = session.get('user_id', None)
+    followed_artist_ids = get_followed_artist_ids(user_id)
+    liked_exhibition_ids = get_liked_exhibition_ids(user_id)
+
     data = {
         "id": id,
         "artist": artist,
         "exhibitions": exhibitions,
-        "exhibition_status": exhibition_status
+        "exhibition_status": exhibition_status,
+        "user_id": user_id,
+        "followed_artist_ids": followed_artist_ids,
+        "liked_exhibition_ids": liked_exhibition_ids
         }
     
     return render_template('artist/artist.html', data=data)
-
-# 작가디테일 > 작가 팔로우
-@artist_bp.route('/artist/<artist_id>/following', methods=['post'])
-def following_artist(artist_id):
-    result = following_artist(artist_id)
-
-    return result
 
 # [함수] 작가 정보
 def get_artist_data(id):
@@ -74,6 +76,13 @@ def get_exhibition_status(exhibitions):
         }
 
     return data
+
+# 작가 팔로우
+@artist_bp.route('/artist/<artist_id>/following', methods=['post'])
+def following_artist(artist_id):
+    result = following_artist(artist_id)
+
+    return result
 
 # [함수] 작가 팔로우 처리
 def following_artist(artist_id):

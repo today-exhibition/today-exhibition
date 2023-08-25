@@ -3,11 +3,12 @@ from sqlalchemy import func
 from datetime import datetime
 from models.model import db, Artist, Exhibition, Gallery, ArtistExhibition, GalleryAddress, User, Comment, LikeExhibition
 from views.artist.artist import get_artist_data
+from views.search.search import get_liked_exhibition_ids
 import uuid
 
 exhibition_bp = Blueprint('exhibition', __name__)
 
-# 전시 디테일 (작가, 전시, 코멘트)
+# 전시 디테일 (작가, 전시, 코멘트, 전시좋아요)
 @exhibition_bp.route('/exhibition/<id>')
 def exhibition(id):
     artists = get_artist_data(id)\
@@ -17,12 +18,17 @@ def exhibition(id):
         .all()
     exhibition = get_exhibition_data(id)
     comments = get_comments_data(id)
-    
+
+    user_id = session.get('user_id', None)
+    liked_exhibition_ids = get_liked_exhibition_ids(user_id)
+
     data =  {
         "id": id,
         "artists": artists,
         "exhibition": exhibition,
-        "comments": comments
+        "comments": comments,
+        "user_id": user_id,
+        "liked_exhibition_ids": liked_exhibition_ids
         }
     
     return render_template('exhibition/exhibition.html', data=data)
@@ -68,29 +74,6 @@ def delete_comment(id, comment_id):
 
     return redirect(url_for('exhibition.exhibition', id=id))
 
-# 전시 좋아요
-@exhibition_bp.route('/exhibition/<exhibition_id>/like', methods=['post'])
-def like_exhibition(exhibition_id):
-    existing_like = LikeExhibition.query\
-        .filter(LikeExhibition.user_id == session["user_id"], LikeExhibition.exhibition_id == exhibition_id)\
-        .first()
-    
-    if existing_like is not None:
-        db.session.delete(existing_like)
-        db.session.commit()
-
-        return "unliked"
-    
-    else:
-        user_id = session["user_id"]
-        liked_at = datetime.now()
-        insertdb = LikeExhibition(id=str(uuid.uuid4()), user_id=user_id, exhibition_id=exhibition_id, liked_at=liked_at)
-        db.session.add(insertdb)
-        db.session.commit()
-
-    return "liked"
-
-
 # [함수] 전시
 def get_exhibition_data(id):
     exhibition = db.session.query(
@@ -128,3 +111,31 @@ def get_comments_data(id):
         .all()
     
     return comments
+
+# 전시 좋아요
+@exhibition_bp.route('/exhibition/<exhibition_id>/like', methods=['post'])
+def like_exhibition(exhibition_id):
+    result = like_exhibition(exhibition_id)
+
+    return result
+
+# [함수] 전시 좋아요 처리
+def like_exhibition(exhibition_id):
+    existing_like = LikeExhibition.query\
+        .filter(LikeExhibition.user_id == session["user_id"], LikeExhibition.exhibition_id == exhibition_id)\
+        .first()
+    
+    if existing_like is not None:
+        db.session.delete(existing_like)
+        db.session.commit()
+
+        return "unliked"
+    
+    else:
+        user_id = session["user_id"]
+        liked_at = datetime.now()
+        insertdb = LikeExhibition(id=str(uuid.uuid4()), user_id=user_id, exhibition_id=exhibition_id, liked_at=liked_at)
+        db.session.add(insertdb)
+        db.session.commit()
+
+    return "liked"
