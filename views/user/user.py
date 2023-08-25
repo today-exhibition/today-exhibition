@@ -5,7 +5,7 @@ from utils import load_secrets
 
 import requests, datetime, random
 
-from models.model import db, User, LoginType
+from models.model import db, User, LoginType, UserToken
 
 
 user_bp = Blueprint('user', __name__)
@@ -108,9 +108,9 @@ def user_signin(user_data: User) -> None:
 
 # 유저 id 세션에 등록하기
 def register_user_id_in_session(id) -> None:
-    user_id = db.session.query(User.id).filter_by(id=id).first()[0]
-    if user_id:
-        session["user_id"] = user_id
+    user_info = db.session.query(User).filter_by(id=id).first()
+    if user_info:
+        session["user_id"] = user_info.id
 
 def social_signin(data, social_type):
     # 유저 데이터 요청
@@ -119,16 +119,38 @@ def social_signin(data, social_type):
     user_signin(user_data)
     # 유저 아이디 세션 등록
     register_user_id_in_session(user_data.id)
+    update_user_refresh_token(data)
     
     return redirect(url_for('main.main'))
 
+# 유저 리프레쉬 토큰 DB에 등록
+def update_user_refresh_token(data):
+    account_info = data.get('response')
+    user_id = account_info.get('id')
+    refresh_token = account_info.get('refresh_token')
+    
+    # DB user_token에 유저 id 있는지 확인 후
+    check_user_token = db.session.query(UserToken).filter_by(id=user_id).first()
+    
+    # 유저 아이디가 user_token에 있으면 업데이트 
+    if check_user_token:
+        check_user_token.refresh_token = refresh_token
+    # 유저 아이디가 user_token에 없으면 추가
+    if not check_user_token:
+        regist_user_token = UserToken(
+            id = user_id,
+            refresh_token = refresh_token
+        )
+        db.session.add(regist_user_token)
+        
+    db.session.commit()
 
 @user_bp.route('/user', methods=['GET', 'POST'])
 def user():
     # 로그인 여부 확인 후 True -> profile, Flase -> login
     if not "user_id" in session:
         return render_template("user/login.html")
-    
+    print(session)
     user_id = session.get("user_id")
     user = User.query.get(user_id)
     
@@ -180,16 +202,18 @@ def naver_callback():
         token_request = requests.get(request_auth_url)
         token_json = token_request.json()
         
+        refresh_token = token_json.get("refresh_token")
         ACCESS_TOKEN = token_json.get("access_token", None)
         if ACCESS_TOKEN is None:
             return Response("Unauthorized", status=401)
+        
         TOKEN_TYPE = token_json.get("token_type")
         
         profile_request = requests.get(f"https://openapi.naver.com/v1/nid/me", headers={"Authorization": f"{TOKEN_TYPE} {ACCESS_TOKEN}"})
         data = profile_request.json()
+        data['response']['refresh_token'] = refresh_token
     except:
         return redirect(url_for('main.main'))
-    
     return social_signin(data, "naver")
 
 @user_bp.route('/login/callback/kakao')
@@ -223,3 +247,10 @@ def logout():
             session.clear()
             
     return redirect(url_for('main.main'))
+
+@user_bp.route('/user/delete', methods=['GET', 'POST'])
+def delete():
+    secrets = load_secrets()
+    social_keys = secrets.get("social")
+    
+    return ""
