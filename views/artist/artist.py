@@ -50,7 +50,7 @@ def artist(id):
                             ended_count=len(ended_exhibitions), id=id)
 
 @artist_bp.route('/artist/<artist_id>/following', methods=['post'])
-def following_exhibition(artist_id):
+def following_artist(artist_id):
     existing_following_artist = FollowingArtist.query.filter(FollowingArtist.user_id == session["user_id"], FollowingArtist.artist_id == artist_id).first()
     
     if existing_following_artist is not None:

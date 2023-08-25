@@ -60,7 +60,7 @@ def gallery(id):
                             ended_count=len(ended_exhibitions), id=id)
 
 @gallery_bp.route('/gallery/<gallery_id>/following', methods=['post'])
-def following_exhibition(gallery_id):
+def following_gallery(gallery_id):
     existing_following_gallery = FollowingGallery.query.filter(FollowingGallery.user_id == session["user_id"], FollowingGallery.gallery_id == gallery_id).first()
     
     if existing_following_gallery is not None:
