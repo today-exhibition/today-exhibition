@@ -3,6 +3,15 @@
 {% block content %}
   <!-- 전시 이름 -->
   <h3 class="fw-bold">{{ data.exhibition.title|safe }}</h3>
+  {% if user_id %}
+    {% if data.id in liked_exhibition_ids %}
+      <i class="fa-solid fa-heart fa-2x" onclick="likeExhibition(this, '{{ data.id }}')"></i>
+    {% else %}
+      <i class="fa-regular fa-heart fa-2x" onclick="likeExhibition(this, '{{ data.id }}')"></i>
+    {% endif %}
+  {% else %}
+    <i class="fa-regular fa-heart fa-2x" onclick="alert('로그인 후 이용 가능한 서비스입니다.')"></i>
+  {% endif %}
   <!-- 전시 정보 -->
   <div class="container">
     <div class="row">

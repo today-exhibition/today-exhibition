@@ -2,13 +2,13 @@
 
 {% block content %}
   <!-- 작가 이름 -->
-  <h3 class="fw-bold">{{ data.artist }}</h3>
+  <h3 class="fw-bold">{{ data.artist.name }}</h3>
   <!-- 진행중 전시 -->
   <div class="container mb-5">
-    <h5 class="fw-bold">진행중 전시회 ({{ data.ongoing_exhibitions|length }})</h5>
-    {% if data.ongoing_exhibitions %}
+    <h5 class="fw-bold">진행중 전시회 ({{ data.exhibition_status.ongoing_exhibitions|length }})</h5>
+    {% if data.exhibition_status.ongoing_exhibitions %}
       <div class="row row-cols-2 row-cols-md-2 row-cols-lg-3 g-5">
-        {% for exhibition in data.ongoing_exhibitions %}
+        {% for exhibition in data.exhibition_status.ongoing_exhibitions %}
           <div class="col">
             <div class="card" onclick="window.location='/exhibition/{{ exhibition.id }}'">
               <img src="{{ exhibition.thumbnail_img }}" class="card-img-top" alt="{{ exhibition.title|safe }}">
@@ -34,10 +34,10 @@
   </div>
   <!-- 예정중 전시 -->
   <div class="container mb-5">
-    <h5 class="fw-bold">예정중 전시회 ({{ data.upcoming_exhibitions|length }})</h5>
-    {% if data.upcoming_exhibitions %}
+    <h5 class="fw-bold">예정중 전시회 ({{ data.exhibition_status.upcoming_exhibitions|length }})</h5>
+    {% if data.exhibition_status.upcoming_exhibitions %}
       <div class="row row-cols-1 row-cols-md-3 g-5">
-        {% for exhibition in data.upcoming_exhibitions %}
+        {% for exhibition in data.exhibition_status.upcoming_exhibitions %}
           <div class="col">
             <div class="card" onclick="window.location='/exhibition/{{ exhibition.id }}'">
               <img src="{{ exhibition.thumbnail_img }}" class="card-img-top" alt="{{ exhibition.title|safe }}">
@@ -63,8 +63,8 @@
   </div>
   <!-- 지난 전시 -->
   <div class="container mb-5">
-    <h5 class="fw-bold">지난 전시회 ({{ data.ended_exhibitions|length }})</h5>
-    {% if data.ended_exhibitions %}
+    <h5 class="fw-bold">지난 전시회 ({{ data.exhibition_status.ended_exhibitions|length }})</h5>
+    {% if data.exhibition_status.ended_exhibitions %}
       <div class="row row-cols-1 row-cols-md-3 g-5">
         {% for exhibition in data.ended_exhibitions %}
           <div class="col">

@@ -6,14 +6,44 @@ import uuid
 
 artist_bp = Blueprint('artist', __name__)
 
+# 작가 디테일(작가명, 전시 상태)
 @artist_bp.route('/artist/<id>')
 def artist(id):
-    # [작가디테일 > 작가 정보 조회]
-    artist = db.session.query(
-        Artist.name)\
+    artist = get_artist_data(id)\
         .filter(Artist.id == id)\
-        .first()
-    # [작가디테일 > 전시 정보 조회]
+        .first()    
+    exhibitions = get_exhibition_data(id)\
+        .join(ArtistExhibition, ArtistExhibition.exhibition_id == Exhibition.id)\
+        .join(Artist, Artist.id == ArtistExhibition.artist_id)\
+        .filter(Artist.id == id)\
+        .all()    
+    exhibition_status = get_exhibition_status(exhibitions)    
+    data = {
+        "id": id,
+        "artist": artist,
+        "exhibitions": exhibitions,
+        "exhibition_status": exhibition_status
+        }
+    
+    return render_template('artist/artist.html', data=data)
+
+# 작가디테일 > 작가 팔로우
+@artist_bp.route('/artist/<artist_id>/following', methods=['post'])
+def following_artist(artist_id):
+    result = following_artist(artist_id)
+
+    return result
+
+# [함수] 작가 정보
+def get_artist_data(id):
+    artist = db.session.query(
+        Artist.name,
+        Artist.id)
+            
+    return artist
+    
+# [함수] 전시 정보
+def get_exhibition_data(id):
     exhibitions = db.session.query(
         Exhibition.id,
         Exhibition.title, 
@@ -21,12 +51,11 @@ def artist(id):
         Exhibition.start_date, 
         Exhibition.end_date, 
         Exhibition.thumbnail_img)\
-        .join(Gallery, Exhibition.gallery_id == Gallery.id)\
-        .join(ArtistExhibition, ArtistExhibition.exhibition_id == Exhibition.id)\
-        .join(Artist, Artist.id == ArtistExhibition.artist_id)\
-        .filter(Artist.id == id)\
-        .all()    
-    # [작가디테일 > 진행/예정/종료 전시 상태 (오늘 날짜와 비교)]
+        .join(Gallery, Exhibition.gallery_id == Gallery.id)
+    return exhibitions
+
+# [함수] 진행/예정/종료 전시 상태 (오늘 날짜와 비교)
+def get_exhibition_status(exhibitions):
     today = datetime.today().date()  #오늘 날짜
     ongoing_exhibitions = []         #진행중 전시 
     upcoming_exhibitions = []        #예정중 전시
@@ -38,20 +67,16 @@ def artist(id):
             upcoming_exhibitions.append(exhibition)
         elif exhibition.end_date < today:
             ended_exhibitions.append(exhibition)
-    # [작가디테일 > json형식(작가, 전시, 전시상태)]
     data = {
-        "id": id,
-        "artist": artist.name,
         "ongoing_exhibitions": ongoing_exhibitions,
         "upcoming_exhibitions": upcoming_exhibitions,
         "ended_exhibitions": ended_exhibitions
         }
 
-    return render_template('artist/artist.html', data=data)
+    return data
 
-# [작가디테일 > 작가 팔로우]
-@artist_bp.route('/artist/<artist_id>/following', methods=['post'])
-def following_exhibition(artist_id):
+# [함수] 작가 팔로우 처리
+def following_artist(artist_id):
     existing_following_artist = FollowingArtist.query\
         .filter(FollowingArtist.user_id == session["user_id"], FollowingArtist.artist_id == artist_id)\
         .first()
@@ -69,4 +94,4 @@ def following_exhibition(artist_id):
         db.session.add(insertdb)
         db.session.commit()
 
-    return "followed"                          
+    return "followed"
