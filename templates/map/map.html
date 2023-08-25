@@ -1,8 +1,6 @@
 {% extends 'common/layout.html' %}
 
 {% block content %}
-<script type="text/javascript"
-  src="https://dapi.kakao.com/v2/maps/sdk.js?appkey={{ api_key }}&libraries=services,clusterer,drawing&autoload=false"></script>
 <div class="container">
   <div class="row justify-content-between">
     <div class="map-container col-12 col-lg-8">
@@ -23,7 +21,7 @@
 {% block script %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-  var exhibitionsArray = JSON.parse('{{ exhibition_list|safe }}');
+  var exhibitionsArray = {{ exhibition_list|safe }} ;
 </script>
 <script type="module" src="{{ url_for('static', filename='map.js')}}"></script>
 {% endblock %}
