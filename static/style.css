@@ -158,3 +158,19 @@ input::placeholder {
   top: 0px;
   right: 0px;
 }
+
+/* sort */
+.sort-type-line {
+  width: 260px; 
+  margin: 10px auto;
+}
+
+.sort-area-line {
+  width: 530px; 
+  margin: 10px auto;
+}
+
+.sort-top-line {
+  width: 600px; 
+  margin: 10px auto;
+}

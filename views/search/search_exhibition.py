@@ -95,7 +95,7 @@ def areas_filter(query, selected_areas):
     if selected_areas:
         query = query \
             .join(GalleryAddress, Gallery.id == GalleryAddress.gallery_id, isouter=True) \
-            .filter(func.substr(GalleryAddress.area, 1, 2).in_(selected_areas))
+            .filter(GalleryAddress.area.in_(selected_areas))
         
     return query
     
