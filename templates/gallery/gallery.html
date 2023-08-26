@@ -13,168 +13,61 @@
       <i class="fa-regular fa-bookmark fa-2x" onclick="alert('로그인 후 이용 가능한 서비스입니다.')"></i>
     {% endif %}
   </h3>
-  <!-- 미술관 정보 -->
-  <div class="container">
-    <div class="row">
-      <div class="col-md-6">
-        <img src="{{ url_for('static', filename='/img/icon/gallery_default2.svg') }}" alt="{{data.gallery.name}}"
-          class="img-fluid" style="width: 250px;">
-      </div>
-      <div class="col-md-6">
-        <table class="table">
-          <tbody>
-            <tr>
-              <th class="col-md-3">운영시간</th>
-              <td>{{ data.gallery.opening_hours or '-' }}</td>
-            </tr>
-            <tr>
-              <th class="col-md-3">휴관일</th>
-              <td>{{ data.gallery.holiday_info or '-' }}</td>
-            </tr>
-            <tr>
-              <th class="col-md-3">주소</th>
-              <td>{{ data.gallery.address or '-' }}</td>
-            </tr>
-            <tr>
-              <th class="col-md-3">연락처</th>
-              <td>{{ data.gallery.contact or '-' }}</td>
-            </tr>
-            <tr>
-              <th class="col-md-3">주차장</th>
-              <td>{{ data.gallery.parking_yn or '-' }}</td>
-            </tr>
-            <tr>
-              <th class="col-md-3">홈페이지</th>
-              <td>
-                {% if data.gallery.homepage_url %}
-                <a href="{{ data.gallery.homepage_url }}" target="_blank">바로가기</a>
+  <!-- 전시회 상태별 정보 -->
+  {% for status in ['ongoing', 'upcoming', 'ended'] %}
+    <div class="container mb-5">
+      <h5 class="fw-bold">
+        {% if status == 'ongoing' %}
+          진행중 전시회
+        {% elif status == 'upcoming' %}
+          예정중 전시회
+        {% else %}
+          지난 전시회
+        {% endif %} 
+          ({{ data.exhibition_status[status + '_exhibitions']|length }})
+      </h5>
+      {% if data.exhibition_status[status + '_exhibitions'] %}
+        <div class="row row-cols-1 row-cols-md-3 g-5">
+          {% for exhibition in data.exhibition_status[status + '_exhibitions'] %}
+            <div class="col">
+              <div class="card">
+                <!-- 전시 좋아요 아이콘 -->
+                {% if data.user_id %}
+                  {% if exhibition.id in data.liked_exhibition_ids %}
+                    <i class="fa-solid fa-heart fa-2x" onclick="likeExhibition(this, '{{ exhibition.id }}')"></i>
+                  {% else %}
+                    <i class="fa-regular fa-heart fa-2x" onclick="likeExhibition(this, '{{ exhibition.id }}')"></i>
+                  {% endif %}
                 {% else %}
-                {{ '-' }}
+                  <i class="fa-regular fa-heart fa-2x" onclick="alert('로그인 후 이용 가능한 서비스입니다.')"></i>
                 {% endif %}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+                <img src="{{ exhibition.thumbnail_img }}" class="card-img-top" alt="{{ exhibition.title|safe }}">
+                <div class="card-body" onclick="window.location='/exhibition/{{ exhibition.id }}'">
+                  <h5 class="card-title text-truncate">{{ exhibition.title|safe }}</h5>
+                  <ul>
+                    <li><strong>기간:</strong>
+                      <p class="card-text gallery-date">{{ exhibition.start_date }} ~ {{ exhibition.end_date }}</p>
+                    </li>
+                    <li><strong>장소:</strong>
+                      <p class="card-text gallery-place">{{ exhibition.name }}</p>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p>
+          {% if status == 'ongoing' %}
+            진행중 전시회가 없습니다.
+          {% elif status == 'upcoming' %}
+            예정중 전시회가 없습니다.
+          {% else %}
+            지난 전시회가 없습니다.
+          {% endif %} 
+        </p>
+      {% endif %}
     </div>
-  </div>
-  <!-- 미술관 소개 -->
-  {% if data.gallery.description %}
-    <h3 class="fw-bold">{{ data.gallery.name }} 소개</h3>
-    <div class="detail_description">{{ data.gallery.description|safe }}</div>
-  {% endif %}
-  <!-- 진행중 전시 -->
-  <div class="container mb-5">
-    <h5 class="fw-bold">진행중 전시회 ({{ data.exhibition_status.ongoing_exhibitions|length }})</h5>
-    {% if data.exhibition_status.ongoing_exhibitions %}
-      <div class="row row-cols-1 row-cols-md-3 g-5">
-        {% for exhibition in data.exhibition_status.ongoing_exhibitions %}
-          <div class="col">
-            <div class="card">
-              {% if data.user_id %}
-                {% if exhibition.id in data.liked_exhibition_ids %}
-                  <i class="fa-solid fa-heart fa-2x" onclick="likeExhibition(this, '{{ exhibition.id }}')"></i>
-                {% else %}
-                  <i class="fa-regular fa-heart fa-2x" onclick="likeExhibition(this, '{{ exhibition.id }}')"></i>
-                {% endif %}
-                {% else %}
-                <i class="fa-regular fa-heart fa-2x" onclick="alert('로그인 후 이용 가능한 서비스입니다.')"></i>
-              {% endif %}         
-              <img src="{{ exhibition.thumbnail_img }}" class="card-img-top" alt="{{ exhibition.title|safe }}">
-              <div class="card-body" onclick="window.location='/exhibition/{{ exhibition.id }}'">
-                <h5 class="card-title text-truncate">{{ exhibition.title|safe }}</h5>
-                <ul>
-                  <li><strong>기간:</strong>
-                    <p class="card-text gallery-date">{{ exhibition.start_date }} ~ {{ exhibition.end_date }}
-                    </p>
-                  </li>
-                  <li><strong>장소:</strong>
-                    <p class="card-text gallery-place">{{ exhibition.name }}</p>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        {% endfor %}
-      </div>
-    {% else %}
-      <p>진행중인 전시회가 없습니다.</p>
-    {% endif %}
-  </div>
-  <!-- 예정중 전시 -->
-  <div class="container mb-5">
-    <h5 class="fw-bold">예정중 전시회 ({{ data.exhibition_status.upcoming_exhibitions|length }})</h5>
-    {% if data.exhibition_status.upcoming_exhibitions %}
-      <div class="row row-cols-1 row-cols-md-3 g-5">
-        {% for exhibition in data.exhibition_status.upcoming_exhibitions %}
-          <div class="col">
-            <div class="card">
-              {% if data.user_id %}
-                {% if exhibition.id in data.liked_exhibition_ids %}
-                  <i class="fa-solid fa-heart fa-2x" onclick="likeExhibition(this, '{{ exhibition.id }}')"></i>
-                {% else %}
-                  <i class="fa-regular fa-heart fa-2x" onclick="likeExhibition(this, '{{ exhibition.id }}')"></i>
-                {% endif %}
-                {% else %}
-                <i class="fa-regular fa-heart fa-2x" onclick="alert('로그인 후 이용 가능한 서비스입니다.')"></i>
-              {% endif %}         
-              <img src="{{ exhibition.thumbnail_img }}" class="card-img-top" alt="{{ exhibition.title|safe }}">
-              <div class="card-body" onclick="window.location='/exhibition/{{ exhibition.id }}'">
-                <h5 class="card-title text-truncate">{{ exhibition.title|safe }}</h5>
-                <ul>
-                  <li><strong>기간:</strong>
-                    <p class="card-text gallery-date">{{ exhibition.start_date }} ~ {{ exhibition.end_date }}
-                    </p>
-                  </li>
-                  <li><strong>장소:</strong>
-                    <p class="card-text gallery-place">{{ exhibition.name }}</p>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        {% endfor %}
-      </div>
-    {% else %}
-      <p>예정중인 전시회가 없습니다.</p>
-    {% endif %}
-  </div>
-  <!-- 지난 전시 -->
-  <div class="container mb-5">
-    <h5 class="fw-bold">지난 전시회 ({{ data.exhibition_status.ended_exhibitions|length }})</h5>
-    {% if data.exhibition_status.ended_exhibitions %}
-      <div class="row row-cols-1 row-cols-md-3 g-5">
-        {% for exhibition in data.exhibition_status.ended_exhibitions %}
-          <div class="col">
-            <div class="card">
-              {% if data.user_id %}
-                {% if exhibition.id in data.liked_exhibition_ids %}
-                  <i class="fa-solid fa-heart fa-2x" onclick="likeExhibition(this, '{{ exhibition.id }}')"></i>
-                {% else %}
-                  <i class="fa-regular fa-heart fa-2x" onclick="likeExhibition(this, '{{ exhibition.id }}')"></i>
-                {% endif %}
-                {% else %}
-                <i class="fa-regular fa-heart fa-2x" onclick="alert('로그인 후 이용 가능한 서비스입니다.')"></i>
-              {% endif %}         
-              <img src="{{ exhibition.thumbnail_img }}" class="card-img-top" alt="{{ exhibition.title|safe }}">
-              <div class="card-body" onclick="window.location='/exhibition/{{ exhibition.id }}'">
-                <h5 class="card-title text-truncate">{{ exhibition.title|safe }}</h5>
-                <ul>
-                  <li><strong>기간:</strong>
-                    <p class="card-text gallery-date">{{ exhibition.start_date }} ~ {{ exhibition.end_date }}
-                    </p>
-                  </li>
-                  <li><strong>장소:</strong>
-                    <p class="card-text gallery-place">{{ exhibition.name }}</p>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        {% endfor %}
-      </div>
-    {% else %}
-      <p>지난 전시회가 없습니다.</p>
-    {% endif %}
-  </div>
+  {% endfor %}
 {% endblock %}

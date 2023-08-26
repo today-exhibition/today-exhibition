@@ -3,7 +3,7 @@ from sqlalchemy import func
 from datetime import datetime
 from models.model import db, Gallery, GalleryAddress, FollowingGallery
 from views.artist.artist import get_exhibition_data, get_exhibition_status
-from views.search.search import get_followed_artist_ids, get_followed_gallery_ids
+from views.search.search import get_followed_gallery_ids, get_liked_exhibition_ids
 import uuid
 
 gallery_bp = Blueprint('gallery', __name__)
@@ -18,16 +18,16 @@ def gallery(id):
     exhibition_status = get_exhibition_status(exhibitions)
     
     user_id = session.get('user_id', None)
-    followed_artist_ids = get_followed_artist_ids(user_id)
     followed_gallery_ids = get_followed_gallery_ids(user_id)
+    liked_exhibition_ids = get_liked_exhibition_ids(user_id)
 
     data = {
         "id": id,
         "gallery": gallery,
         "exhibition_status": exhibition_status,
         "user_id": user_id,
-        "followed_artist_ids": followed_artist_ids,
-        "followed_gallery_ids": followed_gallery_ids
+        "followed_gallery_ids": followed_gallery_ids,        
+        "liked_exhibition_ids": liked_exhibition_ids
         }
 
     return render_template('gallery/gallery.html', data=data)
