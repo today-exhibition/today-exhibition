@@ -27,6 +27,11 @@ class User(db.Model):
     gender = db.Column(db.String(6))
     login_type = db.Column(db.Enum(LoginType), nullable=False)
 
+class UserToken(db.Model):
+    __tablename__ = 'user_token'
+    id = db.Column(db.String(64), primary_key=True)
+    refresh_token = db.Column(db.String())
+
 class Gallery(db.Model):
     __tablename__ = 'gallery'
     id = db.Column(db.String(64), primary_key=True)
