@@ -59,7 +59,7 @@
         </table>
         <div class="booking">
           <form action="{{ url_for('booking.booking_detail', id=data.id) }}">
-            <input type="submit" value="예매하기">
+            <input type="submit" value="예매하기" class="btn btn-outline-secondary">
           </form>
         </div>
       </div>
@@ -80,7 +80,7 @@
           <textarea id="comment" name="content" rows="1" class="form-control rounded"
             placeholder="내용을 입력해주세요."></textarea>
           <div class="input-group-append">
-            <button type="submit" class="btn btn-outline-secondary rounded" id="button-addon2">등록</button>
+            <input type="submit" value="등록" class="btn btn-outline-secondary rounded" id="button-addon2">
           </div>
         </div>
       </form>
