@@ -119,15 +119,24 @@ def social_signin(data, social_type):
     user_signin(user_data)
     # 유저 아이디 세션 등록
     register_user_id_in_session(user_data.id)
-    update_user_refresh_token(data)
+    # user_token 테이블에 refresh token 등록
+    update_user_refresh_token(data, social_type)
     
     return redirect(url_for('main.main'))
 
 # 유저 리프레쉬 토큰 DB에 등록
-def update_user_refresh_token(data):
-    account_info = data.get('response')
-    user_id = account_info.get('id')
-    refresh_token = account_info.get('refresh_token')
+def update_user_refresh_token(data, social_type):
+    try:
+        if social_type == 'naver':
+            account_info = data.get('response')
+            user_id = account_info.get('id')
+            refresh_token = account_info.get('refresh_token')
+        if social_type == 'kakao':
+            account_info = data.get('kakao_account')
+            user_id = data.get('id')
+            refresh_token = account_info.get('refresh_token')
+    except:
+        return redirect(url_for('main.main'))
     
     # DB user_token에 유저 id 있는지 확인 후
     check_user_token = db.session.query(UserToken).filter_by(id=user_id).first()
@@ -144,6 +153,36 @@ def update_user_refresh_token(data):
         db.session.add(regist_user_token)
         
     db.session.commit()
+    
+
+# update access token
+def update_naver_access_token(id, social_keys):
+    NAVER_CLIENT_ID = social_keys["naver_client_id"]
+    NAVER_CLIENT_SECRET = social_keys["naver_client_secret"]
+    
+    user_token_info = db.session.query(UserToken).filter_by(id=id).first()
+    USER_REFRESH_TOKEN = user_token_info.refresh_token
+    
+    request_update_url = f"https://nid.naver.com/oauth2.0/token?grant_type=refresh_token&client_id={NAVER_CLIENT_ID}&client_secret={NAVER_CLIENT_SECRET}&refresh_token={USER_REFRESH_TOKEN}"
+    token_request = requests.get(request_update_url)
+    token_json = token_request.json()
+    access_token = token_json["access_token"]
+    
+    return access_token
+
+def update_kakao_access_token(id, social_keys):
+    KAKAO_CLIENT_ID = social_keys["kakao_client_id"]
+    KAKAO_CLIENT_SECRET = social_keys["kakao_client_id"]
+    
+    user_token_info = db.session.query(UserToken).filter_by(id=id).first()
+    USER_REFRESH_TOKEN = user_token_info.refresh_token
+    
+    request_update_url = f"https://kauth.kakao.com/oauth/token?grant_type=refresh_token&client_id={KAKAO_CLIENT_ID}&client_secret={KAKAO_CLIENT_SECRET}&refresh_token=${USER_REFRESH_TOKEN}"
+    token_request = requests.get(request_update_url)
+    token_json = token_request.json()
+    access_token = token_json["access_token"]
+    
+    return access_token
 
 @user_bp.route('/user', methods=['GET', 'POST'])
 def user():
@@ -200,8 +239,8 @@ def naver_callback():
         
         token_request = requests.get(request_auth_url)
         token_json = token_request.json()
-        
         refresh_token = token_json.get("refresh_token")
+        
         ACCESS_TOKEN = token_json.get("access_token", None)
         if ACCESS_TOKEN is None:
             return Response("Unauthorized", status=401)
@@ -229,6 +268,7 @@ def kakao_callback():
     
     token_request = requests.get(request_auth_url)
     token_json = token_request.json()
+    refresh_token = token_json.get("refresh_token")
     
     ACCESS_TOKEN = token_json.get("access_token", None)
     if ACCESS_TOKEN is None:
@@ -236,6 +276,7 @@ def kakao_callback():
     
     profile_request = requests.get(f"https://kapi.kakao.com/v2/user/me", headers={"Authorization": f"Bearer {ACCESS_TOKEN}"})
     data = profile_request.json()
+    data['kakao_account']['refresh_token'] = refresh_token
     
     return social_signin(data, "kakao")
 
@@ -252,14 +293,13 @@ def delete():
     secrets = load_secrets()
     social_keys = secrets.get("social")
     user_id = session.get("user_id")
+    user_info = db.session.query(User).filter_by(id=user_id).first()
     
     if "naver_delete" in request.form:
         NAVER_CLIENT_ID = social_keys["naver_client_id"]
         NAVER_CLIENT_SECRET = social_keys["naver_client_secret"]
         
-        # user_id로 user_token db 조회 후 refresh_token으로 access_token 새롭게 받은 후 delete 진행
-        user_info = db.session.query(User).filter_by(id=user_id).first()
-        user_id = user_info.id
+        # refresh_token으로 access_token 새롭게 받은 후 delete 진행
         ACCESS_TOKEN = update_naver_access_token(user_id, social_keys)
         request_delete_url = f"https://nid.naver.com/oauth2.0/token?grant_type=delete&client_id={NAVER_CLIENT_ID}&client_secret={NAVER_CLIENT_SECRET}&access_token={ACCESS_TOKEN}&service_provider=NAVER"
         
@@ -273,20 +313,17 @@ def delete():
             session.clear()
         
     if "kakao_delete" in request.form:
-        pass
+        KAKAO_CLIENT_ID = social_keys["kakao_client_id"]
+        KAKAO_CLIENT_SECRET = social_keys["kakao_client_id"]
+        
+        ACCESS_TOKEN = update_kakao_access_token(user_id, social_keys)
+        request_delete_url = f"https://kapi.kakao.com/v1/user/unlink"
+        
+        delete_request = requests.get(request_delete_url, headers={"Authorization": f"Bearer {ACCESS_TOKEN}"})
+        
+        if delete_request.json()['id']:
+            db.session.delete(user_info)
+            db.session.commit()
+            session.clear()
     
     return redirect(url_for('main.main'))
-
-# update access token
-def update_naver_access_token(id, social_keys):
-    NAVER_CLIENT_ID = social_keys["naver_client_id"]
-    NAVER_CLIENT_SECRET = social_keys["naver_client_secret"]
-    
-    user_token_info = db.session.query(UserToken).filter_by(id=id).first()
-    USER_REFRESH_TOKEN = user_token_info.refresh_token
-    
-    request_update_url = f"https://nid.naver.com/oauth2.0/token?grant_type=refresh_token&client_id={NAVER_CLIENT_ID}&client_secret={NAVER_CLIENT_SECRET}&refresh_token={USER_REFRESH_TOKEN}"
-    token_request = requests.get(request_update_url)
-    token_json = token_request.json()
-    access_token = token_json["access_token"]
-    return access_token
