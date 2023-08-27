@@ -139,7 +139,7 @@ def update_user_refresh_token(data, social_type):
         return redirect(url_for('main.main'))
     
     # DB user_token에 유저 id 있는지 확인 후
-    check_user_token = db.session.query(UserToken).filter_by(id=user_id).first()
+    check_user_token = db.session.query(UserToken).filter_by(user_id=user_id).first()
     
     # 유저 아이디가 user_token에 있으면 업데이트 
     if check_user_token:
@@ -147,20 +147,19 @@ def update_user_refresh_token(data, social_type):
     # 유저 아이디가 user_token에 없으면 추가
     if not check_user_token:
         regist_user_token = UserToken(
-            id = user_id,
+            user_id = user_id,
             refresh_token = refresh_token
         )
         db.session.add(regist_user_token)
         
     db.session.commit()
     
-
 # update access token
 def update_naver_access_token(id, social_keys):
     NAVER_CLIENT_ID = social_keys["naver_client_id"]
     NAVER_CLIENT_SECRET = social_keys["naver_client_secret"]
     
-    user_token_info = db.session.query(UserToken).filter_by(id=id).first()
+    user_token_info = db.session.query(UserToken).filter_by(user_id=id).first()
     USER_REFRESH_TOKEN = user_token_info.refresh_token
     
     request_update_url = f"https://nid.naver.com/oauth2.0/token?grant_type=refresh_token&client_id={NAVER_CLIENT_ID}&client_secret={NAVER_CLIENT_SECRET}&refresh_token={USER_REFRESH_TOKEN}"
@@ -174,7 +173,7 @@ def update_kakao_access_token(id, social_keys):
     KAKAO_CLIENT_ID = social_keys["kakao_client_id"]
     KAKAO_CLIENT_SECRET = social_keys["kakao_client_id"]
     
-    user_token_info = db.session.query(UserToken).filter_by(id=id).first()
+    user_token_info = db.session.query(UserToken).filter_by(user_id=id).first()
     USER_REFRESH_TOKEN = user_token_info.refresh_token
     
     request_update_url = f"https://kauth.kakao.com/oauth/token?grant_type=refresh_token&client_id={KAKAO_CLIENT_ID}&client_secret={KAKAO_CLIENT_SECRET}&refresh_token=${USER_REFRESH_TOKEN}"
@@ -191,19 +190,28 @@ def user():
         return render_template("user/login.html")
     user_id = session.get("user_id")
     user = User.query.get(user_id)
+    message = None
     
     # 프로필 수정
     if request.method == "POST":
         input_nickname = request.form.get("input_nickname")
         message = update_user_nickname(user, input_nickname)
-        # 유저 정보 가져오기
-        user_info = db.session.query(User.nickname, User.profile_img).filter_by(id=user_id).first()
-        
-        return render_template("user/user.html", user_info=user_info, message=message)
     
-    user_info = db.session.query(User.nickname, User.profile_img).filter_by(id=user_id).first()
+    user_info = db.session.query(
+        User.nickname, 
+        User.profile_img, 
+        User.login_type) \
+        .filter_by(id=user_id) \
+        .first()
     
-    return render_template("user/user.html", user_info=user_info)
+    user_info_dict = {
+        "nickname": user_info.nickname,
+        "profile_img": user_info.profile_img,
+        "login_type": user_info.login_type.value,
+        "message": message
+    }
+    
+    return render_template("user/user.html", user_info=user_info_dict)
 
 @user_bp.route('/login', methods=['POST'])
 def login():
@@ -313,9 +321,6 @@ def delete():
             session.clear()
         
     if "kakao_delete" in request.form:
-        KAKAO_CLIENT_ID = social_keys["kakao_client_id"]
-        KAKAO_CLIENT_SECRET = social_keys["kakao_client_id"]
-        
         ACCESS_TOKEN = update_kakao_access_token(user_id, social_keys)
         request_delete_url = f"https://kapi.kakao.com/v1/user/unlink"
         
