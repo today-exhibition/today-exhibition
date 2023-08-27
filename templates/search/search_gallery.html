@@ -1,5 +1,9 @@
 {% extends 'common/layout.html' %}
 
+{% block style %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='/css/components/search_box.css') }}">
+{% endblock %}
+
 {% block search %}
   <form action="/search/gallery" method="GET">
     {% include 'common/block_search.html' %}

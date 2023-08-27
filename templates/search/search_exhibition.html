@@ -1,6 +1,7 @@
 {% extends 'common/layout.html' %}
 
 {% block style %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='/css/components/search_box.css') }}">
   <script src="{{ url_for('static', filename='search_exhibition.js') }}" defer></script>
   <script src="{{ url_for('static', filename='truncate.js') }}" defer></script>
 {% endblock %}
@@ -8,7 +9,7 @@
 {% block search %}
   <form action="/search/exhibition" method="GET">
     <div class="input-group mb-3" style="width: 500px; margin: 0 auto; padding-top: 50px;">
-      <input type="text" name="data.keyword" class="form-control" placeholder="검색어를 입력해주세요" value="{{ data.keyword }}" id="keyword-input">   
+      <input type="text" name="data.keyword" class="form-control" placeholder="검색" value="{{ data.keyword }}" id="keyword-input">   
       <button class="btn btn-outline-secondary" type="submit" id="filter-button">검색</button> 
     </div>
   </form>

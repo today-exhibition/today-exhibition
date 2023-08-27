@@ -39,11 +39,7 @@ input::placeholder {
 
 /* button */
 
-.btn {
-  margin: 5px;
-}
-
-.btn-outline-secondary {
+.btn-margin {
   margin: 5px;
 }
 
