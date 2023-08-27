@@ -5,12 +5,12 @@
   <h3 class="fw-bold">{{ data.gallery.name }}
     {% if data.user_id %}
       {% if data.gallery.id in data.followed_gallery_ids %}
-        <i class="fa-solid fa-bookmark fa-2x" onclick="followGallery(this, '{{ data.gallery.id }}')"></i>
+        <i class="fa-solid fa-bookmark fa" onclick="followGallery(this, '{{ data.gallery.id }}')"></i>
       {% else %}
-        <i class="fa-regular fa-bookmark fa-2x" onclick="followGallery(this, '{{ data.gallery.id }}')"></i>
+        <i class="fa-regular fa-bookmark fa" onclick="followGallery(this, '{{ data.gallery.id }}')"></i>
       {% endif %}
     {% else %}
-      <i class="fa-regular fa-bookmark fa-2x" onclick="alert('로그인 후 이용 가능한 서비스입니다.')"></i>
+      <i class="fa-regular fa-bookmark fa" onclick="alert('로그인 후 이용 가능한 서비스입니다.')"></i>
     {% endif %}
   </h3>
   <!-- 전시회 상태별 정보 -->
