@@ -39,10 +39,6 @@ input::placeholder {
 
 /* button */
 
-.btn-margin {
-  margin: 5px;
-}
-
 .btn.selected {
   background-color: #6C757D;
   color: #FFFF;
