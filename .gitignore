@@ -10,6 +10,7 @@ __pycache__
 
 # Sensitive data: API keys and other secrets
 secrets.json
+secrets.js
 
 # Application configuration
 config.py
