@@ -67,6 +67,6 @@
     {% if data.sub_sorts %}{% set url = url + "&sub_sort=" + data.sub_sorts | urlencode %}{% endif %}
     {% if data.areas %}{% set url = url + "&area=" + data.areas | urlencode %}{% endif %}
     {% if data.sort %}{% set url = url + "&sort=" + data.sort %}{% endif %}
-    {% include 'common/pagenation.html' %}
+    {% include 'common/pagination.html' %}
   </div>
 {% endblock %}
