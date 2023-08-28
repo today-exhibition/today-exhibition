@@ -2,15 +2,14 @@ from flask import Blueprint, render_template, session
 from sqlalchemy import func
 
 from models.model import db, Exhibition, Gallery, LikeExhibition
+from decorators import check_user_login
 
 
 exhibition_like_bp = Blueprint('exhibition_like', __name__)
 
 @exhibition_like_bp.route('/exhibition/like')
+@check_user_login
 def exhibition_like():
-    if "user_id" not in session:
-        return render_template("user/login.html")
-    
     user_id = session["user_id"]
     exhibition_list = db.session.query(
         Exhibition.id,
