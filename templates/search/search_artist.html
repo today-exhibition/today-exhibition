@@ -12,6 +12,7 @@
   {% if data.keyword %}
     <span class="search_result">"{{ data.keyword }}" 검색결과 {{ data.artist_count }}건</span>
   {% endif %}
+    <span class="search_result"></span>
   {% set type = "artist" %}
   {% include './common/filter.html' %}
 {% endblock %}
