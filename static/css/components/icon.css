@@ -3,8 +3,8 @@
   height: 32px;
   border-radius: 50%;
   background-color: #EFF1F3;
-  box-shadow: -5px -5px 32px #8B929E,
-            5px  5px 32px #ffffff;
+  box-shadow: -5px -5px 64px #8B929E,
+            5px  5px 64px #ffffff;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -12,8 +12,8 @@
 
 .heart::before, .bookmark::before {
   content: '';
-  width: 60%;
-  height: 60%;
+  width: 63%;
+  height: 63%;
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
   -webkit-mask-size: contain;
@@ -33,13 +33,13 @@
 }
 
 .bookmark.on::before {
-  background-color: #272B35;
+  background-color: #6F7782;
   -webkit-mask-image: url(/static/img/icon/bookmark_on.svg);
   mask-image: url(/static/img/icon/bookmark_on.svg);
 }
 
 .bookmark.off::before {
-  background-color: #272B35;
+  background-color: #6F7782;
   -webkit-mask-image: url(/static/img/icon/bookmark_off.svg);
   mask-image: url(/static/img/icon/bookmark_off.svg);
 }
