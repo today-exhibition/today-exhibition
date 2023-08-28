@@ -1,0 +1,23 @@
+.btn-regular {
+	margin: 5px;
+  border-radius: 17px;
+}
+
+.btn-width {
+	width: 73.6px;
+}
+
+.default {
+	border-color: #D7D9DD;
+  color: #8B929E;
+}
+
+.default:hover {
+  background: #EFF1F3;
+}
+
+.default.selected {
+  background-color: #EFF1F3;
+  color: black;
+  font-weight: bold;
+}

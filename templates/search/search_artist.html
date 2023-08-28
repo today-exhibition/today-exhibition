@@ -1,5 +1,10 @@
 {% extends 'common/layout.html' %}
 
+{% block style %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='/css/components/search_box.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='/css/components/filter_btn.css') }}">
+{% endblock %}
+
 {% block search %}
   <form action="/search/artist" method="GET">
     {% include 'common/block_search.html' %}
@@ -7,6 +12,7 @@
   {% if data.keyword %}
     <span class="search_result">"{{ data.keyword }}" 검색결과 {{ data.artist_count }}건</span>
   {% endif %}
+    <span class="search_result"></span>
   {% set type = "artist" %}
   {% include './common/filter.html' %}
 {% endblock %}

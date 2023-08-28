@@ -22,7 +22,6 @@ input::placeholder {
 }
 
 /* font awesome */
-
 .fa-heart{
   width: 50px;
   height: 50px;
@@ -38,19 +37,6 @@ input::placeholder {
 }
 
 /* button */
-
-.btn {
-  margin: 5px;
-}
-
-.btn-outline-secondary {
-  margin: 5px;
-}
-
-.btn.selected {
-  background-color: #6C757D;
-  color: #FFFF;
-}
 .btn-top.selected {
   background-color: #0D6EFD;
   color: #FFFF;
@@ -78,7 +64,6 @@ input::placeholder {
 .my-card-body {
   height: 100%;
   cursor:pointer;
-  /* .card-body의 하위요소 상하좌우 정중앙 정렬하기 */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -89,7 +74,6 @@ input::placeholder {
 }
 
 /* artist gallery */
-
 .artist-row, .gallery-row {
   height: 180px;
 }
@@ -161,16 +145,46 @@ input::placeholder {
 
 /* sort */
 .sort-type-line {
-  width: 260px; 
+  width: 250px; 
   margin: 10px auto;
 }
 
 .sort-area-line {
-  width: 530px; 
+  width: 490px; 
   margin: 10px auto;
 }
 
 .sort-top-line {
-  width: 600px; 
+  width: 570px; 
   margin: 10px auto;
+}
+
+.input-group {
+  width: 500px; 
+  padding-top: 50px;
+  margin: 0 auto; 
+}
+
+.search_result {
+  height: 15.2px;
+  margin-left: 290px;
+  font-family: 'Pretendard-Light';
+  font-size: small;
+}
+
+.flex-box {
+  display: flex; 
+  justify-content: center;
+}
+
+/* Pretendard */
+.btn {
+  font-family: 'Pretendard-Light';
+}
+
+@font-face {
+	font-family: 'Pretendard-Light';
+	src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Light.woff') format('woff');
+	font-weight: 400;
+	font-style: normal;
 }

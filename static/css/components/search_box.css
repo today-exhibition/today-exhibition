@@ -1,0 +1,11 @@
+#keyword-input {
+  height: 40px;
+}
+
+input::-webkit-input-placeholder{
+	background-image: url(https://cdn1.iconfinder.com/data/icons/hawcons/32/698627-icon-111-search-256.png) ;
+	background-size: 30px 30px;
+	background-position: 0px center;
+	background-repeat: no-repeat;
+	padding-left: 40px;
+}
