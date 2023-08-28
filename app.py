@@ -7,17 +7,17 @@ from models.model import db
 
 from views.main.main import main_bp
 from views.artist.artist import artist_bp
-from views.artist.artist_follow import artist_follow_bp
 from views.gallery.gallery import gallery_bp
-from views.gallery.gallery_follow import gallery_follow_bp
 from views.exhibition.exhibition import exhibition_bp
-from views.exhibition.exhibition_like import exhibition_like_bp
 from views.map.map import map_bp
 from views.search.search import search_bp
 from views.search.search_exhibition import search_exhibition_bp
 from views.search.search_artist import search_artist_bp
 from views.search.search_gallery import search_gallery_bp
 from views.user.user import user_bp
+from views.user.exhibition_like import exhibition_like_bp
+from views.user.gallery_follow import gallery_follow_bp
+from views.user.artist_follow import artist_follow_bp
 from views.booking.booking import booking_bp
 
 

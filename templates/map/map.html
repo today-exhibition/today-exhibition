@@ -9,7 +9,7 @@
     </div>
     <div class="card-container col-12 col-lg-4">
       <div class="card-filter">
-        {% include '/common/map_filter.html' %}
+        {% include '/map/map_filter.html' %}
       </div>
       <div id="card-list">
       </div>
@@ -23,5 +23,5 @@
 <script>
   var exhibitionsArray = {{ exhibition_list|safe }} ;
 </script>
-<script type="module" src="{{ url_for('static', filename='map.js')}}"></script>
+<script type="module" src="{{ url_for('static', filename='/js/map.js')}}"></script>
 {% endblock %}

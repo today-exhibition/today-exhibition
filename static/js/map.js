@@ -1,5 +1,5 @@
-import constants from '/static/constants.js';
-import secrets from '/static/secrets.js';
+import constants from '/static/js/constants.js';
+import secrets from '/static/js/secrets.js';
 
 function makeCard(data) {
   const id = data['exhibition_id'];
