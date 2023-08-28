@@ -1,4 +1,4 @@
-.heart {
+.heart, .bookmark {
   width: 32px;
   height: 32px;
   border-radius: 50%;
@@ -10,23 +10,36 @@
   align-items: center;
 }
 
-.heart:before {
+.heart::before, .bookmark::before {
   content: '';
   width: 60%;
   height: 60%;
-  background-color: #FF0000;
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
   -webkit-mask-size: contain;
   mask-size: contain;
 }
 
-.heart.on:before {
+.heart.on::before {
+  background-color: #FF0000;
   -webkit-mask-image: url(/static/img/icon/heart_on.svg);
   mask-image: url(/static/img/icon/heart_on.svg);
 }
 
-.heart.off:before {
+.heart.off::before {
+  background-color: #FF0000;
   -webkit-mask-image: url(/static/img/icon/heart_off.svg);
   mask-image: url(/static/img/icon/heart_off.svg);
+}
+
+.bookmark.on::before {
+  background-color: #272B35;
+  -webkit-mask-image: url(/static/img/icon/bookmark_on.svg);
+  mask-image: url(/static/img/icon/bookmark_on.svg);
+}
+
+.bookmark.off::before {
+  background-color: #272B35;
+  -webkit-mask-image: url(/static/img/icon/bookmark_off.svg);
+  mask-image: url(/static/img/icon/bookmark_off.svg);
 }
