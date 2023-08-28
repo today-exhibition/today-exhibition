@@ -6,6 +6,7 @@ from utils import load_secrets
 import requests, datetime, random
 
 from models.model import db, User, LoginType, UserToken
+from models.model import UserToken, Booking, LikeExhibition, FollowingArtist, FollowingGallery, Comment
 
 
 user_bp = Blueprint('user', __name__)
@@ -183,6 +184,18 @@ def update_kakao_access_token(id, social_keys):
     
     return access_token
 
+def delete_user_related_data(user_id):
+    # UserToken, Booking, LikeExhibition, FollowingArtist, FollowingGallery, Comment, User
+    db.session.query(UserToken).filter_by(user_id=user_id).delete()
+    db.session.query(Booking).filter_by(user_id=user_id).delete()
+    db.session.query(LikeExhibition).filter_by(user_id=user_id).delete()
+    db.session.query(FollowingArtist).filter_by(user_id=user_id).delete()
+    db.session.query(FollowingGallery).filter_by(user_id=user_id).delete()
+    db.session.query(Comment).filter_by(user_id=user_id).delete()
+    db.session.query(User).filter_by(id=user_id).delete()
+    
+    db.session.commit()
+
 @user_bp.route('/user', methods=['GET', 'POST'])
 def user():
     # 로그인 여부 확인 후 True -> profile, False -> login
@@ -301,7 +314,6 @@ def delete():
     secrets = load_secrets()
     social_keys = secrets.get("social")
     user_id = session.get("user_id")
-    user_info = db.session.query(User).filter_by(id=user_id).first()
     
     if "naver_delete" in request.form:
         NAVER_CLIENT_ID = social_keys["naver_client_id"]
@@ -316,8 +328,7 @@ def delete():
         # delete request 요청이 성공적인 경우
         if delete_request.json()["result"] == "success":
             # 유저 id로 조회된 컬럼 삭제
-            db.session.delete(user_info)
-            db.session.commit()
+            delete_user_related_data(user_id)
             session.clear()
         
     if "kakao_delete" in request.form:
@@ -327,8 +338,7 @@ def delete():
         delete_request = requests.get(request_delete_url, headers={"Authorization": f"Bearer {ACCESS_TOKEN}"})
         
         if delete_request.json()['id']:
-            db.session.delete(user_info)
-            db.session.commit()
+            delete_user_related_data(user_id)
             session.clear()
     
     return redirect(url_for('main.main'))
