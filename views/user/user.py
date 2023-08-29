@@ -7,6 +7,7 @@ import requests, datetime, random
 
 from models.model import db, User, LoginType, UserToken
 from models.model import UserToken, Booking, LikeExhibition, FollowingArtist, FollowingGallery, Comment
+from decorators import check_user_login
 
 
 user_bp = Blueprint('user', __name__)
@@ -197,10 +198,8 @@ def delete_user_related_data(user_id):
     db.session.commit()
 
 @user_bp.route('/user', methods=['GET', 'POST'])
+@check_user_login
 def user():
-    # 로그인 여부 확인 후 True -> profile, False -> login
-    if not "user_id" in session:
-        return render_template("user/login.html")
     user_id = session.get("user_id")
     user = User.query.get(user_id)
     message = None

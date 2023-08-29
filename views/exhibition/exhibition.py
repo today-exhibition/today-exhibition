@@ -5,6 +5,8 @@ from models.model import db, Artist, Exhibition, Gallery, ArtistExhibition, Gall
 from views.artist.artist import get_artist_data
 from views.search.search import get_liked_exhibition_ids
 import uuid
+from decorators import check_user_login
+
 
 exhibition_bp = Blueprint('exhibition', __name__)
 
@@ -35,11 +37,8 @@ def exhibition(id):
 
 # 전시 코멘트 작성
 @exhibition_bp.route('/exhibition/<id>/add_comment', methods=['POST'])
+@check_user_login
 def add_comment(id):
-    if "user_id" not in session:
-
-        return render_template("user/login.html")
-    
     user_id = session["user_id"]
     content = request.form['content']
     created_at = datetime.now()
