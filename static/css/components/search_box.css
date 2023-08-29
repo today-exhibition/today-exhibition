@@ -13,3 +13,10 @@ input::-webkit-input-placeholder {
 	background-repeat: no-repeat;
 	padding-left: 40px;
 }
+
+
+.input-group {
+	width: 500px; 
+	padding-top: 50px;
+	margin: 0 auto; 
+  }

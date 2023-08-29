@@ -2,15 +2,14 @@ from flask import Blueprint, render_template, session
 from sqlalchemy import func
 
 from models.model import db, Gallery, FollowingGallery
+from decorators import check_user_login
 
 
 gallery_follow_bp = Blueprint('gallery_follow', __name__)
 
 @gallery_follow_bp.route('/gallery/follow')
+@check_user_login
 def gallery_follow():
-    if "user_id" not in session:
-        return render_template("user/login.html")
-    
     user_id = session["user_id"]
     gallery_list = db.session.query(
         Gallery.id,
