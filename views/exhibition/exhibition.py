@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify
+from flask import Blueprint, render_template, request, redirect, url_for, session
 from sqlalchemy import func
 from datetime import datetime
 from models.model import db, Artist, Exhibition, Gallery, ArtistExhibition, GalleryAddress, User, Comment, LikeExhibition
@@ -108,6 +108,7 @@ def get_comments_data(id):
         .join(User, Comment.user_id == User.id)\
         .join(Exhibition, Comment.exhibition_id == Exhibition.id)\
         .filter(Exhibition.id == id)\
+        .order_by(Comment.created_at.desc())\
         .all()
     
     return comments
