@@ -60,7 +60,6 @@ $(document).ready(function () {
       var markers = [];
       for (var i = 0; i < exhibitionsArray.data.length; i++) {
         var exhibition = exhibitionsArray.data[i];
-        console.log(exhibition)
 
         var marker = new kakao.maps.Marker({
           position: new kakao.maps.LatLng(exhibition.gpsy, exhibition.gpsx),

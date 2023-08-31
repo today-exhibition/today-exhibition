@@ -89,13 +89,7 @@
 {% block script %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-  console.log("ejje");
-  console.log(data);
-
   var data = {{ data|tojson|safe }};
-  console.log(data);
-  console.log("ejje");
-
 </script>
 <script type="module" src="{{ url_for('static', filename='/js/search.js')}}"></script>
 {% endblock %}
