@@ -1,5 +1,5 @@
 from flask import Blueprint, request, render_template, session
-from sqlalchemy import desc
+from sqlalchemy import Cast, String, desc
 
 from models.model import db, Exhibition, Gallery, GalleryAddress, LikeExhibition, FollowingGallery, Artist, FollowingArtist
 
@@ -46,8 +46,8 @@ def get_search_exhibitions(keyword):
     exhibitions_query = db.session.query(
         Exhibition.id,
         Exhibition.title,
-        Exhibition.start_date,
-        Exhibition.end_date,
+        Cast(Exhibition.start_date, String).label('start_date'),
+        Cast(Exhibition.end_date, String).label('end_date'),
         Gallery.name,
         Exhibition.thumbnail_img
         ) \

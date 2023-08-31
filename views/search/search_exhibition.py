@@ -14,9 +14,9 @@ def search_exhibition():
     keyword = request.args.get('keyword', default="", type=str).strip()
     page = request.args.get('page', default=1, type=int)
     user_id = session.get('user_id', None)
-    sub_sorts = request.args.get('sub_sort') # ongoing, ended, upcoming
-    areas = request.args.get('area') # 서울, 경기, 강원, 대전
-    sort = request.args.get('sort') # popularity, featured, recommended
+    sub_sorts = request.args.get('sub_sort') if request.args.get('sub_sort') else "" # ongoing, ended, upcoming
+    areas = request.args.get('area') if request.args.get('areas') else "" # 서울, 경기, 강원, 대전
+    sort = request.args.get('sort') if request.args.get('sort') else "" # popularity, featured, recommended
 
     selected_sub_sorts = sub_sorts.split(',') if sub_sorts else []
     selected_areas = areas.split(',') if areas else []
@@ -35,6 +35,7 @@ def search_exhibition():
     liked_exhibition_ids = get_liked_exhibition_ids(user_id)
 
     total_pages, current_page, page_data, page_list = calc_pages(exhibitions, page)
+    page_data = [row._asdict() for row in page_data]
 
     data = {
         "exhibitions": page_data,
