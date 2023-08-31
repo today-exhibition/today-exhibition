@@ -1,19 +1,19 @@
-<a href="{{ url_for('map.map') }}" name="exhibition" class="btn btn-outline-secondary {% if exhibition_list.type == 'exhibition' %}selected{% endif %}">
+<a href="{{ url_for('map.map') }}" name="exhibition" class="btn btn-outline-primary btn-regular-map {% if exhibition_list.type == 'exhibition' %}selected{% endif %}">
   전체
 </a>
 <a href="{{ url_for('map.ending_soon') }}" name="ending_soon"
-  class="btn btn-outline-secondary {% if exhibition_list.type == 'ending_soon' %}selected{% endif %}">
+  class="btn btn-outline-primary btn-regular-map {% if exhibition_list.type == 'ending_soon' %}selected{% endif %}">
   곧 종료되는 전시
 </a>
 <a href="{{ url_for('map.featured') }}" name="featured"
-  class="btn btn-outline-secondary {% if exhibition_list.type == 'featured' %}selected{% endif %}">
+  class="btn btn-outline-primary btn-regular-map {% if exhibition_list.type == 'featured' %}selected{% endif %}">
   지금 주목받는 전시
 </a>
 <a href="{{ url_for('map.popular') }}" name="popular"
-  class="btn btn-outline-secondary {% if exhibition_list.type == 'popular' %}selected{% endif %}">
+  class="btn btn-outline-primary btn-regular-map {% if exhibition_list.type == 'popular' %}selected{% endif %}">
   인기순
 </a>
 <a href="{{ url_for('map.recommended') }}" name="recommended"
-  class="btn btn-outline-secondary {% if exhibition_list.type == 'recommended' %}selected{% endif %}">
+  class="btn btn-outline-primary btn-regular-map {% if exhibition_list.type == 'recommended' %}selected{% endif %}">
   추천 전시
 </a>

@@ -1,5 +1,9 @@
 {% extends 'common/layout.html' %}
 
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='/css/components/filter_btn.css') }}">
+{% endblock %}
+
 {% block content %}
 <div class="container">
   <div class="row justify-content-between">

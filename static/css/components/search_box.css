@@ -14,9 +14,8 @@ input::-webkit-input-placeholder {
 	padding-left: 40px;
 }
 
-
 .input-group {
 	width: 500px; 
 	padding-top: 50px;
 	margin: 0 auto; 
-  }
+}
