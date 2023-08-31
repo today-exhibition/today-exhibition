@@ -46,7 +46,7 @@
 {% block script %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-  var data = {{ data|safe }} ;
+  var data = {{ data|tojson|safe }};
 </script>
 <script type="module" src="{{ url_for('static', filename='/js/search.js')}}"></script>
 {% endblock %}

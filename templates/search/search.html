@@ -3,6 +3,8 @@
 {% block style %}
   <link rel="stylesheet" href="{{ url_for('static', filename='/css/components/search_box.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='/css/components/filter_btn.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='/css/components/exhibition-card.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='/css/components/icon.css') }}">
   <script src="{{ url_for('static', filename='/js/truncate.js') }}" defer></script>
 {% endblock %}
 
@@ -20,44 +22,10 @@
 {% block content %}
   <!-- 전시 데이터 -->
   <h3>전시({{ data.exhibition_count }})</h3>
-  <div class="row row-cols-1 row-cols-md-3 g-5">
-    {% for exhibition in data.exhibition_list %}
-    <div class="col">
-      <div class="card" id="{{ exhibition.id }}">
-        {% if data.user_id %}
-          {% if exhibition.id in data.liked_exhibition_ids %}
-            <i class="fa-solid fa-heart fa-2x" onclick="likeExhibition(this, '{{ exhibition.id }}')"></i>
-          {% else %}
-            <i class="fa-regular fa-heart fa-2x" onclick="likeExhibition(this, '{{ exhibition.id }}')"></i>
-          {% endif %}
-        {% else %}
-          <i class="fa-regular fa-heart fa-2x" onclick="alert('로그인 후 이용 가능한 서비스입니다.')"></i>
-        {% endif %}
-        <img src="{{ exhibition.thumbnail_img }}"
-          class="card-img-top"
-          alt="{{ exhibition.title|safe }}"/>
-        <div class="card-body" onclick="window.location='/exhibition/{{ exhibition.id }}'">
-          <h5 class="card-title">{{ exhibition.title|safe }}</h5>
-          <ul>
-            <li>
-              <strong>기간:</strong>
-              <p class="card-text gallery-date">
-                {{ exhibition.start_date }} ~ {{ exhibition.end_date }}
-              </p>
-            </li>
-            <li>
-              <strong>장소:</strong>
-              <p class="card-text gallery-place">{{ exhibition.name }}</p>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    {% endfor %}
-  </div>
-  <div>
-    <a href="{{ url_for('search_exhibition.search_exhibition', keyword=keyword) }}">전시 결과 더보기</a>
-  </div>
+  <a href="{{ url_for('search_exhibition.search_exhibition', keyword=data.keyword) }}">전시 결과 더보기</a>
+  <!-- 전시 카드 리스트 (JavaScript로 카드 생성) -->
+  <div class="exhibition-card-list"></div>
+  
   <hr>
   <!-- 작가 데이터 -->
   <h3>작가({{ data.artist_count }})</h3>
@@ -116,4 +84,18 @@
   <div>
     <a href="{{ url_for('search_gallery.search_gallery', keyword=keyword) }}">미술관 결과 더보기</a>
   </div>
+{% endblock %}
+
+{% block script %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  console.log("ejje");
+  console.log(data);
+
+  var data = {{ data|tojson|safe }};
+  console.log(data);
+  console.log("ejje");
+
+</script>
+<script type="module" src="{{ url_for('static', filename='/js/search.js')}}"></script>
 {% endblock %}

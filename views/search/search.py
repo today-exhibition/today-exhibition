@@ -27,9 +27,9 @@ def search():
     followed_artist_ids = get_followed_artist_ids(user_id)
 
     data = {
-        "exhibition_list": exhibitions[:3],
-        "gallery_list": gallerys[:3],
-        "artist_list": artists[:3],
+        "exhibitions": [row._asdict() for row in exhibitions][:3],
+        "gallery_list": [row._asdict() for row in gallerys][:3],
+        "artist_list": [row._asdict() for row in artists][:3],
         "exhibition_count": exhibition_count,
         "gallery_count": gallery_count,
         "artist_count": artist_count,
