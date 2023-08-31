@@ -1,3 +1,10 @@
+.exhibition-card-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  justify-items: center;
+}
+
 .exhibition-card {
   position: relative;
   width: 350px;
@@ -7,10 +14,11 @@
 
 .exhibition-card-img {
   display: block;
-  width: 348px;
+  width: 349px;
   height: 210px;
   object-fit: cover;
   margin: 0 auto;
+  transition: all 0.5s ease-out;
 }
 
 .exhibition-card-img:hover {

@@ -12,8 +12,8 @@
 
 .heart::before, .bookmark::before {
   content: '';
-  width: 63%;
-  height: 63%;
+  width: 65%;
+  height: 65%;
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
   -webkit-mask-size: contain;
