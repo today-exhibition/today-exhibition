@@ -12,7 +12,7 @@ function makeExhibitionCard(data) {
     <div class="exhibition-card-img-container">
       <img src="${thumbnail_img}" alt="${title}" class="exhibition-card-img">
     </div>
-    <a href="#" class="exhibition-card-text-container">
+    <a href="/exhibition/${id}" class="exhibition-card-text-container">
       <h3 class="exhibition-title">
         ${title}
       </h3>
