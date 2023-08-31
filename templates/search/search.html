@@ -8,9 +8,10 @@
 
 {% block search %}
   <form action="/search" method="GET">
+    {% set keyword = data.keyword %}
     {% include 'common/block_search.html' %}
-    {% if data.keyword %}
-      <span class="search_result">"{{ data.keyword }}" 검색결과 {{ data.exhibition_count + data.artist_count + data.gallery_count }}건</span>
+    {% if keyword %}
+      <span class="search_result">"{{ keyword }}" 검색결과 {{ data.exhibition_count + data.artist_count + data.gallery_count }}건</span>
     {% endif %}
     <span class="search_result"></span>
   </form>
@@ -56,7 +57,7 @@
     {% endfor %}
   </div>
   <div>
-    <a href="{{ url_for('search_exhibition.search_exhibition', keyword=keyword) }}">전시 결과 더보기</a>
+    <a href="{{ url_for('search_exhibition.search_exhibition', keyword=data.keyword) }}">전시 결과 더보기</a>
   </div>
   <hr>
   <!-- 작가 데이터 -->
@@ -85,7 +86,7 @@
     {% endfor %}
   </div>
   <div>
-    <a href="{{ url_for('search_artist.search_artist', keyword=keyword) }}">작가 결과 더보기</a>
+    <a href="{{ url_for('search_artist.search_artist', keyword=data.keyword) }}">작가 결과 더보기</a>
   </div>
   <hr>
   <!-- 미술관 데이터 -->
@@ -114,6 +115,6 @@
     {% endfor %}
   </div>
   <div>
-    <a href="{{ url_for('search_gallery.search_gallery', keyword=keyword) }}">미술관 결과 더보기</a>
+    <a href="{{ url_for('search_gallery.search_gallery', keyword=data.keyword) }}">미술관 결과 더보기</a>
   </div>
 {% endblock %}
