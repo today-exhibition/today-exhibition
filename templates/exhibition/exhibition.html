@@ -75,14 +75,14 @@
   <!-- 코멘트 작성 -->
   <h5 class="fw-bold">관람평</h5>
   <div class="input-group mb-3">
-    <form action="{{ url_for('exhibition.add_comment', id=data.id) }}" method="POST" class="w-100">
+    <form action="{{ url_for('exhibition.add_comment', id=data.id) }}" method="POST" class="w-100" onsubmit="return validateForm()">
       <div class="input-group">
         <textarea id="comment" name="content" rows="1" class="form-control rounded" placeholder="내용을 입력해주세요."></textarea>
         <div class="input-group-append">
           <input type="submit" value="등록" class="btn btn-outline-secondary rounded" id="button-addon2">
         </div>
       </div>
-    </form>
+    </form>    
   </div>
   <!-- 코멘트 수정 및 삭제 -->
   <div class="comment">

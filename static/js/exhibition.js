@@ -46,3 +46,16 @@ function toggleEditForm(commentId) {
       
   }
   
+  // 공백 입력 방지
+  function validateForm() {
+    const commentTextarea = document.getElementById("comment");
+    const commentContent = commentTextarea.value.trim();
+  
+    if (commentContent === "") {
+      alert("내용을 입력해주세요.");
+      return false; 
+    }
+  
+    return true; 
+  }
+  
