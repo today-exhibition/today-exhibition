@@ -243,12 +243,6 @@ input::placeholder {
   margin: 10px auto;
 }
 
-.input-group {
-  width: 500px; 
-  padding-top: 50px;
-  margin: 0 auto; 
-}
-
 .search_result {
   height: 15.2px;
   margin-left: 290px;

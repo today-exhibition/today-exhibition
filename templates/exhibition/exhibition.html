@@ -75,14 +75,14 @@
   <!-- 코멘트 작성 -->
   <h5 class="fw-bold">관람평</h5>
   <div class="input-group mb-3">
-    <form action="{{ url_for('exhibition.add_comment', id=data.id) }}" method="POST" class="w-100">
+    <form action="{{ url_for('exhibition.add_comment', id=data.id) }}" method="POST" class="w-100" onsubmit="return validateForm()">
       <div class="input-group">
         <textarea id="comment" name="content" rows="1" class="form-control rounded" placeholder="내용을 입력해주세요."></textarea>
         <div class="input-group-append">
           <input type="submit" value="등록" class="btn btn-outline-secondary rounded" id="button-addon2">
         </div>
       </div>
-    </form>
+    </form>    
   </div>
   <!-- 코멘트 수정 및 삭제 -->
   <div class="comment">
@@ -95,8 +95,12 @@
               {% if comment.user_id == data.user_id %}
                 <button class="edit-button btn btn-outline text-primary" data-comment-id="{{ comment.comment_id }}"
                   onclick="toggleEditForm('{{ comment.comment_id }}')">수정</button>
+                <button class="save-button btn btn-outline text-primary" data-comment-id="{{ comment.comment_id }}"
+                  style="display: none;"
+                  onclick="saveEditedComment('{{ comment.comment_id }}')">수정 완료</button>
                 <form class="delete-form"
-                  action="{{ url_for('exhibition.delete_comment', id=data.id, comment_id=comment.comment_id) }}" method="POST">
+                  action="{{ url_for('exhibition.delete_comment', id=data.id, comment_id=comment.comment_id) }}"
+                  method="POST">
                   <button type="submit" class="delete-button btn btn-outline text-danger">삭제</button>
                 </form>
               {% endif %}
@@ -105,12 +109,11 @@
           <div class="comment-content" id="comment-content-{{ comment.comment_id }}">
             <p class="card-text">{{ comment.content }}</p>
           </div>
-          <form class="edit-form" id="edit-form-{{ comment.comment_id }}"data-comment-id="{{ comment.comment_id }}"
-          style="display: none;"
-          action="{{ url_for('exhibition.edit_comment', id=data.id, comment_id=comment.comment_id) }}" method="POST">
-            <textarea name="edited_content" rows="2" cols="50">{{ comment.content }}</textarea>
-            <button type="submit" class="save-button btn btn-outline text-primary">수정 완료</button>
-        </form>
+          <form class="edit-form" id="edit-form-{{ comment.comment_id }}"
+            data-comment-id="{{ comment.comment_id }}" style="display: none;"
+            action="{{ url_for('exhibition.edit_comment', id=data.id, comment_id=comment.comment_id) }}" method="POST">
+            <textarea name="edited_content" rows="2" class="form-control rounded">{{ comment.content }}</textarea>
+          </form>
         </li>
       {% endfor %}
     </ul>

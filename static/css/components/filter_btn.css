@@ -1,3 +1,4 @@
+/* 검색 필터 버튼 */
 .btn-regular {
 	margin: 5px;
   border-radius: 17px;
@@ -20,4 +21,19 @@
   background-color: #EFF1F3;
   color: black;
   font-weight: bold;
+}
+
+/* 지도 버튼 */
+.btn-regular-map {
+	margin-top: 4px;
+  margin-bottom: 4px;
+  border-radius: 17px;
+  background-color: #F1F1F1;
+  border-color: #F1F1F1;
+  color: #505050;
+}
+
+.btn-regular-map.selected {
+  background-color: #0D6EFD;
+  color: white;
 }

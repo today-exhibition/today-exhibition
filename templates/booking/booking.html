@@ -1,0 +1,52 @@
+{% extends 'common/layout.html' %}
+
+{% block content %}
+<div class="text-center">
+    {% if working == true %}
+    <h1>현재 페이지는 공사 중 입니다.</h1>
+    {% else %}
+    <h3>{{ exhibition.title }}</h3>
+        <div class="row">
+        <div class="col-md-6 d-flex justify-content-center align-items-center">
+            <img src="{{ exhibition.thumbnail_img }}" alt="{{ exhibition.title }}" class="img-fluid" style="max-height: 400px;">
+        </div>
+        <div class="col-md-6">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th class="col-md-3">가격</th>
+                        <td>{{ exhibition.ticket_price }}원</td>
+                    </tr>
+                    <tr>
+                        <th class="col-md-3">장소</th>
+                        <td>{{ exhibition.area or '-' }} | {{ exhibition.gallery_name or '-' }}</td>
+                    </tr>
+                    <tr>
+                        <th class="col-md-3">요금</th>
+                        <td>{{ exhibition.TicketPrice or '-' }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <form method="POST" action="{{ url_for('booking.booking_success') }}">
+        <input type="hidden" name="price" value="{{ exhibition.ticket_price }}">
+        <input type="date" min="{{ exhibition.start_date }}" max="{{ exhibition.end_date }}" value="{{ current_date }}" name="reserve_date"/>
+        <input type="number" min="1" max="99" value="1" id="quantityInput" oninput="updatePrice()" name="quantity"/>
+        <input type="submit" value="확인"/>
+        <p id="totalPrice">최종 가격 {{ exhibition.ticket_price }}원</p>
+    </form>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+    function updatePrice() {
+        const quantity = parseInt(document.getElementById('quantityInput').value);
+        const finalPrice = quantity * {{ exhibition.ticket_price }};
+        document.getElementById('totalPrice').textContent = `최종 가격 ${finalPrice}원`;
+    }
+</script>
+{% endblock %}
