@@ -5,9 +5,9 @@
   <h3 class="fw-bold">{{ data.artist[0].name }}
     {% if data.user_id %}
       {% if data.artist[0].id in data.followed_artist_ids %}
-        <i class="fa-solid fa-bookmark fa" onclick="followArtist(this, '{{ data.artist.id }}')"></i>
+        <i class="fa-solid fa-bookmark fa" onclick="followArtist(this, '{{ data.artist[0].id }}')"></i>
       {% else %}
-        <i class="fa-regular fa-bookmark fa" onclick="followArtist(this, '{{ data.artist.id }}')"></i>
+        <i class="fa-regular fa-bookmark fa" onclick="followArtist(this, '{{ data.artist[0].id }}')"></i>
       {% endif %}
     {% else %}
       <i class="fa-regular fa-bookmark fa" onclick="alert('로그인 후 이용 가능한 서비스입니다.')"></i>

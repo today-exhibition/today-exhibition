@@ -5,9 +5,9 @@
   <h3 class="fw-bold">{{ data.gallery[0].name }}
     {% if data.user_id %}
       {% if data.gallery[0].id in data.followed_gallery_ids %}
-        <i class="fa-solid fa-bookmark fa" onclick="followGallery(this, '{{ data.gallery.id }}')"></i>
+        <i class="fa-solid fa-bookmark fa" onclick="followGallery(this, '{{ data.gallery[0].id }}')"></i>
       {% else %}
-        <i class="fa-regular fa-bookmark fa" onclick="followGallery(this, '{{ data.gallery.id }}')"></i>
+        <i class="fa-regular fa-bookmark fa" onclick="followGallery(this, '{{ data.gallery[0].id }}')"></i>
       {% endif %}
     {% else %}
       <i class="fa-regular fa-bookmark fa" onclick="alert('로그인 후 이용 가능한 서비스입니다.')"></i>

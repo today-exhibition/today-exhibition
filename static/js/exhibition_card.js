@@ -13,7 +13,7 @@ function makeExhibitionCard(exhibition) {
 
   let card_content = `
   <div class="exhibition-card">
-    <div class="heart ${heart}" onclick="likeExhibition(this, ${id})"></div>
+    <div class="heart ${heart}" onclick="likeExhibition(this, '${id}')"></div>
     <div class="exhibition-card-img-container">
       <img src="${thumbnail_img}" alt="${title}" class="exhibition-card-img">
     </div>
