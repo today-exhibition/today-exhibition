@@ -9,7 +9,6 @@ function makeExhibitionCard(exhibition) {
   if (exhibition['liked'] == 1) {
     heart = 'on';
   }
-  console.log(exhibition)
 
   let card_content = `
   <div class="exhibition-card">
