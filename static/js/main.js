@@ -8,11 +8,11 @@ function likeExhibition(icon, exhibition_id) {
     data: { exhibition_id: exhibition_id },
     success: function (resp) {
       if (resp == "liked") {
-        icon.classList.remove("fa-regular");
-        icon.classList.add("fa-solid");
+        icon.classList.remove("off");
+        icon.classList.add("on");
       } else if (resp == "unliked") {
-        icon.classList.remove("fa-solid");
-        icon.classList.add("fa-regular");
+        icon.classList.remove("on");
+        icon.classList.add("off");
       }
     }
   });

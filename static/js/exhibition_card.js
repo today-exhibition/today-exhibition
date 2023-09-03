@@ -1,14 +1,19 @@
-function makeExhibitionCard(data) {
-  const id = data['id'];
-  const title = data['title'];
-  const thumbnail_img = data['thumbnail_img'];
-  const start_date = data['start_date'];
-  const end_date = data['end_date'];
-  const gallery = data['name'];
+function makeExhibitionCard(exhibition) {
+  const id = exhibition['exhibition_id'];
+  const title = exhibition['exhibition_title'];
+  const thumbnail_img = exhibition['thumbnail_img'];
+  const start_date = exhibition['start_date'];
+  const end_date = exhibition['end_date'];
+  const gallery = exhibition['gallery_name'];
+  var heart = 'off';
+  if (exhibition['liked'] == 1) {
+    heart = 'on';
+  }
+  console.log(exhibition)
 
   let card_content = `
   <div class="exhibition-card">
-    <div class="heart on" onclick="likeExhibition(this, ${id})"></div>
+    <div class="heart ${heart}" onclick="likeExhibition(this, ${id})"></div>
     <div class="exhibition-card-img-container">
       <img src="${thumbnail_img}" alt="${title}" class="exhibition-card-img">
     </div>

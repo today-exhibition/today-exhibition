@@ -1,5 +1,5 @@
 from flask import Blueprint, request, render_template, session
-from sqlalchemy import Cast, String, desc
+from sqlalchemy import func, case, Cast, String
 
 from models.model import db, Exhibition, Gallery, GalleryAddress, LikeExhibition, FollowingGallery, Artist, FollowingArtist
 
@@ -10,7 +10,7 @@ def search():
     keyword = request.args.get('keyword', default="", type=str).strip()
     user_id = session.get('user_id', None)
 
-    exhibitions = get_search_exhibitions(keyword) \
+    exhibitions = get_exhibitions(user_id, keyword) \
         .join(GalleryAddress, Gallery.id == GalleryAddress.gallery_id, isouter=True) \
         .all()
     artists = get_search_artists(keyword).all()    
@@ -53,9 +53,34 @@ def get_search_exhibitions(keyword):
         ) \
         .filter(Exhibition.title.like('%' + keyword + '%')) \
         .join(Gallery, Exhibition.gallery_id == Gallery.id) \
-        .order_by(desc(Exhibition.start_date)) 
+        .order_by(Exhibition.start_date.desc()) 
     
     return exhibitions_query
+
+def get_exhibitions(user_id, keyword):
+    liked_subquery = db.session.query(
+        LikeExhibition.exhibition_id,
+        func.count('*').label('likes')) \
+        .filter(LikeExhibition.user_id == user_id) \
+        .group_by(LikeExhibition.exhibition_id) \
+        .subquery()
+
+    query = db.session.query(
+        Exhibition.id.label('exhibition_id'),
+        Exhibition.title.label("exhibition_title"),
+        Exhibition.thumbnail_img,
+        Cast(Exhibition.start_date, String).label('start_date'),
+        Cast(Exhibition.end_date, String).label('end_date'),
+        Gallery.name.label("gallery_name"),
+        case(
+            (liked_subquery.c.likes, 1),
+            else_=0).label('liked')) \
+        .filter(Exhibition.title.like('%' + keyword + '%')) \
+        .join(Gallery, Gallery.id == Exhibition.gallery_id) \
+        .outerjoin(liked_subquery, liked_subquery.c.exhibition_id == Exhibition.id) \
+        .order_by(Exhibition.start_date.desc())          
+                
+    return query
 
 def get_search_artists(keyword):
     artists_query = db.session.query(

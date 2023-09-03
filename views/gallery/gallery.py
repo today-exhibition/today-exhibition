@@ -11,25 +11,25 @@ gallery_bp = Blueprint('gallery', __name__)
 # 미술관 디테일 (미술관, 전시상태, 작가팔로우, 미술관팔로우)
 @gallery_bp.route('/gallery/<id>')
 def gallery(id):
+    user_id = session.get('user_id', None)
+
     gallery = get_gallery_data(id)
-    exhibitions = get_exhibition_data(id)\
+    exhibitions = get_exhibition_data(user_id)\
         .filter(Gallery.id == id)\
         .all() 
-    exhibition_status = get_exhibition_status(exhibitions)
+    # exhibition_status = get_exhibition_status(exhibitions)
     
-    user_id = session.get('user_id', None)
     followed_gallery_ids = get_followed_gallery_ids(user_id)
     liked_exhibition_ids = get_liked_exhibition_ids(user_id)
 
     data = {
-        "id": id,
-        "gallery": gallery,
-        "exhibition_status": exhibition_status,
+        "gallery": [gallery._asdict()],
+        "exhibitions": [row._asdict() for row in exhibitions],
         "user_id": user_id,
         "followed_gallery_ids": followed_gallery_ids,        
         "liked_exhibition_ids": liked_exhibition_ids
         }
-
+    
     return render_template('gallery/gallery.html', data=data)
 
 # [함수] 미술관 정보

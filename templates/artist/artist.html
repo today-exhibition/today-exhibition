@@ -2,9 +2,9 @@
 
 {% block content %}
   <!-- 작가 이름 -->
-  <h3 class="fw-bold">{{ data.artist.name }}
+  <h3 class="fw-bold">{{ data.artist[0].name }}
     {% if data.user_id %}
-      {% if data.artist.id in data.followed_artist_ids %}
+      {% if data.artist[0].id in data.followed_artist_ids %}
         <i class="fa-solid fa-bookmark fa" onclick="followArtist(this, '{{ data.artist.id }}')"></i>
       {% else %}
         <i class="fa-regular fa-bookmark fa" onclick="followArtist(this, '{{ data.artist.id }}')"></i>
@@ -14,60 +14,15 @@
     {% endif %}
   </h3>  
   <!-- 전시회 상태별 정보 -->
-  {% for status in ['ongoing', 'upcoming', 'ended'] %}
-    <div class="container mb-5">
-      <h5 class="fw-bold">
-        {% if status == 'ongoing' %}
-          진행중 전시회
-        {% elif status == 'upcoming' %}
-          예정중 전시회
-        {% else %}
-          지난 전시회
-        {% endif %} 
-          ({{ data.exhibition_status[status + '_exhibitions']|length }})
-      </h5>
-      {% if data.exhibition_status[status + '_exhibitions'] %}
-        <div class="row row-cols-1 row-cols-md-3 g-5">
-          {% for exhibition in data.exhibition_status[status + '_exhibitions'] %}
-            <div class="col">
-              <div class="card">
-                <!-- 전시 좋아요 아이콘 -->
-                {% if data.user_id %}
-                  {% if exhibition.id in data.liked_exhibition_ids %}
-                    <i class="fa-solid fa-heart fa-2x" onclick="likeExhibition(this, '{{ exhibition.id }}')"></i>
-                  {% else %}
-                    <i class="fa-regular fa-heart fa-2x" onclick="likeExhibition(this, '{{ exhibition.id }}')"></i>
-                  {% endif %}
-                {% else %}
-                  <i class="fa-regular fa-heart fa-2x" onclick="alert('로그인 후 이용 가능한 서비스입니다.')"></i>
-                {% endif %}
-                <img src="{{ exhibition.thumbnail_img }}" class="card-img-top" alt="{{ exhibition.title|safe }}">
-                <div class="card-body" onclick="window.location='/exhibition/{{ exhibition.id }}'">
-                  <h5 class="card-title text-truncate">{{ exhibition.title|safe }}</h5>
-                  <ul>
-                    <li><strong>기간:</strong>
-                      <p class="card-text gallery-date">{{ exhibition.start_date }} ~ {{ exhibition.end_date }}</p>
-                    </li>
-                    <li><strong>장소:</strong>
-                      <p class="card-text gallery-place">{{ exhibition.name }}</p>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          {% endfor %}
-        </div>
-      {% else %}
-        <p>
-          {% if status == 'ongoing' %}
-            진행중 전시회가 없습니다.
-          {% elif status == 'upcoming' %}
-            예정중 전시회가 없습니다.
-          {% else %}
-            지난 전시회가 없습니다.
-          {% endif %} 
-        </p>
-      {% endif %}
-    </div>
-  {% endfor %}
+  <div class="exhibition-card-list"></div>
+
+{% endblock %}
+
+{% block script %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  var data = {{ data|tojson|safe }};
+  console.log(data)
+</script>
+<script type="module" src="{{ url_for('static', filename='/js/exhibition_card.js')}}"></script>
 {% endblock %}

@@ -5,7 +5,7 @@ from flask import Blueprint, request, render_template, session
 from sqlalchemy import func, or_
 
 from models.model import Exhibition, Gallery, GalleryAddress, LikeExhibition
-from views.search.search import get_search_exhibitions, get_liked_exhibition_ids
+from views.search.search import get_liked_exhibition_ids, get_exhibitions
 
 search_exhibition_bp = Blueprint('search_exhibition', __name__)
 
@@ -21,7 +21,7 @@ def search_exhibition():
     selected_sub_sorts = sub_sorts.split(',') if sub_sorts else []
     selected_areas = areas.split(',') if areas else []
 
-    exhibitions_query = get_search_exhibitions(keyword)
+    exhibitions_query = get_exhibitions(user_id, keyword)
     
     if sub_sorts:
         exhibitions_query = sub_sorts_filter(exhibitions_query, selected_sub_sorts)
