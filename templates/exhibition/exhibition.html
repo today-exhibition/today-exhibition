@@ -1,8 +1,10 @@
 {% extends 'common/layout.html' %}
 
 {% block content %}
-  <!-- 전시 이름 -->
-  <h3 class="fw-bold">{{ data.exhibition.title|safe }}
+  <!-- 전시명, 클립보드, 하트 -->
+  <h3 class="fw-bold">
+    <a href="#" id="shareLink"><i class="fa-regular fa-paste fa-2x"></i></a>  
+    {{ data.exhibition.title|safe }}
     {% if data.user_id %}
       {% if data.id in data.liked_exhibition_ids %}
         <i class="fa-solid fa-heart fa" onclick="likeExhibition(this, '{{ data.id }}')"></i>
@@ -11,7 +13,7 @@
       {% endif %}
     {% else %}
       <i class="fa-regular fa-heart fa" onclick="alert('로그인 후 이용 가능한 서비스입니다.')"></i>
-    {% endif %}
+    {% endif %} 
   </h3>
   <!-- 전시 정보 -->
   <div class="container">

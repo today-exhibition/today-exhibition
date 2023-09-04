@@ -45,17 +45,44 @@ function toggleEditForm(commentId) {
       });
       
   }
-  
+    
   // 공백 입력 방지
+  const user_id = "{{ data.user_id | safe }}";
+  console.log("user_id: ", user_id); 
+
   function validateForm() {
     const commentTextarea = document.getElementById("comment");
     const commentContent = commentTextarea.value.trim();
-  
-    if (commentContent === "") {
+    
+    // 세션 로그인 여부 확인
+    const isLoggedIn = user_id !== "";
+    
+    // 공백 입력 방지 (로그인된 경우에만)
+    if (isLoggedIn && commentContent === "") {
       alert("내용을 입력해주세요.");
-      return false; 
+      return false;
     }
-  
-    return true; 
+
+    return true;
   }
+
+// 공유하기 버튼 (URL 클립보드 저장)
+document.getElementById("shareLink").addEventListener("click", function(event) {
+  event.preventDefault(); // 기본 링크 동작을 중지
+
+  const url = window.location.href;
+
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(url)
+      .then(function() {
+        alert("클립보드에 복사되었습니다.");
+      })
+      .catch(function(error) {
+        console.error("URL 복사 중 오류가 발생했습니다.", error);
+      });
+  } else {
+    alert("현재 브라우저에서는 클립보드 복사를 지원하지 않습니다.");
+  }
+});
+
   
