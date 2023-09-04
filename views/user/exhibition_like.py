@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, session
-from sqlalchemy import func
+from sqlalchemy import func, Cast, String
 
 from models.model import db, Exhibition, Gallery, LikeExhibition
 from decorators import check_user_login
@@ -12,18 +12,21 @@ exhibition_like_bp = Blueprint('exhibition_like', __name__)
 def exhibition_like():
     user_id = session["user_id"]
     exhibition_list = db.session.query(
-        Exhibition.id,
-        Exhibition.title,
-        Exhibition.start_date,
-        Exhibition.end_date,
+        Exhibition.id.label('exhibition_id'),
+        Exhibition.title.label("exhibition_title"),
         Exhibition.thumbnail_img,
-        Gallery.name,
-        func.count('*').label('likes')) \
+        Cast(Exhibition.start_date, String).label('start_date'),
+        Cast(Exhibition.end_date, String).label('end_date'),
+        Gallery.name.label("gallery_name"),
+        func.count('*').label('liked')) \
         .join(Gallery, Gallery.id == Exhibition.gallery_id) \
         .join(LikeExhibition, LikeExhibition.exhibition_id == Exhibition.id) \
         .filter(LikeExhibition.user_id == user_id) \
         .group_by(LikeExhibition.exhibition_id) \
         .order_by(LikeExhibition.liked_at.desc()) \
         .all()
+
+    result = {}
+    result['exhibitions'] = [row._asdict() for row in exhibition_list]
     
-    return render_template('user/exhibition_like.html', exhibition_list=exhibition_list, user_id=user_id)
+    return render_template('user/exhibition_like.html', data=result)

@@ -5,34 +5,15 @@
 {% endblock %}
 
 {% block content %}
-<div class="row row-cols-1 row-cols-md-4 g-5">
-  {% for exhibition in exhibition_list %}
-  <div class="col">
-    <div class="card" id="{{ exhibition.id }}">
-      <i class="{% if exhibition.likes %} fa-solid {% else %} fa-regular{% endif %} fa-heart fa-2x"
-        onclick="likeExhibition(this, '{{ exhibition.id }}')"></i>
-      <img src="{{ exhibition.thumbnail_img }}" class="card-img-top" alt="{{ exhibition.title|safe }}" />
-      <div class="card-body" onclick="window.location='/exhibition/{{ exhibition.id }}'">
-        <h5 class="card-title">{{ exhibition.title|safe }}</h5>
-        <ul>
-          <li>
-            <strong>기간:</strong>
-            <p class="card-text gallery-date">
-              {{ exhibition.start_date }} ~ {{ exhibition.end_date }}
-            </p>
-          </li>
-          <li>
-            <strong>장소:</strong>
-            <p class="card-text gallery-place">{{ exhibition.name }}</p>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
-  {% endfor %}
-</div>
+  <!-- 전시 카드 리스트 (JavaScript로 카드 생성) -->
+  <div class="exhibition-card-list"></div>
 {% endblock %}
 
 {% block script %}
 <script src="https://kit.fontawesome.com/840a32f19e.js" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  var data = {{ data|tojson|safe }};
+</script>
+<script type="module" src="{{ url_for('static', filename='/js/exhibition_card.js')}}"></script>
 {% endblock %}

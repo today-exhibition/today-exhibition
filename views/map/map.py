@@ -1,6 +1,6 @@
 import datetime
 from flask import Blueprint, render_template, session
-from sqlalchemy import func, case, and_
+from sqlalchemy import func, case, and_, Cast, String
 
 from models.model import db, Exhibition, Gallery, GalleryAddress, LikeExhibition
 
@@ -10,19 +10,8 @@ map_bp = Blueprint('map', __name__)
 def convert_rowlist_to_json(type, row_list):
     result = {}
     result['type'] = type
-    result['data'] = []
-    for item in row_list:
-        result['data'].append({
-            "exhibition_id": item.exhibition_id,
-            "exhibition_title": item.exhibition_title,
-            "thumbnail_img": item.thumbnail_img,
-            "start_date": str(item.start_date),
-            "end_date": str(item.end_date),
-            "gallery_name": item.gallery_name,
-            "gpsx": item.gpsx,
-            "gpsy": item.gpsy,
-            "liked" : item.liked
-        })
+    result['data'] = [row._asdict() for row in row_list]
+    
     return result
 
 def get_exhibition_list(user_id, session, filter_type=None):
@@ -37,8 +26,8 @@ def get_exhibition_list(user_id, session, filter_type=None):
         Exhibition.id.label('exhibition_id'),
         Exhibition.title.label("exhibition_title"),
         Exhibition.thumbnail_img,
-        Exhibition.start_date,
-        Exhibition.end_date,
+        Cast(Exhibition.start_date, String).label('start_date'),
+        Cast(Exhibition.end_date, String).label('end_date'),
         Gallery.name.label("gallery_name"),
         GalleryAddress.gpsx,
         GalleryAddress.gpsy,

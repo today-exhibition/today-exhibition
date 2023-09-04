@@ -5,7 +5,7 @@ from flask import Blueprint, request, render_template, session
 from sqlalchemy import func, or_
 
 from models.model import Exhibition, Gallery, GalleryAddress, LikeExhibition
-from views.search.search import get_search_exhibitions, get_liked_exhibition_ids
+from views.search.search import get_liked_exhibition_ids, get_exhibitions
 
 search_exhibition_bp = Blueprint('search_exhibition', __name__)
 
@@ -14,14 +14,14 @@ def search_exhibition():
     keyword = request.args.get('keyword', default="", type=str).strip()
     page = request.args.get('page', default=1, type=int)
     user_id = session.get('user_id', None)
-    sub_sorts = request.args.get('sub_sort') # ongoing, ended, upcoming
-    areas = request.args.get('area') # 서울, 경기, 강원, 대전
-    sort = request.args.get('sort') # popularity, featured, recommended
+    sub_sorts = request.args.get('sub_sort') if request.args.get('sub_sort') else "" # ongoing, ended, upcoming
+    areas = request.args.get('area') if request.args.get('areas') else "" # 서울, 경기, 강원, 대전
+    sort = request.args.get('sort') if request.args.get('sort') else "" # popularity, featured, recommended
 
     selected_sub_sorts = sub_sorts.split(',') if sub_sorts else []
     selected_areas = areas.split(',') if areas else []
 
-    exhibitions_query = get_search_exhibitions(keyword)
+    exhibitions_query = get_exhibitions(user_id, keyword)
     
     if sub_sorts:
         exhibitions_query = sub_sorts_filter(exhibitions_query, selected_sub_sorts)
@@ -35,6 +35,7 @@ def search_exhibition():
     liked_exhibition_ids = get_liked_exhibition_ids(user_id)
 
     total_pages, current_page, page_data, page_list = calc_pages(exhibitions, page)
+    page_data = [row._asdict() for row in page_data]
 
     data = {
         "exhibitions": page_data,
