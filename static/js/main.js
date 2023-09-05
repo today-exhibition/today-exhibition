@@ -1,5 +1,7 @@
 // 전시 좋아요
-function likeExhibition(icon, exhibition_id) {
+function likeExhibition(e, icon, exhibition_id) {
+  e.preventDefault();
+
   const url = `/exhibition/${exhibition_id}/like`;
   
   $.ajax({

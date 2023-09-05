@@ -1,5 +1,14 @@
 {% extends 'common/layout.html' %}
 
+{% block style %}
+<style>
+  h3 {
+    position: relative;
+  }
+</style>
+
+{% endblock %}
+
 {% block content %}
   <!-- 전시명, 클립보드, 하트 -->
   <h3 class="fw-bold">
@@ -7,13 +16,13 @@
     {{ data.exhibition.title|safe }}
     {% if data.user_id %}
       {% if data.id in data.liked_exhibition_ids %}
-        <i class="fa-solid fa-heart fa" onclick="likeExhibition(this, '{{ data.id }}')"></i>
+        <div class="heart on" onclick="likeExhibition(event, this, '{{ data.id }}')"></div>
       {% else %}
-        <i class="fa-regular fa-heart fa" onclick="likeExhibition(this, '{{ data.id }}')"></i>
+        <div class="heart off" onclick="likeExhibition(event, this, '{{ data.id }}')"></div>
       {% endif %}
     {% else %}
-      <i class="fa-regular fa-heart fa" onclick="alert('로그인 후 이용 가능한 서비스입니다.')"></i>
-    {% endif %} 
+      <div class="heart off" onclick="alert('로그인 후 이용 가능한 서비스입니다.')"></div>
+    {% endif %}
   </h3>
   <!-- 전시 정보 -->
   <div class="container">

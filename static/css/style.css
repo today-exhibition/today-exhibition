@@ -126,37 +126,6 @@ input::placeholder {
   color: var(--white);
 }
 
-/* card */
-.card-container {
-  height: 80vh;
-  overflow-y: scroll;
-}
-
-.card {
-  height: 100%; 
-  position: relative;
-}
-
-.card-img-top {
-  height: 100%;
-}
-
-.card-text {
-  padding-left: 5px;
-}
-
-.my-card-body {
-  height: 100%;
-  cursor:pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.card-body {
-  cursor:pointer;
-}
-
 /* artist gallery */
 .artist-row, .gallery-row {
   height: 180px;
@@ -175,11 +144,6 @@ input::placeholder {
 
 .gallery-col img {
   width: 100%;
-}
-
-/* map */
-.map.card {
-  height: auto; 
 }
 
 /* pagination */

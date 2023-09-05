@@ -2,6 +2,7 @@
 
 {% block style %}
 <link rel="stylesheet" href="{{ url_for('static', filename='/css/components/filter_btn.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='/css/components/map.css') }}">
 {% endblock %}
 
 {% block content %}
@@ -12,10 +13,14 @@
       </div>
     </div>
     <div class="card-container col-12 col-lg-4">
-      <div class="card-filter">
-        {% include '/map/map_filter.html' %}
+      <div class="card-filter-container">
+        <div class="card-filter">
+          {% include '/map/map_filter.html' %}
+        </div>
       </div>
-      <div id="card-list">
+      <div class="card-list-container">
+        <div id="card-list">
+        </div>
       </div>
     </div>
   </div>
@@ -28,4 +33,5 @@
   var exhibitionsArray = {{ exhibition_list|safe }} ;
 </script>
 <script type="module" src="{{ url_for('static', filename='/js/map.js')}}"></script>
+<script type="module" src="{{ url_for('static', filename='/js/truncate.js')}}"></script>
 {% endblock %}
