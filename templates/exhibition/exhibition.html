@@ -14,9 +14,9 @@
   <h3 class="fw-bold">{{ data.exhibition.title|safe }}
     {% if data.user_id %}
       {% if data.id in data.liked_exhibition_ids %}
-        <div class="heart on" onclick="likeExhibition(this, '{{ data.id }}')"></div>
+        <div class="heart on" onclick="likeExhibition(event, this, '{{ data.id }}')"></div>
       {% else %}
-        <div class="heart off" onclick="likeExhibition(this, '{{ data.id }}')"></div>
+        <div class="heart off" onclick="likeExhibition(event, this, '{{ data.id }}')"></div>
       {% endif %}
     {% else %}
       <div class="heart off" onclick="alert('로그인 후 이용 가능한 서비스입니다.')"></div>

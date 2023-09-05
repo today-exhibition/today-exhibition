@@ -18,7 +18,7 @@ function makeCard(data) {
   <div class="map card mb-3" style="max-width: 540px;">
     <div class="row g-0">
       <div class="col-4">
-        <i class="${heart} fa-heart fa-2x" onclick="likeExhibition(this, ${id})"></i>
+        <i class="${heart} fa-heart fa-2x" onclick="likeExhibition(event, this, ${id})"></i>
         <img src="${img}" class="img-fluid rounded-start" alt="${title}">
       </div>
       <div class="col-8">
