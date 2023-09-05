@@ -61,7 +61,7 @@ def get_address_from_gps(gpsx, gpsy):
     area = None
     address = None
     secrets = load_secrets()
-    kakao_api_key = secrets["map"]["kakao_api_key"]
+    kakao_api_key = secrets["map"]["kakao_api_key_py"]
     
     url = 'https://dapi.kakao.com/v2/local/geo/coord2address'
     params = {'x': gpsx,
