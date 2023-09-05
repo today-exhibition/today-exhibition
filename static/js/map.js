@@ -2,34 +2,37 @@ import constants from '/static/js/constants.js';
 import secrets from '/static/js/secrets.js';
 
 function makeCard(data) {
+  const maxLenght = 25;
   const id = data['exhibition_id'];
-  const title = data['exhibition_title'];
+  var title = data['exhibition_title'];
+  if (title.length > maxLenght) {
+    title = title.substring(0, maxLenght) + "...";
+  }
   const img = data['thumbnail_img'];
   const s_date = data['start_date'];
   const e_date = data['end_date'];
   const gallery = data['gallery_name'];
-  var heart = 'fa-regular';
+  var heart = 'off';
   if (data['liked'] == 1) {
-    heart = 'fa-solid';
+    heart = 'on';
   }
 
   let card_content =
   `
-  <div class="map card mb-3" style="max-width: 540px;">
-    <div class="row g-0">
-      <div class="col-4">
-        <i class="${heart} fa-heart fa-2x" onclick="likeExhibition(this, ${id})"></i>
-        <img src="${img}" class="img-fluid rounded-start" alt="${title}">
+    <div class="map-exhibition-card">
+      <div class="map-exhibition-card-img-container">
+        <img src="${img}" class="map-exhibition-card-img">
       </div>
-      <div class="col-8">
-        <div class="card-body" onclick="window.location='/exhibition/${id}'">
-          <h5 class="card-title">${title}</h5>
-          <p class="card-text">${s_date}~${e_date}</p>
-          <p class="card-text"><small class="text-body-secondary">${gallery}</small></p>
-        </div>
-      </div>
+      <a href="/exhibition/${id}" class="map-exhibition-card-text-container">
+        <div class="heart ${heart}" onclick="likeExhibition(event, this, '${id}')"></div>
+        <h3 class="map-exhibition-title">
+          ${title}
+        </h3>
+        <p class="map-exhibition-desc">${s_date} - ${e_date}</p>
+        <p class="map-exhibition-desc">${gallery}</p>
+      </a>
     </div>
-  </div>
+
   `
   $("#card-list").append(card_content);
 }
