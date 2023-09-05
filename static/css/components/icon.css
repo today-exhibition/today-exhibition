@@ -2,9 +2,9 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background-color: #EFF1F3;
-  box-shadow: -5px -5px 64px #8B929E,
-            5px  5px 64px #ffffff;
+  background-color: var(--gray100);
+  box-shadow: -5px -5px 64px var(--gray400)
+            5px  5px 64px var(--white);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -21,25 +21,26 @@
 }
 
 .heart.on::before {
-  background-color: #FF0000;
+  background-color: var(--red);
+  display: flex;
   -webkit-mask-image: url(/static/img/icon/heart_on.svg);
   mask-image: url(/static/img/icon/heart_on.svg);
 }
 
 .heart.off::before {
-  background-color: #FF0000;
+  background-color: var(--red);
   -webkit-mask-image: url(/static/img/icon/heart_off.svg);
   mask-image: url(/static/img/icon/heart_off.svg);
 }
 
 .bookmark.on::before {
-  background-color: #6F7782;
+  background-color: var(--gray500);
   -webkit-mask-image: url(/static/img/icon/bookmark_on.svg);
   mask-image: url(/static/img/icon/bookmark_on.svg);
 }
 
 .bookmark.off::before {
-  background-color: #6F7782;
+  background-color: var(--gray500);
   -webkit-mask-image: url(/static/img/icon/bookmark_off.svg);
   mask-image: url(/static/img/icon/bookmark_off.svg);
 }
