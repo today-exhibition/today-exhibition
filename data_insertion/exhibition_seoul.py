@@ -6,7 +6,7 @@ from utils import load_secrets, fetch_api_data_json
 from data_utils.encode import encode_exhibition_title, encode_date, encode_gallery_name, encode_artist_name, is_free, is_artist
 from data_utils.get_data import get_gallery_by_name, get_gallery_id_by_name, get_exhibition_by_title
 from data_utils.make_instance import make_gallery_by_name, make_artist, make_artistexhibition
-from data_utils.seoul_thumbnail_to_s3 import thumbnail_to_s3
+from data_utils.api_thumbnail_to_s3 import thumbnail_to_s3
 from data_utils.remove_thumbnail import remove_thumbnail
 
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
@@ -56,7 +56,7 @@ def insert_seoul_to_db(data_dict):
             else:
                 artist_list.remove(a)
     db.session.commit()
-    remove_thumbnail(dirPath = "seoul_thumbnail_imgs")
+    remove_thumbnail(dirPath = "thumbnail_imgs")
 
 def insert_exhibition_seoul() :
     secrets = load_secrets()

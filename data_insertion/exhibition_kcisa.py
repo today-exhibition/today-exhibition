@@ -5,7 +5,7 @@ from utils import load_secrets, fetch_api_data, convert_xml, get_address_from_gp
 from data_utils.encode import encode_exhibition_title, encode_date, encode_gallery_name
 from data_utils.get_data import get_gallery_by_name, get_gallery_id_by_name, get_galleryaddress_by_id
 from data_utils.make_instance import make_gallery_by_name, make_galleryaddress, make_exhibition
-from data_utils.kcisa_thumbnail_to_s3 import thumbnail_to_s3
+from data_utils.api_thumbnail_to_s3 import thumbnail_to_s3
 from data_utils.remove_thumbnail import remove_thumbnail
 
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
