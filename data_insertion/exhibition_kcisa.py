@@ -5,6 +5,8 @@ from utils import load_secrets, fetch_api_data, convert_xml, get_address_from_gp
 from data_utils.encode import encode_exhibition_title, encode_date, encode_gallery_name
 from data_utils.get_data import get_gallery_by_name, get_gallery_id_by_name, get_galleryaddress_by_id
 from data_utils.make_instance import make_gallery_by_name, make_galleryaddress, make_exhibition
+from data_utils.kcisa_thumbnail_to_s3 import thumbnail_to_s3
+from data_utils.remove_thumbnail import remove_thumbnail
 
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from models.model import db
@@ -35,8 +37,11 @@ def insert_kcisa_to_db(data_dict):
             start_date = encode_date(data['startDate'], '%Y%m%d')
             end_date = encode_date(data['endDate'], '%Y%m%d')
             thumbnail_img = data['thumbnail']
+            thumbnail_img = thumbnail_to_s3(id, thumbnail_img)
             make_exhibition(id, title, start_date, end_date, gallery_id, thumbnail_img)
     db.session.commit()
+    remove_thumbnail(dirPath = "thumbnail_imgs")
+
 
 def insert_exhibition_kcisa() :
     secrets = load_secrets()

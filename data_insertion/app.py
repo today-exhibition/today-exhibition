@@ -17,8 +17,7 @@ from like_exhibition_generator import create_random_likes_data
 app = Flask(__name__)
 
 app.instance_path = os.path.join(os.path.dirname(os.path.abspath(os.path.dirname(__file__))), 'database')
-# app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///today-exhibition3.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = SQLALCHEMY_TRACK_MODIFICATIONS
 app.debug = DEBUG
 
