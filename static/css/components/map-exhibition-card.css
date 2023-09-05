@@ -1,0 +1,81 @@
+.card-container {
+  height: 80vh;
+}
+
+.card-filter-container {
+  display: flex;
+  height: 95px;
+  align-items: center;
+}
+
+#card-list {
+  height: calc(80vh - 95px);
+  overflow-y: scroll;
+}
+
+#card-list::-webkit-scrollbar {
+  width: 10px;
+  height: 20px;
+}
+
+#card-list::-webkit-scrollbar-thumb {
+  background: var(--gray400);
+  border-radius: 12px 12px 12px 12px;
+}
+
+#card-list::-webkit-scrollbar-track {
+  background: var(--gray100);
+  border-radius: 12px 12px 12px 12px;
+}
+
+.map-exhibition-card {
+  width: 100%;
+  height: 150px;
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: var(--gray100);
+  border-radius: 14px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.map-exhibition-card:last-child {
+  margin-bottom: 0px;
+}
+
+.map-exhibition-card-img-container {
+  flex: 2;
+}
+
+.map-exhibition-card-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  margin: 0 auto;
+  transition: all 0.5s ease-out;
+}
+
+.map-exhibition-card-text-container {
+  flex: 3;
+}
+
+.map-exhibition-title {
+  font-weight: 700;
+  font-size: var(--font-size-16);
+}
+
+.map-exhibition-desc {
+  font-size: var(--font-size-14);
+  color: var(--gray400);
+  margin-top: 5px;
+  margin-bottom: 0px;
+}
+
+.heart {
+  position: relative;
+  float: right;
+  top: 0px;
+  right: 0px;
+}

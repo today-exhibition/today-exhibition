@@ -1,8 +1,8 @@
 document.addEventListener("DOMContentLoaded", function() {
-    const maxlen = 15;
+    const maxlen = 33;
   
     // 전시 제목 길이 자르기
-    const spanTexts = document.querySelectorAll(".card-title");
+    const spanTexts = document.querySelectorAll(".exhibition-title");
     spanTexts.forEach(function(spanText) {
       const text = spanText.textContent;
       if (text.length > maxlen) {
