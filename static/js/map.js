@@ -45,7 +45,7 @@ $(document).ready(function () {
 
   script.onload = () => {
     kakao.maps.load(() => {
-      const maxCardList = 100;
+      const maxCardList = 20;
       // 기본 위치 : 서울시청으로 설정
       var curLoc = new kakao.maps.LatLng(constants.map.defaultLatitude, constants.map.defaultLongitude);
       if (navigator.geolocation) {
@@ -110,22 +110,32 @@ $(document).ready(function () {
 
       // 지도에 있는 마커만 카드 리스트 표시
       var bounds = map.getBounds();
+      var count = 0;
       $('#card-list').text("");
-      for (let i = 0; i < Math.min(markers.length, maxCardList); i++) {
+      for (let i = 0; i < markers.length; i++) {
         var curMarker = markers[i];
         if (bounds.contain(curMarker.getPosition())) {
           makeCard(curMarker.data);
+          count++;
+          if (count >= maxCardList) {
+            break;
+          }
         }
       }
 
       // 지도 이동할 때마다 카드 리스트 변경
       kakao.maps.event.addListener(map, 'bounds_changed', function () {
         bounds = map.getBounds();
+        count = 0;
         $('#card-list').text("");
-        for (let i = 0; i < Math.min(markers.length, maxCardList); i++) {
+        for (let i = 0; i < markers.length; i++) {
           var curMarker = markers[i];
           if (bounds.contain(curMarker.getPosition())) {
             makeCard(curMarker.data);
+            count++;
+            if (count >= maxCardList) {
+              break;
+            }
           }
         }
       });
