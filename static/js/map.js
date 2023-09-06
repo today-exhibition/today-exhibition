@@ -21,7 +21,7 @@ function makeCard(data) {
   `
     <div class="map-exhibition-card">
       <div class="map-exhibition-card-img-container">
-        <img src="${img}" class="map-exhibition-card-img">
+        <img src="${img}" class="map-exhibition-card-img" loading="lazy" >
       </div>
       <a href="/exhibition/${id}" class="map-exhibition-card-text-container">
         <div class="heart ${heart}" onclick="likeExhibition(event, this, '${id}')"></div>
