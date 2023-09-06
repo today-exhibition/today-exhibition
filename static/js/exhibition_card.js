@@ -14,7 +14,7 @@ function makeExhibitionCard(exhibition) {
   <div class="exhibition-card">
     <div class="heart ${heart}" onclick="likeExhibition(event, this, '${id}')"></div>
     <div class="exhibition-card-img-container">
-      <img src="${thumbnail_img}" alt="${title}" class="exhibition-card-img">
+      <img src="${thumbnail_img}" alt="${title}" class="exhibition-card-img" loading="lazy">
     </div>
     <a href="/exhibition/${id}" class="exhibition-card-text-container">
       <h3 class="exhibition-title">
