@@ -1,12 +1,7 @@
 {% extends 'common/layout.html' %}
 
 {% block style %}
-<style>
-  h3 {
-    position: relative;
-  }
-</style>
-
+<link rel="stylesheet" href="{{ url_for('static', filename='/css/components/icon.css') }}">
 {% endblock %}
 
 {% block content %}
@@ -129,4 +124,9 @@
       {% endfor %}
     </ul>
   </div>
+{% endblock %}
+
+{% block script %}
+<script src="{{ url_for('static', filename='/js/exhibition.js') }}" defer></script>
+<script src="{{ url_for('static', filename='/js/like_exhibition.js') }}" defer></script>
 {% endblock %}

@@ -2,6 +2,7 @@
 
 {% block style %}
 <link rel="stylesheet" href="{{ url_for('static', filename='/css/components/exhibition-card.css') }}" />
+<link rel="stylesheet" href="{{ url_for('static', filename='/css/components/icon.css') }}" />
 {% endblock %}
 
 {% block content %}
@@ -28,5 +29,7 @@
 <script>
   var data = {{ data|tojson|safe }};
 </script>
-<script type="module" src="{{ url_for('static', filename='/js/exhibition_card.js')}}"></script>
+<script src="{{ url_for('static', filename='/js/exhibition_card.js')}}"></script>
+<script src="{{ url_for('static', filename='/js/like_exhibition.js') }}"></script>
+<script src="{{ url_for('static', filename='/js/follow_gallery.js') }}"></script>
 {% endblock %}

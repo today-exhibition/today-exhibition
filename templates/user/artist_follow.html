@@ -1,5 +1,9 @@
 {% extends 'common/layout_side_split.html' %}
 
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='/css/components/icon.css') }}">
+{% endblock %}
+
 {% block content %}
 <div class="row">
   {% for artist in artist_list %}
@@ -20,4 +24,5 @@
 
 {% block script %}
 <script src="https://kit.fontawesome.com/840a32f19e.js" crossorigin="anonymous"></script>
+<script src="{{ url_for('static', filename='/js/follow_artist.js')}}"></script>
 {% endblock %}
