@@ -48,7 +48,6 @@ function toggleEditForm(commentId) {
     
   // 공백 입력 방지
   const user_id = "{{ data.user_id | safe }}";
-  console.log("user_id: ", user_id); 
 
   function validateForm() {
     const commentTextarea = document.getElementById("comment");
