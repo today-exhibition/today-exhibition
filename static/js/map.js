@@ -106,6 +106,7 @@ $(document).ready(function () {
         clustererMarkers.forEach(marker => {
           makeCard(marker.data);
         })
+        $('.card-list-container').scrollTop(0);
       })
 
       // 지도에 있는 마커만 카드 리스트 표시
@@ -138,6 +139,7 @@ $(document).ready(function () {
             }
           }
         }
+        $('.card-list-container').scrollTop(0);
       });
     })
   }
