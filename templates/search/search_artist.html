@@ -5,6 +5,8 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='/css/components/filter_btn.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='/css/components/pagination.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='/css/components/icon.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='/css/components/rounded_card.css') }}">
+
 {% endblock %}
 
 {% block search %}
@@ -22,27 +24,27 @@
 
 {% block content %}
   <h3>작가({{ data.artist_count }})</h3>
-  <div class="card mb-3">
+  <div class="rounded-card-list">
     {% for artist in data.artists %}
-    <div class="row artist-row ">
-      <div class="col-md-4 artist-col" id="{{ artist.id }}">
+      <div class="rounded-card" id="{{ artist.id }}">
         {% if data.user_id %}
           {% if artist.id in data.followed_artist_ids %}
-            <i class="fa-solid fa-bookmark fa-2x" onclick="followArtist(this, '{{ artist.id }}')"></i>
+          <div class="bookmark on" onclick="followArtist(this, '{{ artist.id }}')"></div>
           {% else %}
-            <i class="fa-regular fa-bookmark fa-2x" onclick="followArtist(this, '{{ artist.id }}')"></i>
+          <div class="bookmark off" onclick="followArtist(this, '{{ artist.id }}')"></div>
           {% endif %}
         {% else %}
-          <i class="fa-regular fa-bookmark fa-2x" onclick="alert('로그인 후 이용 가능한 서비스입니다.')"></i>
+          <div class="bookmark off" onclick="alert('로그인 후 이용 가능한 서비스입니다.')"></div>
         {% endif %}
-        <img src="{{ artist.thumbnail_img }}" class="img-fluid rounded-start" alt="{{ artist.name }}">
+        {% if artist.thumbnail_img %}
+          <img src="{{ artist.thumbnail_img }}" alt="{{ artist.name }}" class="rounded-card-img">
+        {% else %}
+          <img src="{{ url_for('static', filename='/img/default/default_artist.png') }}" alt="{{ artist.name }}" class="rounded-card-img">
+        {% endif %}
+        <a href="/artist/{{ artist.id }}" class="rounded-card-text-container">
+          <h5 class="rounded-card-name">{{ artist.name }}</h5>
+        </a>
       </div>
-      <div class="col-md-8">
-        <div class="my-card-body" onclick="window.location='/artist/{{ artist.id }}'">
-          <h5 class="card-title">{{ artist.name }}</h5>
-        </div>
-      </div>
-    </div>
     {% endfor %}
   </div>
   <!-- 페이지네이션 -->

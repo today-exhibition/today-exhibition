@@ -4,6 +4,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='/css/components/search_box.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='/css/components/filter_btn.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='/css/components/exhibition-card.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='/css/components/rounded_card.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='/css/components/icon.css') }}">
 {% endblock %}
 
@@ -22,66 +23,67 @@
 {% block content %}
   <!-- 전시 데이터 -->
   <h3>전시({{ data.exhibition_count }})</h3>
-  <a href="{{ url_for('search_exhibition.search_exhibition', keyword=data.keyword) }}">전시 결과 더보기</a>
   <!-- 전시 카드 리스트 (JavaScript로 카드 생성) -->
   <div class="exhibition-card-list"></div>
-  
+  <div class="see-more">
+    <a href="{{ url_for('search_exhibition.search_exhibition', keyword=data.keyword) }}">전시 결과 더보기</a>
+  </div>
   <hr>
   <!-- 작가 데이터 -->
   <h3>작가({{ data.artist_count }})</h3>
-  <div class="card mb-3">
-    {% for artist in data.artist_list %}
-    <div class="row artist-row" id="{{ artist.id }}">
-      <div class="col-md-4 artist-col">
+  <div class="rounded-card-list">
+    {% for artist in data.artists %}
+      <div class="rounded-card" id="{{ artist.id }}">
         {% if data.user_id %}
           {% if artist.id in data.followed_artist_ids %}
-            <i class="fa-solid fa-bookmark fa-2x" onclick="followArtist(this, '{{ artist.id }}')"></i>
+          <div class="bookmark on" onclick="followArtist(this, '{{ artist.id }}')"></div>
           {% else %}
-            <i class="fa-regular fa-bookmark fa-2x" onclick="followArtist(this, '{{ artist.id }}')"></i>
+          <div class="bookmark off" onclick="followArtist(this, '{{ artist.id }}')"></div>
           {% endif %}
         {% else %}
-          <i class="fa-regular fa-bookmark fa-2x" onclick="alert('로그인 후 이용 가능한 서비스입니다.')"></i>
+          <div class="bookmark off" onclick="alert('로그인 후 이용 가능한 서비스입니다.')"></div>
         {% endif %}
-        <img src="{{ url_for('static', filename='/img/icon/artist_default.svg') }}" class="img-fluid rounded-start" alt="{{ artist.name }}">
+        {% if artist.thumbnail_img %}
+          <img src="{{ artist.thumbnail_img }}" alt="{{ artist.name }}" class="rounded-card-img">
+        {% else %}
+          <img src="{{ url_for('static', filename='/img/default/default_artist.png') }}" alt="{{ artist.name }}" class="rounded-card-img">
+        {% endif %}
+        <a href="/artist/{{ artist.id }}" class="rounded-card-text-container">
+          <h5 class="rounded-card-name">{{ artist.name }}</h5>
+        </a>
       </div>
-      <div class="col-md-8">
-        <div class="my-card-body" onclick="window.location='/artist/{{ artist.id }}'">
-          <h5 class="card-title">{{ artist.name }}</h5>
-        </div>
-      </div>
-    </div>
     {% endfor %}
   </div>
-  <div>
+  <div class="see-more">
     <a href="{{ url_for('search_artist.search_artist', keyword=data.keyword) }}">작가 결과 더보기</a>
   </div>
   <hr>
   <!-- 미술관 데이터 -->
   <h3>미술관({{ data.gallery_count }})</h3>
-  <div class="card mb-3">
-    {% for gallery in data.gallery_list %}
-    <div class="row gallery-row" id="{{ gallery.id }}">
-      <div class="col-md-4 gallery-col">
+  <div class="rounded-card-list">
+    {% for gallery in data.galleries %}
+      <div class="rounded-card" id="{{ gallery.id }}">
         {% if data.user_id %}
           {% if gallery.id in data.followed_gallery_ids %}
-            <i class="fa-solid fa-bookmark fa-2x" onclick="followGallery(this, '{{ gallery.id }}')"></i>
+          <div class="bookmark on" onclick="followGallery(this, '{{ gallery.id }}')"></div>
           {% else %}
-            <i class="fa-regular fa-bookmark fa-2x" onclick="followGallery(this, '{{ gallery.id }}')"></i>
+          <div class="bookmark off" onclick="followGallery(this, '{{ gallery.id }}')"></div>
           {% endif %}
         {% else %}
-          <i class="fa-regular fa-bookmark fa-2x" onclick="alert('로그인 후 이용 가능한 서비스입니다.')"></i>
+          <div class="bookmark off" onclick="alert('로그인 후 이용 가능한 서비스입니다.')"></div>
         {% endif %}
-        <img src="{{ url_for('static', filename='/img/icon/gallery_default2.svg') }}" class="img-fluid rounded-start" alt="{{ gallery.name }}" style="width: 150px;">
+        {% if gallery.thumbnail_img %}
+          <img src="{{ gallery.thumbnail_img }}" alt="{{ gallery.name }}" class="rounded-card-img">
+        {% else %}
+          <img src="{{ url_for('static', filename='/img/default/default_gallery.png') }}" alt="{{ gallery.name }}" class="rounded-card-img">
+        {% endif %}
+        <a href="/gallery/{{ gallery.id }}" class="rounded-card-text-container">
+          <h5 class="rounded-card-name">{{ gallery.name }}</h5>
+        </a>
       </div>
-      <div class="col-md-8">
-        <div class="my-card-body" onclick="window.location='/gallery/{{ gallery.id }}'">
-          <h5 class="card-title">{{ gallery.name }}</h5>
-        </div>
-      </div>
-    </div>
     {% endfor %}
   </div>
-  <div>
+  <div class="see-more">
     <a href="{{ url_for('search_gallery.search_gallery', keyword=data.keyword) }}">미술관 결과 더보기</a>
   </div>
 {% endblock %}

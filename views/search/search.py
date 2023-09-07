@@ -14,11 +14,11 @@ def search():
         .join(GalleryAddress, Gallery.id == GalleryAddress.gallery_id, isouter=True) \
         .all()
     artists = get_search_artists(keyword).all()    
-    gallerys = get_search_gallerys(keyword).all()
+    galleries = get_search_gallerys(keyword).all()
 
     # 각 데이터 검색 결과 개수
     exhibition_count = len(exhibitions)
-    gallery_count = len(gallerys)
+    gallery_count = len(galleries)
     artist_count = len(artists)
 
     # 사용자가 좋아요, 팔로우한 id 목록
@@ -28,8 +28,8 @@ def search():
 
     data = {
         "exhibitions": [row._asdict() for row in exhibitions][:3],
-        "gallery_list": [row._asdict() for row in gallerys][:3],
-        "artist_list": [row._asdict() for row in artists][:3],
+        "galleries": [row._asdict() for row in galleries][:5],
+        "artists": [row._asdict() for row in artists][:5],
         "exhibition_count": exhibition_count,
         "gallery_count": gallery_count,
         "artist_count": artist_count,
