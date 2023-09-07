@@ -55,7 +55,7 @@ def search_exhibition():
 
 # 페이지 계산
 def calc_pages(data, current_page):
-    per_page = 12
+    per_page = 15
     data_length = len(data)
     total_pages = math.ceil((data_length / per_page))
     start_index = per_page * (current_page -1)
