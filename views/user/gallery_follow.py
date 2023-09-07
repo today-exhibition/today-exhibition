@@ -21,4 +21,7 @@ def gallery_follow():
         .order_by(FollowingGallery.followed_at.desc()) \
         .all()
     
-    return render_template('user/gallery_follow.html', gallery_list=gallery_list, user_id=user_id)
+    result = {}
+    result['galleries'] = [row._asdict() for row in gallery_list]
+   
+    return render_template('user/gallery_follow.html', data=result)

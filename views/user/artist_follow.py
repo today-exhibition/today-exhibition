@@ -21,4 +21,7 @@ def artist_follow():
         .order_by(FollowingArtist.followed_at.desc()) \
         .all()
     
-    return render_template('user/artist_follow.html', artist_list=artist_list, user_id=user_id)
+    result = {}
+    result['artists'] = [row._asdict() for row in artist_list]
+ 
+    return render_template('user/artist_follow.html', data=result)
