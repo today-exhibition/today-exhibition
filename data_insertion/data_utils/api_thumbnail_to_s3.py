@@ -3,7 +3,7 @@ import requests
 import os
 
 from utils import load_secrets
-from config import REGION_NAME, BUCKET_NAME
+from config import REGION_NAME, BUCKET_NAME, LOW_QUALITY_BUCKET_NAME
 
 def thumbnail_to_s3(id, thumbnail_img):
     secrets = load_secrets()
@@ -18,23 +18,39 @@ def thumbnail_to_s3(id, thumbnail_img):
 
     # 업로드할 이미지 파일과 버킷 이름 설정     
     filename, img_type = image_download(id, thumbnail_img)
-    bucket_name = BUCKET_NAME  
+    bucket_name = BUCKET_NAME 
     ContentType = get_img_type(img_type.lower())
 
-    # 이미지를 S3 버킷에 업로드
+    # 이미지를 S3 버킷에 업로드 (업로드 위치, 버킷 위치(키))
     s3_client.upload_file(filename, bucket_name, filename, ExtraArgs={'ContentType': ContentType })
 
     # S3 객체 URL 생성
-    object_url = f"https://{bucket_name}.s3.amazonaws.com/{filename}"
-    print(object_url)
+    presigned_url = s3_client.generate_presigned_url(
+        'get_object',
+        Params={'Bucket': bucket_name, 'Key': filename}
+    )
+    object_url = get_object_url(presigned_url)
+
+    # 저화질 버킷 
+    low_bucket_name = LOW_QUALITY_BUCKET_NAME
+    low_object_url = None
+
+    response = s3_client.list_objects_v2(
+        Bucket=low_bucket_name,
+        Prefix=filename
+    )
+
+    if 'Contents' in response:
+        object_key = response['Contents'][0]['Key']
+        low_object_url = f"https://{low_bucket_name}.s3.amazonaws.com/{object_key}"
     
-    return object_url
+    return object_url, low_object_url
 
 def image_download(id, image_url):
     local_directory = 'thumbnail_imgs/'
     response = requests.get(image_url)
     img_type = image_url.split('.')[-1]
-    if len(img_type) > 4:
+    if len(img_type) > 3:
         img_name = f'{id}'
     else:
         img_name = f'{id}.{img_type}'
@@ -54,4 +70,10 @@ def get_img_type(image_type):
         ContentType = "image/jpeg"
     
     return ContentType
+
+def get_object_url(presigned_url):
+    url_parts = presigned_url.split('?')
+    object_url = url_parts[0]
+
+    return object_url
 
