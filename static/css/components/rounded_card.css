@@ -1,0 +1,31 @@
+.rounded-card-list{
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  justify-items: center;
+}
+
+.rounded-card {
+  position: relative;
+}
+
+.rounded-card-img {
+  display: block;
+  width: 180px;
+  height: 180px;
+  margin: 10px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+}
+
+.rounded-card-name {
+  text-align: center;
+  font-weight: 700;
+  font-size: var(--font-size-16)
+}
+
+.bookmark {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+}

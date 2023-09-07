@@ -18,7 +18,7 @@ def search_gallery():
     total_pages, current_page, page_data, page_list = calc_pages(gallerys, page)
     
     data = {
-        "gallerys": page_data,
+        "galleries": page_data,
         "keyword": keyword,
         "user_id": user_id,
         "gallery_count": gallery_count,
