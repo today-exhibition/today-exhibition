@@ -36,7 +36,11 @@
         {% else %}
           <div class="bookmark off" onclick="alert('로그인 후 이용 가능한 서비스입니다.')"></div>
         {% endif %}
-        <img src="{{ artist.thumbnail_img }}" alt="{{ artist.name }}" class="rounded-card-img">
+        {% if artist.thumbnail_img %}
+          <img src="{{ artist.thumbnail_img }}" alt="{{ artist.name }}" class="rounded-card-img">
+        {% else %}
+          <img src="{{ url_for('static', filename='/img/default/default_artist.png') }}" alt="{{ artist.name }}" class="rounded-card-img">
+        {% endif %}
         <a href="/artist/{{ artist.id }}" class="rounded-card-text-container">
           <h5 class="rounded-card-name">{{ artist.name }}</h5>
         </a>

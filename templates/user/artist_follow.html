@@ -10,7 +10,11 @@
   {% for artist in data.artists %}
     <div class="rounded-card" id="{{ artist.id }}">
       <div class="bookmark on" onclick="followArtist(this, '{{ artist.id }}')"></div>
-      <img src="{{ artist.thumbnail_img }}" alt="{{ artist.name }}" class="rounded-card-img">
+      {% if artist.thumbnail_img %}
+        <img src="{{ artist.thumbnail_img }}" alt="{{ artist.name }}" class="rounded-card-img">
+      {% else %}
+        <img src="{{ url_for('static', filename='/img/default/default_artist.png') }}" alt="{{ artist.name }}" class="rounded-card-img">
+      {% endif %}
       <a href="/artist/{{ artist.id }}" class="rounded-card-text-container">
         <h5 class="rounded-card-name">{{ artist.name }}</h5>
       </a>

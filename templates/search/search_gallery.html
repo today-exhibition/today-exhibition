@@ -35,7 +35,11 @@
         {% else %}
           <div class="bookmark off" onclick="alert('로그인 후 이용 가능한 서비스입니다.')"></div>
         {% endif %}
-        <img src="{{ url_for('static', filename='/img/icon/gallery_default2.svg') }}" alt="{{ gallery.name }}" class="rounded-card-img">
+        {% if gallery.thumbnail_img %}
+          <img src="{{ gallery.thumbnail_img }}" alt="{{ gallery.name }}" class="rounded-card-img">
+        {% else %}
+          <img src="{{ url_for('static', filename='/img/default/default_gallery.png') }}" alt="{{ gallery.name }}" class="rounded-card-img">
+        {% endif %}
         <a href="/gallery/{{ gallery.id }}" class="rounded-card-text-container">
           <h5 class="rounded-card-name">{{ gallery.name }}</h5>
         </a>
