@@ -10,12 +10,12 @@
   <h3 class="fw-bold">{{ data.artist[0].name }}
     {% if data.user_id %}
       {% if data.artist[0].id in data.followed_artist_ids %}
-        <i class="fa-solid fa-bookmark fa" onclick="followArtist(this, '{{ data.artist[0].id }}')"></i>
+        <div class="bookmark on" onclick="followArtist(this, '{{ data.artist[0].id }}')"></div>
       {% else %}
-        <i class="fa-regular fa-bookmark fa" onclick="followArtist(this, '{{ data.artist[0].id }}')"></i>
+        <div class="bookmark off" onclick="followArtist(this, '{{ data.artist[0].id }}')"></div>
       {% endif %}
     {% else %}
-      <i class="fa-regular fa-bookmark fa" onclick="alert('로그인 후 이용 가능한 서비스입니다.')"></i>
+      <div class="bookmark off" onclick="alert('로그인 후 이용 가능한 서비스입니다.')"></div>
     {% endif %}
   </h3>  
   <!-- 전시회 상태별 정보 -->
