@@ -83,6 +83,7 @@ class Exhibition(db.Model):
     end_date = db.Column(db.Date())
     gallery_id = db.Column(db.String(64), db.ForeignKey('gallery.id'))
     thumbnail_img = db.Column(db.String(256))
+    low_thumbnail_img = db.Column(db.String(256))
     price = db.Column(db.Integer())
 
     exhibition_keyword_R = db.relationship('ExhibitionKeyword', backref='exhibition')

@@ -49,7 +49,8 @@ def get_search_exhibitions(keyword):
         Cast(Exhibition.start_date, String).label('start_date'),
         Cast(Exhibition.end_date, String).label('end_date'),
         Gallery.name,
-        Exhibition.thumbnail_img
+        Exhibition.thumbnail_img,
+        Exhibition.low_thumbnail_img
         ) \
         .filter(Exhibition.title.like('%' + keyword + '%')) \
         .join(Gallery, Exhibition.gallery_id == Gallery.id) \
@@ -69,6 +70,7 @@ def get_exhibitions(user_id, keyword):
         Exhibition.id.label('exhibition_id'),
         Exhibition.title.label("exhibition_title"),
         Exhibition.thumbnail_img,
+        Exhibition.low_thumbnail_img,
         Cast(Exhibition.start_date, String).label('start_date'),
         Cast(Exhibition.end_date, String).label('end_date'),
         Gallery.name.label("gallery_name"),
