@@ -31,58 +31,15 @@
   <hr>
   <!-- 작가 데이터 -->
   <h3>작가({{ data.artist_count }})</h3>
-  <div class="rounded-card-list">
-    {% for artist in data.artists %}
-      <div class="rounded-card" id="{{ artist.id }}">
-        {% if data.user_id %}
-          {% if artist.id in data.followed_artist_ids %}
-          <div class="bookmark on" onclick="followArtist(this, '{{ artist.id }}')"></div>
-          {% else %}
-          <div class="bookmark off" onclick="followArtist(this, '{{ artist.id }}')"></div>
-          {% endif %}
-        {% else %}
-          <div class="bookmark off" onclick="alert('로그인 후 이용 가능한 서비스입니다.')"></div>
-        {% endif %}
-        {% if artist.thumbnail_img %}
-          <img src="{{ artist.thumbnail_img }}" alt="{{ artist.name }}" class="rounded-card-img">
-        {% else %}
-          <img src="{{ url_for('static', filename='/img/default/default_artist.png') }}" alt="{{ artist.name }}" class="rounded-card-img">
-        {% endif %}
-        <a href="/artist/{{ artist.id }}" class="rounded-card-text-container">
-          <h5 class="rounded-card-name">{{ artist.name }}</h5>
-        </a>
-      </div>
-    {% endfor %}
-  </div>
+  <!-- 작가 카드 리스트 (JavaScript로 카드 생성) -->
+  <div class="artist-card-list rounded-card-list"></div>
   <div class="see-more">
     <a href="{{ url_for('search_artist.search_artist', keyword=data.keyword) }}">작가 결과 더보기</a>
   </div>
   <hr>
   <!-- 미술관 데이터 -->
   <h3>미술관({{ data.gallery_count }})</h3>
-  <div class="rounded-card-list">
-    {% for gallery in data.galleries %}
-      <div class="rounded-card" id="{{ gallery.id }}">
-        {% if data.user_id %}
-          {% if gallery.id in data.followed_gallery_ids %}
-          <div class="bookmark on" onclick="followGallery(this, '{{ gallery.id }}')"></div>
-          {% else %}
-          <div class="bookmark off" onclick="followGallery(this, '{{ gallery.id }}')"></div>
-          {% endif %}
-        {% else %}
-          <div class="bookmark off" onclick="alert('로그인 후 이용 가능한 서비스입니다.')"></div>
-        {% endif %}
-        {% if gallery.thumbnail_img %}
-          <img src="{{ gallery.thumbnail_img }}" alt="{{ gallery.name }}" class="rounded-card-img">
-        {% else %}
-          <img src="{{ url_for('static', filename='/img/default/default_gallery.png') }}" alt="{{ gallery.name }}" class="rounded-card-img">
-        {% endif %}
-        <a href="/gallery/{{ gallery.id }}" class="rounded-card-text-container">
-          <h5 class="rounded-card-name">{{ gallery.name }}</h5>
-        </a>
-      </div>
-    {% endfor %}
-  </div>
+  <div class="gallery-card-list rounded-card-list"></div>
   <div class="see-more">
     <a href="{{ url_for('search_gallery.search_gallery', keyword=data.keyword) }}">미술관 결과 더보기</a>
   </div>
@@ -94,6 +51,8 @@
   var data = {{ data|tojson|safe }};
 </script>
 <script src="{{ url_for('static', filename='/js/exhibition_card.js')}}"></script>
+<script src="{{ url_for('static', filename='/js/artist_card.js')}}"></script>
+<script src="{{ url_for('static', filename='/js/gallery_card.js')}}"></script>
 <script src="{{ url_for('static', filename='/js/like_exhibition.js')}}"></script>
 <script src="{{ url_for('static', filename='/js/follow_artist.js')}}"></script>
 <script src="{{ url_for('static', filename='/js/follow_gallery.js')}}"></script>
