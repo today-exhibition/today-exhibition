@@ -82,6 +82,8 @@ def sub_sorts_filter(query, selected_sub_sorts):
         sorts.append(Exhibition.end_date < datetime.datetime.today() - datetime.timedelta(days=1))
     if 'upcoming' in selected_sub_sorts:
         sorts.append(Exhibition.start_date > datetime.datetime.today())
+    if 'available_purchase' in selected_sub_sorts:
+        sorts.append(Exhibition.price != 0 or None)
 
     if sorts:
         return query.filter(or_(*sorts))
