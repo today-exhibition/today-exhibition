@@ -9,11 +9,11 @@ function makeCard(data) {
     title = title.substring(0, maxLenght) + "...";
   }
   var img = '/static/img/default/default_exhibition.png'
-  if (exhibition['low_thumbnail_img']) {
-    img = exhibition['low_thumbnail_img'];
+  if (data['low_thumbnail_img']) {
+    img = data['low_thumbnail_img'];
   }
   else {
-    img = exhibition['thumbnail_img'];
+    img = data['thumbnail_img'];
   }
   const s_date = data['start_date'];
   const e_date = data['end_date'];
