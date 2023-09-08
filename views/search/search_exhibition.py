@@ -5,7 +5,7 @@ from flask import Blueprint, request, render_template, session
 from sqlalchemy import func, or_
 
 from models.model import Exhibition, Gallery, GalleryAddress, LikeExhibition
-from views.search.search import get_liked_exhibition_ids, get_exhibitions
+from views.search.search import get_exhibitions
 
 search_exhibition_bp = Blueprint('search_exhibition', __name__)
 
@@ -32,7 +32,6 @@ def search_exhibition():
    
     exhibitions = exhibitions_query.all()
     exhibition_count = len(exhibitions)
-    liked_exhibition_ids = get_liked_exhibition_ids(user_id)
 
     total_pages, current_page, page_data, page_list = calc_pages(exhibitions, page)
     page_data = [row._asdict() for row in page_data]
@@ -41,8 +40,6 @@ def search_exhibition():
         "exhibitions": page_data,
         "keyword": keyword,
         "exhibition_count": exhibition_count,
-        "user_id": user_id,
-        "liked_exhibition_ids": liked_exhibition_ids,
         "sub_sorts": sub_sorts,
         "areas": areas,
         "sort": sort,
