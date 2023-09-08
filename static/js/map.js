@@ -8,7 +8,13 @@ function makeCard(data) {
   if (title.length > maxLenght) {
     title = title.substring(0, maxLenght) + "...";
   }
-  const img = data['thumbnail_img'];
+  var img = '/static/img/default/default_exhibition.png'
+  if (exhibition['low_thumbnail_img']) {
+    img = exhibition['low_thumbnail_img'];
+  }
+  else {
+    img = exhibition['thumbnail_img'];
+  }
   const s_date = data['start_date'];
   const e_date = data['end_date'];
   const gallery = data['gallery_name'];
