@@ -21,15 +21,11 @@ def thumbnail_to_s3(id, thumbnail_img):
     bucket_name = BUCKET_NAME 
     ContentType = get_img_type(img_type.lower())
 
-    # 이미지를 S3 버킷에 업로드 (업로드 위치, 버킷 위치(키))
+    # 이미지를 S3 버킷에 업로드 (업로드 위치, 버킷 파일 위치(키))
     s3_client.upload_file(filename, bucket_name, filename, ExtraArgs={'ContentType': ContentType })
 
     # S3 객체 URL 생성
-    presigned_url = s3_client.generate_presigned_url(
-        'get_object',
-        Params={'Bucket': bucket_name, 'Key': filename}
-    )
-    object_url = get_object_url(presigned_url)
+    object_url = f"https://{bucket_name}.s3.amazonaws.com/{filename}"
 
     # 저화질 버킷 
     low_bucket_name = LOW_QUALITY_BUCKET_NAME
@@ -43,7 +39,7 @@ def thumbnail_to_s3(id, thumbnail_img):
     if 'Contents' in response:
         object_key = response['Contents'][0]['Key']
         low_object_url = f"https://{low_bucket_name}.s3.amazonaws.com/{object_key}"
-    
+
     return object_url, low_object_url
 
 def image_download(id, image_url):
@@ -70,10 +66,3 @@ def get_img_type(image_type):
         ContentType = "image/jpeg"
     
     return ContentType
-
-def get_object_url(presigned_url):
-    url_parts = presigned_url.split('?')
-    object_url = url_parts[0]
-
-    return object_url
-

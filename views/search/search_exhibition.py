@@ -15,7 +15,7 @@ def search_exhibition():
     page = request.args.get('page', default=1, type=int)
     user_id = session.get('user_id', None)
     sub_sorts = request.args.get('sub_sort') if request.args.get('sub_sort') else "" # ongoing, ended, upcoming
-    areas = request.args.get('area') if request.args.get('areas') else "" # 서울, 경기, 강원, 대전
+    areas = request.args.get('area') if request.args.get('area') else "" # 서울, 경기, 강원, 대전
     sort = request.args.get('sort') if request.args.get('sort') else "" # popularity, featured, recommended
 
     selected_sub_sorts = sub_sorts.split(',') if sub_sorts else []
