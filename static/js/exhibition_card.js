@@ -1,8 +1,9 @@
 function makeExhibitionCard(exhibition) {
   const id = exhibition['exhibition_id'];
   const title = exhibition['exhibition_title'];
+  var thumbnail_img = '/static/img/default/default_exhibition.png'
   if (exhibition['low_thumbnail_img']) {
-    var thumbnail_img = exhibition['low_thumbnail_img'];
+    thumbnail_img = exhibition['low_thumbnail_img'];
   }
   else {
     thumbnail_img = exhibition['thumbnail_img'];

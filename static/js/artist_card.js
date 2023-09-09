@@ -1,12 +1,12 @@
 function makeArtistCard(artist) {
   const id = artist['id'];
   const name = artist['name'];
-  var thumbnail_img = '/img/default/default_artist.png'
+  var thumbnail_img = '/static/img/default/default_artist.png'
   if (artist['artist_thumbnail_img']) {
-    var thumbnail_img = artist['artist_thumbnail_img'];
+    thumbnail_img = artist['artist_thumbnail_img'];
   }
   else if (artist['exhibition_thumbnail_img']) {
-    var thumbnail_img = artist['exhibition_thumbnail_img'];
+    thumbnail_img = artist['exhibition_thumbnail_img'];
   }
   var bookmark = 'off';
   if (artist['followed'] == 1) {

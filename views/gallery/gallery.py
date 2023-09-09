@@ -56,6 +56,9 @@ def get_gallery_data(id):
 # 미술관 팔로우
 @gallery_bp.route('/gallery/<gallery_id>/following', methods=['post'])
 def following_gallery(gallery_id):
+    if "user_id" not in session:
+        return "login_required"
+
     existing_following_gallery = FollowingGallery.query \
         .filter(FollowingGallery.user_id == session["user_id"], FollowingGallery.gallery_id == gallery_id) \
         .first()

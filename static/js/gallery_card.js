@@ -1,12 +1,12 @@
 function makeGalleryCard(gallery) {
   const id = gallery['id'];
   const name = gallery['name'];
-  var thumbnail_img = '/img/default/default_artist.png'
+  var thumbnail_img = '/static/img/default/default_artist.png'
   if (gallery['gallery_thumbnail_img']) {
-    var thumbnail_img = gallery['gallery_thumbnail_img'];
+    thumbnail_img = gallery['gallery_thumbnail_img'];
   }
   else if (gallery['exhibition_thumbnail_img']) {
-    var thumbnail_img = gallery['exhibition_thumbnail_img'];
+    thumbnail_img = gallery['exhibition_thumbnail_img'];
   }
   var bookmark = 'off';
   if (gallery['followed'] == 1) {
