@@ -17,11 +17,61 @@
     {% else %}
     <div class="bookmark off" onclick="alert('로그인 후 이용 가능한 서비스입니다.')"></div>
     {% endif %}
-  </h3>
+  </h3> 
+  <!-- 미술관 정보 -->
+  <div class="container">
+    <div class="row">
+        <div class="col-md-6">
+          <div class="gallery-card-list"></div>
+        </div>
+        <div class="col-md-6">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th class="col-md-3">운영시간</th>
+                        <td>{{ data['gallery'][0]['opening_hours'] or '-' }}</td>
+                    </tr>
+                    <tr>
+                        <th class="col-md-3">휴관일</th>
+                        <td>{{ data['gallery'][0]['holiday_info'] or '-' }}</td>
+                    </tr>
+                    <tr>
+                        <th class="col-md-3">주소</th>
+                        <td>{{ data['gallery'][0]['address'] or '-' }}</td>
+                    </tr>
+                    <tr>
+                        <th class="col-md-3">연락처</th>
+                        <td>{{ data['gallery'][0]['contact'] or '-' }}</td>
+                    </tr>
+                    <tr>
+                        <th class="col-md-3">주차장</th>
+                        <td>{{ data['gallery'][0]['parking_yn'] or '-' }}</td>
+                    </tr>
+                    <tr>
+                        <th class="col-md-3">홈페이지</th>
+                        <td>
+                            {% if data['gallery'][0]['homepage_url'] %}
+                            <a href="{{ data['gallery'][0]['homepage_url'] }}" target="_blank">바로가기</a>
+                            {% else %}
+                            {{ '-' }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+  </div>
   <!-- 전시회 상태별 정보 -->
-  <!-- 전시 카드 리스트 (JavaScript로 카드 생성) -->
-  <div class="exhibition-card-list"></div>
-  
+  <div class="ongoing_exhibitions">  
+    <h5 class="fw-bold">진행중 전시회</h5>
+  </div>
+  <div class="upcoming_exhibitions">
+    <h5 class="fw-bold">예정중 전시회</h5>
+  </div>
+  <div class="ended_exhibitions">
+    <h5 class="fw-bold">지난 전시회</h5>
+  </div>  
 {% endblock %}
 
 {% block script %}
@@ -29,7 +79,9 @@
 <script>
   var data = {{ data|tojson|safe }};
 </script>
-<script src="{{ url_for('static', filename='/js/exhibition_card.js')}}"></script>
+
+<script src="{{ url_for('static', filename='/js/gallery_datail_card.js')}}"></script>
+<script src="{{ url_for('static', filename='/js/exhibition_detail_card.js')}}"></script>
 <script src="{{ url_for('static', filename='/js/like_exhibition.js') }}"></script>
 <script src="{{ url_for('static', filename='/js/follow_gallery.js') }}"></script>
 {% endblock %}

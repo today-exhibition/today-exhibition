@@ -19,7 +19,15 @@
     {% endif %}
   </h3>  
   <!-- 전시회 상태별 정보 -->
-  <div class="exhibition-card-list"></div>
+  <div class="ongoing_exhibitions">  
+    <h5 class="fw-bold">진행중 전시회</h5>
+  </div>
+  <div class="upcoming_exhibitions">
+    <h5 class="fw-bold">예정중 전시회</h5>
+  </div>
+  <div class="ended_exhibitions">
+    <h5 class="fw-bold">지난 전시회</h5>
+  </div>
 
 {% endblock %}
 
@@ -29,7 +37,7 @@
   var data = {{ data|tojson|safe }};
   console.log(data)
 </script>
-<script src="{{ url_for('static', filename='/js/exhibition_card.js')}}"></script>
+<script src="{{ url_for('static', filename='/js/exhibition_detail_card.js')}}"></script>
 <script src="{{ url_for('static', filename='/js/like_exhibition.js') }}"></script>
 <script src="{{ url_for('static', filename='/js/follow_artist.js') }}"></script>
 {% endblock %}
