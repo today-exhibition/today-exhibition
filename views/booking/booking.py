@@ -3,6 +3,9 @@ from flask import redirect, url_for
 from datetime import datetime, timedelta
 from sqlalchemy import and_
 from utils import load_secrets
+import base64
+import json
+import requests
 
 from models.model import db, Exhibition, TicketPrice, Gallery, LikeExhibition
 from views.search.search_exhibition import calc_pages
@@ -49,6 +52,7 @@ def booking():
 @booking_bp.route('/booking/exhibition/<id>', methods=['GET'])
 @check_user_login
 def booking_detail(id):
+    user_id = session.get('user_id')
     exhibition = get_exhibition_data(id)
     # 전시일자 리스트
     date_range = []
@@ -56,26 +60,53 @@ def booking_detail(id):
     while current_date <= exhibition.end_date:
         date_range.append(current_date.strftime('%Y-%m-%d'))
         current_date += timedelta(days=1)
+
     data =  {
-    "id": id,
-    "working": True,
-    "exhibition": exhibition,
-    "date_range": date_range
+        "id": id,
+        "working": True,
+        "exhibition": exhibition,
+        "date_range": date_range
     }
     return render_template('booking/booking.html', data=data)
 
-@booking_bp.route('/booking/booking_success', methods=['POST'])
-@check_user_login
+@booking_bp.route('/booking/success', methods=['GET'])
 def booking_success():
-    price = int(request.form.get('price'))
-    quantity = request.form.get('quantity')
-    print(price, quantity)
-    
+    order_id = request.args.get('orderId')
+    amount = request.args.get('amount')
+    payment_key = request.args.get('paymentKey')
+
+    url = "https://api.tosspayments.com/v1/payments/confirm"
+
     secrets = load_secrets()
     payments_keys = secrets.get("payments")
-    payments_keys.get("toss_payments_id")
-    payments_keys.get("toss_payments_secret")
+
+    secretKey = payments_keys.get("toss_payments_secret")
+    userpass = secretKey + ':'
+    encoded_u = base64.b64encode(userpass.encode()).decode()
+
+    headers = {
+        "Authorization" : "Basic %s" % encoded_u,
+        "Content-Type": "application/json"
+    }
     
-    user_id = session.get('user_id')
-    final_price = price, quantity
-    return ""
+    params = {
+        "orderId" : order_id,
+        "amount" : amount,
+        "paymentKey": payment_key,
+    }
+    
+    res = requests.post(url, data=json.dumps(params), headers=headers)
+    resjson = res.json()
+    pretty = json.dumps(resjson, indent=4)
+
+    respaymentKey = resjson["paymentKey"]
+    resorderId = resjson["orderId"]
+    
+    # final_price = price, quantity
+
+    data = {
+        "res" : pretty,
+        "respaymentKey" : respaymentKey,
+        "resorderId" : resorderId,
+        }
+    return render_template("booking/success.html", data=data)

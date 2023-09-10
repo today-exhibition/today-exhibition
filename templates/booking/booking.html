@@ -50,11 +50,16 @@
             {% endfor %}
           </select>
         </div>
+        <!-- 결제 -->
+        <div id="payment-method"></div>
+        <div id="agreement"></div>
+        <button id="payment-button">결제하기</button>
       </div>
     </div>
   </div>
   {% endblock %}
 
   {% block script %}
-  <script src="{{ url_for('static', filename='/js/booking.js') }}" defer></script>
+  <script src="https://js.tosspayments.com/v1/payment-widget"></script>
+  <script type="module" src="{{ url_for('static', filename='/js/booking.js') }}"></script>
   {% endblock %}
