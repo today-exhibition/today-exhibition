@@ -7,7 +7,7 @@
 {% block content %}
   <!-- 전시명, 클립보드, 하트 -->
   <h3 class="fw-bold">
-    <a href="#" id="shareLink"><i class="fa-regular fa-paste fa-2x"></i></a>  
+    <!-- <a href="#" id="shareLink"><i class="fa-regular fa-paste fa-2x"></i></a>   -->
     {{ data.exhibition.title|safe }}
     {% if data.user_id %}
       {% if data.id in data.liked_exhibition_ids %}
@@ -66,7 +66,14 @@
         <div class="booking d-flex justify-content-center">
           <form action="{{ url_for('booking.booking_detail', id=data.id) }}">
             <input type="submit" value="예매하기" class="btn btn-outline-secondary">
-          </form>
+          </form>&nbsp;
+          <!-- URL 복사 -->
+          <a href="#" id="shareLink"><i class="fa-solid fa-share-nodes fa-2x"></i></a>&nbsp;         
+          <!-- 트위터 -->
+          <a id="twitter"><i class="fa-brands fa-x-twitter fa-2x"></i></a>&nbsp;   
+          <!-- 페이스북 -->
+          <a id="facebook"><i class="fa-brands fa-facebook-f fa-2x"></i></a>
+        </div>
         </div>
       </div>
     </div>
@@ -129,4 +136,6 @@
 {% block script %}
 <script src="{{ url_for('static', filename='/js/exhibition.js') }}" defer></script>
 <script src="{{ url_for('static', filename='/js/like_exhibition.js') }}" defer></script>
+<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.4.0/kakao.min.js"
+  integrity="sha384-mXVrIX2T/Kszp6Z0aEWaA8Nm7J6/ZeWXbL8UpGRjKwWe56Srd/iyNmWMBhcItAjH" crossorigin="anonymous"></script>
 {% endblock %}
