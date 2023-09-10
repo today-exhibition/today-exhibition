@@ -115,6 +115,9 @@ def get_comments_data(id):
 # 전시 좋아요
 @exhibition_bp.route('/exhibition/<exhibition_id>/like', methods=['post'])
 def like_exhibition(exhibition_id):
+    if "user_id" not in session:
+        return "login_required"
+    
     existing_like = LikeExhibition.query \
         .filter(LikeExhibition.user_id == session["user_id"], LikeExhibition.exhibition_id == exhibition_id) \
         .first()

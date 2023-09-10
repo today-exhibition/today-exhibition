@@ -1,11 +1,12 @@
 from flask import Blueprint, render_template, session, request
 from flask import redirect, url_for
-from datetime import datetime
+from datetime import datetime, timedelta
 from sqlalchemy import and_
 from utils import load_secrets
 
 from models.model import db, Exhibition, TicketPrice, Gallery, LikeExhibition
 from views.search.search_exhibition import calc_pages
+from views.exhibition.exhibition import get_exhibition_data
 from decorators import check_user_login
 
 
@@ -43,38 +44,26 @@ def booking():
 
 #! TODO: ticket_price 없으면 0원으로 진행
 #! TODO: 나중에 데이터 추가 후 예외처리 추가하기
+
+# 2023.09.09 수정
 @booking_bp.route('/booking/exhibition/<id>', methods=['GET'])
 @check_user_login
 def booking_detail(id):
-    current_date = datetime.now().date()
-    
-    info_exhibition = db.session.query(
-                            Exhibition.id,
-                            Exhibition.title,
-                            Exhibition.start_date,
-                            Exhibition.end_date,
-                            Gallery.name,
-                            Exhibition.thumbnail_img,
-                            TicketPrice.final_price
-                        ) \
-                        .filter(Exhibition.id == id) \
-                        .join(Gallery, Exhibition.gallery_id == Gallery.id) \
-                        .outerjoin(TicketPrice, Exhibition.id == TicketPrice.exhibition_id) \
-                        .first()
-                    
-    info_dict = {
-        "id": info_exhibition.id,
-        "title": info_exhibition.title,
-        "start_date": info_exhibition.start_date,
-        "end_date": info_exhibition.end_date,
-        "gallery_name": info_exhibition.name,
-        "thumbnail_img": info_exhibition.thumbnail_img,
-        "ticket_price": info_exhibition.final_price or 10  # final_price가 None인 경우 0
+    exhibition = get_exhibition_data(id)
+    # 전시일자 리스트
+    date_range = []
+    current_date = datetime.now().date()  
+    while current_date <= exhibition.end_date:
+        date_range.append(current_date.strftime('%Y-%m-%d'))
+        current_date += timedelta(days=1)
+    data =  {
+    "id": id,
+    "working": True,
+    "exhibition": exhibition,
+    "date_range": date_range
     }
-        
-    return render_template('booking/booking.html', id=id, working=True,
-                           exhibition=info_dict, current_date=current_date, info_dict=info_dict)
-    
+    return render_template('booking/booking.html', data=data)
+
 @booking_bp.route('/booking/booking_success', methods=['POST'])
 @check_user_login
 def booking_success():

@@ -5,6 +5,7 @@
       <button class="btn default btn-type btn-regular {% if data.sub_sorts and 'ongoing' in data.sub_sorts %}selected{% endif %}" sub-sort="ongoing">전시중</button>
       <button class="btn default btn-type btn-regular {% if data.sub_sorts and 'ended' in data.sub_sorts %}selected{% endif %}" sub-sort="ended">전시종료</button>
       <button class="btn default btn-type btn-regular {% if data.sub_sorts and 'upcoming' in data.sub_sorts %}selected{% endif %}" sub-sort="upcoming">전시예정</button>
+      <button class="btn default btn-type btn-regular {% if data.sub_sorts and 'available_purchase' in data.sub_sorts %}selected{% endif %}" sub-sort="available_purchase">예매가능</button>
     </div>
     <hr class="sort-area-line">
     <div class="flex-box">

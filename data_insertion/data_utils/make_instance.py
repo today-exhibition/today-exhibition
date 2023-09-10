@@ -14,9 +14,9 @@ def make_galleryaddress(gallery_id, area, gpsx, gpsy, address):
     new_gallery_address = GalleryAddress(gallery_id=gallery_id, area=area, gpsx=gpsx, gpsy=gpsy, address=address)
     db.session.merge(new_gallery_address)
 
-def make_exhibition(id, title, start_date, end_date, gallery_id, thumbnail_img):
+def make_exhibition(id, title, start_date, end_date, gallery_id, thumbnail_img, low_thumbnail_img=None):
     new_exhib = Exhibition(id=id, title=title, start_date=start_date, end_date=end_date,
-                           gallery_id=gallery_id, thumbnail_img=thumbnail_img)
+                           gallery_id=gallery_id, thumbnail_img=thumbnail_img, low_thumbnail_img=low_thumbnail_img)
     db.session.merge(new_exhib)
 
 def make_artist(id, name):

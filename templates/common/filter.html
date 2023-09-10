@@ -5,7 +5,7 @@
     <a href="{{ url_for('search_artist.search_artist', keyword=keyword) }}" name="artist" class="btn default btn-regular btn-width {% if type == 'artist' %}selected{% endif %}">
         작가
     </a>
-    <a href="{{ url_for('search_gallery.search_gallery', keyword=keyword) }}" name="gallery" class="btn default btn-regular {% if type == 'gallery' %}selected{% endif %}">
+    <a href="{{ url_for('search_gallery.search_gallery', keyword=keyword) }}" name="gallery" class="btn default btn-regular btn-width {% if type == 'gallery' %}selected{% endif %}">
         미술관
     </a>
 </div>

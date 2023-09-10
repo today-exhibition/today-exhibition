@@ -6,8 +6,6 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='/css/components/pagination.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='/css/components/exhibition-card.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='/css/components/icon.css') }}">
-  <script src="{{ url_for('static', filename='/js/search_exhibition.js') }}" defer></script>
-  <script src="{{ url_for('static', filename='/js/truncate.js') }}" defer></script>
 {% endblock %}
 
 {% block search %}
@@ -50,7 +48,8 @@
 <script>
   var data = {{ data|tojson|safe }};
 </script>
+<script src="{{ url_for('static', filename='/js/search_exhibition.js') }}"></script>
 <script src="{{ url_for('static', filename='/js/exhibition_card.js')}}"></script>
 <script src="{{ url_for('static', filename='/js/like_exhibition.js')}}"></script>
-<script src="{{ url_for('static', filename='/js/truncate.js') }}" defer></script>
+<script src="{{ url_for('static', filename='/js/truncate.js') }}"></script>
 {% endblock %}

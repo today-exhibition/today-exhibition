@@ -1,7 +1,7 @@
 from flask import Blueprint, request, render_template, session
 from sqlalchemy import func, case, Cast, String
 
-from models.model import db, Exhibition, Gallery, GalleryAddress, LikeExhibition, FollowingGallery, Artist, FollowingArtist
+from models.model import ArtistExhibition, db, Exhibition, Gallery, GalleryAddress, LikeExhibition, FollowingGallery, Artist, FollowingArtist
 
 search_bp = Blueprint('search', __name__)
 
@@ -13,18 +13,13 @@ def search():
     exhibitions = get_exhibitions(user_id, keyword) \
         .join(GalleryAddress, Gallery.id == GalleryAddress.gallery_id, isouter=True) \
         .all()
-    artists = get_search_artists(keyword).all()    
-    galleries = get_search_gallerys(keyword).all()
+    artists = get_artists(user_id, keyword).all()    
+    galleries = get_galleries(user_id, keyword).all()
 
     # 각 데이터 검색 결과 개수
     exhibition_count = len(exhibitions)
     gallery_count = len(galleries)
     artist_count = len(artists)
-
-    # 사용자가 좋아요, 팔로우한 id 목록
-    liked_exhibition_ids = get_liked_exhibition_ids(user_id)
-    followed_gallery_ids = get_followed_gallery_ids(user_id)
-    followed_artist_ids = get_followed_artist_ids(user_id)
 
     data = {
         "exhibitions": [row._asdict() for row in exhibitions][:3],
@@ -33,29 +28,10 @@ def search():
         "exhibition_count": exhibition_count,
         "gallery_count": gallery_count,
         "artist_count": artist_count,
-        "liked_exhibition_ids": liked_exhibition_ids,
-        "followed_gallery_ids": followed_gallery_ids,
-        "followed_artist_ids": followed_artist_ids,
-        "keyword": keyword,
-        "user_id": user_id
+        "keyword": keyword
     }
 
     return render_template('search/search.html', data=data)
-
-def get_search_exhibitions(keyword):
-    exhibitions_query = db.session.query(
-        Exhibition.id,
-        Exhibition.title,
-        Cast(Exhibition.start_date, String).label('start_date'),
-        Cast(Exhibition.end_date, String).label('end_date'),
-        Gallery.name,
-        Exhibition.thumbnail_img
-        ) \
-        .filter(Exhibition.title.like('%' + keyword + '%')) \
-        .join(Gallery, Exhibition.gallery_id == Gallery.id) \
-        .order_by(Exhibition.start_date.desc()) 
-    
-    return exhibitions_query
 
 def get_exhibitions(user_id, keyword):
     liked_subquery = db.session.query(
@@ -69,6 +45,7 @@ def get_exhibitions(user_id, keyword):
         Exhibition.id.label('exhibition_id'),
         Exhibition.title.label("exhibition_title"),
         Exhibition.thumbnail_img,
+        Exhibition.low_thumbnail_img,
         Cast(Exhibition.start_date, String).label('start_date'),
         Cast(Exhibition.end_date, String).label('end_date'),
         Gallery.name.label("gallery_name"),
@@ -82,27 +59,54 @@ def get_exhibitions(user_id, keyword):
                 
     return query
 
-def get_search_artists(keyword):
-    artists_query = db.session.query(
+def get_artists(user_id, keyword):
+    followed_subquery = db.session.query(
+        FollowingArtist.artist_id,
+        func.count('*').label('follows')) \
+        .filter(FollowingArtist.user_id == user_id) \
+        .group_by(FollowingArtist.artist_id) \
+        .subquery()
+    
+    query = db.session.query(
         Artist.id,
         Artist.name,
-        Artist.thumbnail_img
-        ) \
+        Artist.thumbnail_img.label('artist_thumbnail_img'),
+        Exhibition.thumbnail_img.label('exhibition_thumbnail_img'),
+        case(
+            (followed_subquery.c.follows, 1),
+            else_=0).label('followed')) \
         .filter(Artist.name.like('%' + keyword + '%')) \
-        .order_by(Artist.id) 
+        .outerjoin(followed_subquery, followed_subquery.c.artist_id == Artist.id) \
+        .join(ArtistExhibition, Artist.id == ArtistExhibition.artist_id) \
+        .join(Exhibition, ArtistExhibition.exhibition_id == Exhibition.id) \
+        .group_by(Artist.id) \
+        .order_by(Artist.id)
+    
+    return query
 
-    return artists_query
-
-def get_search_gallerys(keyword):
-    gallerys_query = db.session.query(
+def get_galleries(user_id, keyword):
+    followed_subquery = db.session.query(
+        FollowingGallery.gallery_id,
+        func.count('*').label('follows')) \
+        .filter(FollowingGallery.user_id == user_id) \
+        .group_by(FollowingGallery.gallery_id) \
+        .subquery()
+    
+    query = db.session.query(
         Gallery.id,
         Gallery.name,
-        Gallery.thumbnail_img,
-        ) \
+        Gallery.thumbnail_img.label('gallery_thumbnail_img'),
+        Exhibition.thumbnail_img.label('exhibition_thumbnail_img'),
+        case(
+            (followed_subquery.c.follows, 1),
+            else_=0).label('followed')) \
         .filter(Gallery.name.like('%' + keyword + '%')) \
+        .outerjoin(followed_subquery, followed_subquery.c.gallery_id == Gallery.id) \
+        .join(Exhibition, Gallery.id == Exhibition.gallery_id) \
+        .group_by(Gallery.id) \
         .order_by(Gallery.id)
     
-    return gallerys_query
+    return query
 
 def get_liked_exhibition_ids(user_id):
     if user_id:
