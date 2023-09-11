@@ -1,6 +1,7 @@
 import os
 from flask import Flask
 from flask_session import Session
+from flask_migrate import Migrate
 
 from config import DEBUG, SQLALCHEMY_DATABASE_URI, SQLALCHEMY_TRACK_MODIFICATIONS, SECRET_KEY, PORT
 from models.model import db
@@ -35,7 +36,7 @@ app.config["SESSION_SQLALCHEMY"] = db
 Session(app)
 
 db.init_app(app)
-
+migrate = Migrate(app, db)
 
 app.register_blueprint(main_bp)
 app.register_blueprint(artist_bp)

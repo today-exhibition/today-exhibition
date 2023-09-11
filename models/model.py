@@ -131,7 +131,7 @@ class ExhibitionKeyword(db.Model):
 class TicketPrice(db.Model):
     __tablename__ = 'ticket_price'
     exhibition_id = db.Column(db.String(64), db.ForeignKey('exhibition.id'), primary_key=True)
-    ticket_type = db.Column(db.Enum(TicketType), nullable=False)
+    ticket_type = db.Column(db.Enum(TicketType), primary_key=True)
     final_price = db.Column(db.Integer(), nullable=False)
     available = db.Column(db.Boolean())
 
