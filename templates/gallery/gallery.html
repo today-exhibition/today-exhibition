@@ -15,7 +15,7 @@
         <div class="bookmark off" onclick="followGallery(this, '{{ data.gallery[0].id }}')"></div>
       {% endif %}
     {% else %}
-    <div class="bookmark off" onclick="alert('로그인 후 이용 가능한 서비스입니다.')"></div>
+    <div class="bookmark off" onclick="followGallery(this, '{{ data.gallery[0].id }}')"></div>
     {% endif %}
   </h3> 
   <!-- 미술관 정보 -->

@@ -119,3 +119,23 @@ document.getElementById("twitter").addEventListener("click", function () {
     "https://twitter.com/intent/tweet?url=" + encodeURIComponent(currentURL);
   window.open(twitterShareURL, "_blank");
 });
+
+function check_user_login(e, url) {
+  e.preventDefault();
+
+  $.ajax({
+    type: "POST", 
+    url: "/user/login/check",
+    data: JSON.stringify({
+      url: url,
+    }),
+    contentType: 'application/json',
+    success: function (resp) {
+      if (resp == "login_required") {
+        $('#alertmodal').modal('show');
+      } else {
+        window.location.href = url; 
+      }
+    }
+  });
+}

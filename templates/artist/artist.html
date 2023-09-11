@@ -15,7 +15,7 @@
         <div class="bookmark off" onclick="followArtist(this, '{{ data.artist[0].id }}')"></div>
       {% endif %}
     {% else %}
-      <div class="bookmark off" onclick="alert('로그인 후 이용 가능한 서비스입니다.')"></div>
+      <div class="bookmark off" onclick="followArtist(this, '{{ data.artist[0].id }}')"></div>
     {% endif %}
   </h3>  
   <!-- 전시회 상태별 정보 -->

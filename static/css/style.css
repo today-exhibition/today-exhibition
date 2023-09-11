@@ -1,7 +1,7 @@
 @font-face {
-  font-family: 'Pretendard-Regular';
-  src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
-  font-style: normal;
+	font-family: 'Pretendard-Light';
+	src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Light.woff') format('woff');
+	font-style: normal;
 }
 
 /* 변수 */
@@ -25,7 +25,7 @@
   --border: #D7D9DD;
   --logo: #1A1E25;
 
-  --font-main: 'Pretendard-Regular', sans-serif;
+  --font-main: 'Pretendard-Light', sans-serif;
   
   --font-size-12: 12px;
   --font-size-14: 14px;
@@ -231,14 +231,16 @@ input::placeholder {
   font-family: 'Pretendard-Light';
 }
 
-@font-face {
-	font-family: 'Pretendard-Light';
-	src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Light.woff') format('woff');
-	font-weight: 400;
-	font-style: normal;
-}
-
 /* link */
 a{
   color: black;
+}
+
+/* modal */
+.modal-body {
+  height: 80px; 
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+  font-size: medium;
 }

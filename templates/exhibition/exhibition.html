@@ -16,7 +16,7 @@
         <div class="heart off" onclick="likeExhibition(event, this, '{{ data.id }}')"></div>
       {% endif %}
     {% else %}
-      <div class="heart off" onclick="alert('로그인 후 이용 가능한 서비스입니다.')"></div>
+      <div class="heart off" onclick="likeExhibition(event, this, '{{ data.id }}')"></div>
     {% endif %}
   </h3>
   <!-- 전시 정보 -->
@@ -92,7 +92,11 @@
       <div class="input-group">
         <textarea id="comment" name="content" rows="1" class="form-control rounded" placeholder="내용을 입력해주세요."></textarea>
         <div class="input-group-append">
-          <input type="submit" value="등록" class="btn btn-outline-secondary rounded" id="button-addon2">
+          {% if data.user_id %}
+            <input type="submit" value="등록" class="btn btn-outline-secondary rounded" id="button-addon2" onclick="check_user_login(event, `/exhibition/${data.id}/add_comment`)">
+          {% else %}
+            <input type="submit" value="등록" class="btn btn-outline-secondary rounded" id="button-addon2" onclick="check_user_login(event, `/user/login/check`)">
+          {% endif %}  
         </div>
       </div>
     </form>    
@@ -136,6 +140,4 @@
 {% block script %}
 <script src="{{ url_for('static', filename='/js/exhibition.js') }}" defer></script>
 <script src="{{ url_for('static', filename='/js/like_exhibition.js') }}" defer></script>
-<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.4.0/kakao.min.js"
-  integrity="sha384-mXVrIX2T/Kszp6Z0aEWaA8Nm7J6/ZeWXbL8UpGRjKwWe56Srd/iyNmWMBhcItAjH" crossorigin="anonymous"></script>
 {% endblock %}

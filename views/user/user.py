@@ -341,3 +341,9 @@ def delete():
             session.clear()
     
     return redirect(url_for('main.main'))
+
+@user_bp.route('/user/login/check', methods=['POST'])
+def login_check():
+    if "user_id" not in session:
+            return "login_required"
+    return "success"
