@@ -29,12 +29,15 @@ def booking_detail(id):
         .filter(User.id == user_id) \
         .all()
     user = [row._asdict() for row in user][0]
+
+    current_date = datetime.now().date()
     
     exhibition = get_exhibition_data(id)
     exhibition = [row._asdict() for row in exhibition][0]
 
     data =  {
         "user": user,
+        "current_date": current_date,
         "working": True,
         "exhibition": exhibition
     }
@@ -50,10 +53,7 @@ def booking_success():
     url = "https://api.tosspayments.com/v1/payments/confirm"
 
     secrets = load_secrets()
-    payments_keys = secrets.get("payments")
-
-    secretKey = payments_keys.get("toss_payments_secret")
-    userpass = secretKey + ':'
+    userpass = secrets['payments']['toss_payments_secret'] + ':'
     encoded_u = base64.b64encode(userpass.encode()).decode()
 
     headers = {
@@ -81,4 +81,5 @@ def booking_success():
         "respaymentKey" : respaymentKey,
         "resorderId" : resorderId,
         }
+
     return render_template("booking/success.html", data=data)
