@@ -18,8 +18,11 @@ def exhibition(id):
         .join(Exhibition, Exhibition.id == ArtistExhibition.exhibition_id)\
         .filter(Exhibition.id == id)\
         .all()
+    comments = [row._asdict() for row in artists]
     exhibition = get_exhibition_data(id)
+    exhibition = [row._asdict() for row in exhibition][0]
     comments = get_comments_data(id)
+    comments = [row._asdict() for row in comments]
 
     user_id = session.get('user_id', None)
     liked_exhibition_ids = get_liked_exhibition_ids(user_id)
@@ -32,6 +35,7 @@ def exhibition(id):
         "user_id": user_id,
         "liked_exhibition_ids": liked_exhibition_ids
         }
+    print(data)
     
     return render_template('exhibition/exhibition.html', data=data)
 
