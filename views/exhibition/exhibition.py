@@ -92,7 +92,7 @@ def get_exhibition_data(id):
         .join(ArtistExhibition, ArtistExhibition.exhibition_id == Exhibition.id, isouter = True)\
         .join(Artist, Artist.id == ArtistExhibition.artist_id, isouter = True)\
         .filter(Exhibition.id == id) \
-        .first()
+        .all()
     
     return exhibition
     

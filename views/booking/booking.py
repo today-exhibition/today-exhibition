@@ -7,7 +7,7 @@ import base64
 import json
 import requests
 
-from models.model import db, Exhibition, TicketPrice, Gallery, LikeExhibition
+from models.model import db, Exhibition, TicketPrice, Gallery, LikeExhibition, User
 from views.search.search_exhibition import calc_pages
 from views.exhibition.exhibition import get_exhibition_data
 from decorators import check_user_login
@@ -53,20 +53,23 @@ def booking():
 @check_user_login
 def booking_detail(id):
     user_id = session.get('user_id')
+    user = db.session.query(
+        User.id,
+        User.email,
+        User.nickname) \
+        .filter(User.id == user_id) \
+        .all()
+    user = [row._asdict() for row in user][0]
+    
     exhibition = get_exhibition_data(id)
-    # 전시일자 리스트
-    date_range = []
-    current_date = datetime.now().date()  
-    while current_date <= exhibition.end_date:
-        date_range.append(current_date.strftime('%Y-%m-%d'))
-        current_date += timedelta(days=1)
+    exhibition = [row._asdict() for row in exhibition][0]
 
     data =  {
-        "id": id,
+        "user": user,
         "working": True,
-        "exhibition": exhibition,
-        "date_range": date_range
+        "exhibition": exhibition
     }
+    
     return render_template('booking/booking.html', data=data)
 
 @booking_bp.route('/booking/success', methods=['GET'])
