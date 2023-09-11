@@ -2,9 +2,19 @@ import datetime
 import enum
 
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import MetaData
 
 
-db = SQLAlchemy()
+convention = {
+    "ix": 'ix_%(column_0_label)s',
+    "uq": "uq_%(table_name)s_%(column_0_name)s",
+    "ck": "ck_%(table_name)s_%(constraint_name)s",
+    "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
+    "pk": "pk_%(table_name)s"
+}
+
+metadata = MetaData(naming_convention=convention)
+db = SQLAlchemy(metadata=metadata)
 
 class LoginType(enum.Enum):
     NAVER = "NAVER"
@@ -28,14 +38,14 @@ class BillingStatus(enum.Enum):
     EXPIRED = 7
 
 class BillingMethod(enum.Enum):
-    카드 = 0
-    가상계좌 = 1
-    간편결제 = 2
-    휴대폰 = 3
-    계좌이체 = 4
-    문화상품권 = 5
-    도서문화상품권 = 6
-    게임문화상품권 = 7
+    카드 = 10
+    가상계좌 = 11
+    간편결제 = 12
+    휴대폰 = 13
+    계좌이체 = 14
+    문화상품권 = 15
+    도서문화상품권 = 16
+    게임문화상품권 = 17
     
 class User(db.Model):
     __tablename__ = 'user'
@@ -136,16 +146,22 @@ class ArtistExhibition(db.Model):
     artist_id = db.Column(db.String(64), db.ForeignKey('artist.id'), primary_key=True)
     exhibition_id = db.Column(db.String(64), db.ForeignKey('exhibition.id'), primary_key=True)
 
-class Booking(db.Model): # 추후 예매테이블 구체화
+class Booking(db.Model):
     __tablename__ = 'booking'
     id = db.Column(db.String(64), primary_key=True)
     user_id = db.Column(db.String(64), db.ForeignKey('user.id'), nullable=False)
     exhibition_id = db.Column(db.String(64), db.ForeignKey('exhibition.id'), nullable=False)
+    visited_at = db.Column(db.DateTime(), nullable=False)
+    ticket_type = db.Column(db.Enum(TicketType), nullable=False)
+
+class Billing(db.Model):
+    __tablename__ = 'billing'
+    id = db.Column(db.String(200), primary_key=True)
+    booking_id = db.Column(db.String(64), db.ForeignKey('booking.id'), nullable=False)
     requested_at = db.Column(db.DateTime())
     approved_at = db.Column(db.DateTime())
-    booking_status = db.Column(db.Enum(BillingStatus))
-    booking_method = db.Column(db.Enum(BillingMethod))
-    visited_at = db.Column(db.DateTime())
+    billing_status = db.Column(db.Enum(BillingStatus))
+    billing_method = db.Column(db.Enum(BillingMethod))
     price = db.Column(db.Integer())
 
 class LikeExhibition(db.Model):
