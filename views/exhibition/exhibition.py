@@ -35,7 +35,6 @@ def exhibition(id):
         "user_id": user_id,
         "liked_exhibition_ids": liked_exhibition_ids
         }
-    print(data)
     
     return render_template('exhibition/exhibition.html', data=data)
 
