@@ -18,6 +18,7 @@ from views.user.user import user_bp
 from views.user.exhibition_like import exhibition_like_bp
 from views.user.gallery_follow import gallery_follow_bp
 from views.user.artist_follow import artist_follow_bp
+from views.user.booking_list import booking_list_bp
 from views.booking.booking import booking_bp
 
 
@@ -50,6 +51,7 @@ app.register_blueprint(search_artist_bp)
 app.register_blueprint(search_gallery_bp)
 app.register_blueprint(user_bp)
 app.register_blueprint(booking_bp)
+app.register_blueprint(booking_list_bp)
 
 if __name__ == "__main__" :
     with app.app_context():

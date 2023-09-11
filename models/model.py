@@ -17,6 +17,26 @@ class TicketType(enum.Enum):
     GROUP = 3
     EARLY_BIRD = 4
 
+class BillingStatus(enum.Enum):
+    READY = 0
+    IN_PROGRESS = 1
+    WAITING_FOR_DEPOSIT = 2
+    DONE = 3
+    CANCELED = 4
+    PARTIAL_CANCELED = 5
+    ABORTED = 6
+    EXPIRED = 7
+
+class BillingMethod(enum.Enum):
+    카드 = 0
+    가상계좌 = 1
+    간편결제 = 2
+    휴대폰 = 3
+    계좌이체 = 4
+    문화상품권 = 5
+    도서문화상품권 = 6
+    게임문화상품권 = 7
+    
 class User(db.Model):
     __tablename__ = 'user'
     id = db.Column(db.String(64), primary_key=True)
@@ -121,7 +141,12 @@ class Booking(db.Model): # 추후 예매테이블 구체화
     id = db.Column(db.String(64), primary_key=True)
     user_id = db.Column(db.String(64), db.ForeignKey('user.id'), nullable=False)
     exhibition_id = db.Column(db.String(64), db.ForeignKey('exhibition.id'), nullable=False)
+    requested_at = db.Column(db.DateTime())
+    approved_at = db.Column(db.DateTime())
+    booking_status = db.Column(db.Enum(BillingStatus))
+    booking_method = db.Column(db.Enum(BillingMethod))
     visited_at = db.Column(db.DateTime())
+    price = db.Column(db.Integer())
 
 class LikeExhibition(db.Model):
     __tablename__ = 'like_exhibition'
