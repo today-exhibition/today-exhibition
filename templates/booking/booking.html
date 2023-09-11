@@ -44,7 +44,7 @@
         <!-- 관람일 선택 -->
         <div class="form-group">
           <label for="booking-date">관람일 :</label>
-          <input type="date" data-placeholder="날짜 선택" required aria-required="true" id="booking-date" name="booking-date" value="" min="{{ data.exhibition.start_date }}" max="{{ data.exhibition.end_date }}" />
+          <input type="date" data-placeholder="날짜 선택" required aria-required="true" id="booking-date" name="booking-date" value="" min="{{ [data.exhibition.start_date, data.current_date]|max }}" max="{{ data.exhibition.end_date }}" />
           <button type="submit" class="btn btn-outline-secondary" id="booking">예매하기</button>
         </div>
       </div>
