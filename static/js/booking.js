@@ -6,9 +6,9 @@ $('#booking').on("click", function() {
   const clientKey = secrets.toss_api_key; // 테스트용 클라이언트 키
   const customerKey = data.user.id; // 내 상점에서 고객을 구분하기 위해 발급한 고객의 고유 ID -> 이거 숨겨야 하나?
 
-  const paymentWidget = PaymentWidget(clientKey, customerKey); // 회원 결제
+  const paymentWidget = PaymentWidget(clientKey, customerKey);
 
-  const paymentMethodWidget = paymentWidget.renderPaymentMethods('#payment-method',
+  paymentWidget.renderPaymentMethods('#payment-method',
   {
     value: 10000,
     currency: 'KRW',
@@ -19,7 +19,7 @@ $('#booking').on("click", function() {
 
   paymentWidget.renderAgreement('#agreement')
 
-  document.querySelector("#payment-button").addEventListener("click",()=>{
+  $("#payment-button").on("click", function() {
     paymentWidget.requestPayment({
       orderId: self.crypto.randomUUID(),
       orderName: data.exhibition.title,
