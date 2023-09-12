@@ -1,13 +1,11 @@
 from flask import Blueprint, render_template, session, request
-from datetime import datetime, timedelta
-from sqlalchemy import and_
+from datetime import datetime
 from utils import load_secrets
 import base64
 import json
 import requests
 
 from models.model import db, Exhibition, TicketPrice, Gallery, LikeExhibition, User
-from views.search.search_exhibition import calc_pages
 from views.exhibition.exhibition import get_exhibition_data
 from decorators import check_user_login
 
@@ -17,7 +15,6 @@ booking_bp = Blueprint('booking', __name__)
 #! TODO: ticket_price 없으면 0원으로 진행
 #! TODO: 나중에 데이터 추가 후 예외처리 추가하기
 
-# 2023.09.09 수정
 @booking_bp.route('/booking/exhibition/<id>', methods=['GET'])
 @check_user_login
 def booking_detail(id):
@@ -34,12 +31,24 @@ def booking_detail(id):
     
     exhibition = get_exhibition_data(id)
     exhibition = [row._asdict() for row in exhibition][0]
+    
+    exhibition_price = db.session.query(
+        TicketPrice.ticket_type,
+        TicketPrice.final_price)\
+        .filter(TicketPrice.exhibition_id == id) \
+        .order_by(TicketPrice.final_price.desc()) \
+        .all()
+    exhibition_price = [{
+        'ticket_type': row.ticket_type.value,
+        'final_price': row.final_price
+    } for row in exhibition_price]
 
     data =  {
         "user": user,
         "current_date": current_date,
         "working": True,
-        "exhibition": exhibition
+        "exhibition": exhibition,
+        "exhibition_price" : exhibition_price
     }
     
     return render_template('booking/booking.html', data=data)

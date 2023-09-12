@@ -37,7 +37,20 @@
             </tr>
             <tr>
               <th class="col-md-3">요금</th>
-              <td>{{ data.exhibition.price or '-' }}</td>
+              <td>
+                {% if data.exhibition_price %}
+                  <table>
+                    {% for price in data.exhibition_price %}
+                      <tr>
+                        <td>{{ price.ticket_type }}</td>
+                        <td>{{ price.final_price }}원</td>
+                      </tr>
+                    {% endfor %}
+                  </table>
+                {% else %}
+                  -
+                {% endif %}
+              </td>
             </tr>
           </tbody>
         </table>
@@ -51,12 +64,16 @@
             <label for="ticket-type">티켓 종류 :</label>
             <select id="ticket-type">
               <option value="">티켓 종류</option>
-              <option value="NO_DISCOUNT">일반티켓</option>
-              <option value="STUDENT">학생티켓</option>
-              <option value="SENIOR_CITIZEN">경로자티켓</option>
-              <option value="GROUP">그룹티켓</option>
-              <option value="EARLY_BIRD">얼리버드티켓</option>
+              {% for price in data.exhibition_price %}
+                <option value="{{ price.final_price }}">{{ price.ticket_type }} / {{ price.final_price }}원</option>
+              {% endfor %}
             </select>
+          </div>
+          <div class="selected-option">
+            <p id="selected-date"></p>
+            <div>
+              <p class="selected-price-full"><span id="selected-price">0</span>원</p>
+            </div>
           </div>
           <div>
             <button type="button" class="btn btn-outline-secondary" id="booking">예매하기</button>
@@ -80,8 +97,8 @@
 
   {% block script %}
   <script>
-    var data = {{ data|tojson|safe }} ;
-  </script>
+    var data = {{ data|tojson|safe }};
+  </script>  
   <script src="https://js.tosspayments.com/v1/payment-widget"></script>
   <script type="module" src="{{ url_for('static', filename='/js/booking.js') }}"></script>
   {% endblock %}
