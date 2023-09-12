@@ -27,7 +27,7 @@ app.secret_key = SECRET_KEY
 app.instance_path = os.path.join(os.getcwd(), 'database')
 app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = SQLALCHEMY_TRACK_MODIFICATIONS
-app.debug = True
+app.debug = DEBUG
 
 app.config["SESSION_TYPE"] = "sqlalchemy"
 app.config["SESSION_SQLALCHEMY"] = db
