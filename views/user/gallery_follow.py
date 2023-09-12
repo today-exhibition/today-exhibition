@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, session
 from sqlalchemy import func
 
-from models.model import db, Gallery, FollowingGallery
+from models.model import Exhibition, db, Gallery, FollowingGallery
 from decorators import check_user_login
 
 
@@ -14,7 +14,10 @@ def gallery_follow():
     gallery_list = db.session.query(
         Gallery.id,
         Gallery.name,
+        Gallery.thumbnail_img.label('gallery_thumbnail_img'),
+        Exhibition.thumbnail_img.label('exhibition_thumbnail_img'),
         func.count('*').label('follows')) \
+        .join(Exhibition, Gallery.id == Exhibition.gallery_id) \
         .join(FollowingGallery, FollowingGallery.gallery_id == Gallery.id) \
         .filter(FollowingGallery.user_id == user_id) \
         .group_by(FollowingGallery.gallery_id) \

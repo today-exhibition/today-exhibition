@@ -1,29 +1,19 @@
 {% extends 'common/layout_side_split.html' %}
 
 {% block style %}
-<link rel="stylesheet" href="{{ url_for('static', filename='/css/components/rounded_card.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='/css/components/icon.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='/css/components/rounded_card.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='/css/components/icon.css') }}">
 {% endblock %}
 
 {% block content %}
-<div class="rounded-card-list">
-  {% for artist in data.artists %}
-    <div class="rounded-card" id="{{ artist.id }}">
-      <div class="bookmark on" onclick="followArtist(this, '{{ artist.id }}')"></div>
-      {% if artist.thumbnail_img %}
-        <img src="{{ artist.thumbnail_img }}" alt="{{ artist.name }}" class="rounded-card-img">
-      {% else %}
-        <img src="{{ url_for('static', filename='/img/default/default_artist.png') }}" alt="{{ artist.name }}" class="rounded-card-img">
-      {% endif %}
-      <a href="/artist/{{ artist.id }}" class="rounded-card-text-container">
-        <h5 class="rounded-card-name">{{ artist.name }}</h5>
-      </a>
-    </div>
-  {% endfor %}
-</div>
+  <!-- 작가 카드 리스트 (JavaScript로 카드 생성) -->
+  <div class="artist-card-list rounded-card-list"></div>
 {% endblock %}
 
 {% block script %}
-<script src="https://kit.fontawesome.com/840a32f19e.js" crossorigin="anonymous"></script>
-<script src="{{ url_for('static', filename='/js/follow_artist.js')}}"></script>
+  <script>
+    var data = {{ data|tojson|safe }};
+  </script>
+  <script src="{{ url_for('static', filename='/js/artist_card.js')}}"></script>
+  <script src="{{ url_for('static', filename='/js/follow_artist.js')}}"></script>
 {% endblock %}
