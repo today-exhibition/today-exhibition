@@ -10,7 +10,7 @@ function likeExhibition(e, icon, exhibition_id) {
     data: { exhibition_id: exhibition_id },
     success: function (resp) {
       if (resp == "login_required") {
-        window.alert("로그인 후 이용 가능한 서비스입니다.")
+        $('#alertmodal').modal('show');
       } else if (resp == "liked") {
         icon.classList.remove("off");
         icon.classList.add("on");

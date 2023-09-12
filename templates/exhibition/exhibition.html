@@ -7,7 +7,7 @@
 {% block content %}
   <!-- 전시명, 클립보드, 하트 -->
   <h3 class="fw-bold">
-    <a href="#" id="shareLink"><i class="fa-regular fa-paste fa-2x"></i></a>  
+    <!-- <a href="#" id="shareLink"><i class="fa-regular fa-paste fa-2x"></i></a>   -->
     {{ data.exhibition.title|safe }}
     {% if data.user_id %}
       {% if data.id in data.liked_exhibition_ids %}
@@ -16,7 +16,7 @@
         <div class="heart off" onclick="likeExhibition(event, this, '{{ data.id }}')"></div>
       {% endif %}
     {% else %}
-      <div class="heart off" onclick="alert('로그인 후 이용 가능한 서비스입니다.')"></div>
+      <div class="heart off" onclick="likeExhibition(event, this, '{{ data.id }}')"></div>
     {% endif %}
   </h3>
   <!-- 전시 정보 -->
@@ -66,7 +66,14 @@
         <div class="booking d-flex justify-content-center">
           <form action="{{ url_for('booking.booking_detail', id=data.id) }}">
             <input type="submit" value="예매하기" class="btn btn-outline-secondary">
-          </form>
+          </form>&nbsp;
+          <!-- URL 복사 -->
+          <a href="#" id="shareLink"><i class="fa-solid fa-share-nodes fa-2x"></i></a>&nbsp;         
+          <!-- 트위터 -->
+          <a id="twitter"><i class="fa-brands fa-x-twitter fa-2x"></i></a>&nbsp;   
+          <!-- 페이스북 -->
+          <a id="facebook"><i class="fa-brands fa-facebook-f fa-2x"></i></a>
+        </div>
         </div>
       </div>
     </div>
@@ -85,7 +92,11 @@
       <div class="input-group">
         <textarea id="comment" name="content" rows="1" class="form-control rounded" placeholder="내용을 입력해주세요."></textarea>
         <div class="input-group-append">
-          <input type="submit" value="등록" class="btn btn-outline-secondary rounded" id="button-addon2">
+          {% if data.user_id %}
+            <input type="submit" value="등록" class="btn btn-outline-secondary rounded" id="button-addon2" onclick="check_user_login(event, `/exhibition/${data.id}/add_comment`)">
+          {% else %}
+            <input type="submit" value="등록" class="btn btn-outline-secondary rounded" id="button-addon2" onclick="check_user_login(event, `/user/login/check`)">
+          {% endif %}  
         </div>
       </div>
     </form>    
