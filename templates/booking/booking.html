@@ -41,11 +41,26 @@
             </tr>
           </tbody>
         </table>
-        <!-- 관람일 선택 -->
+        <!-- 예매 옵션 선택 -->
         <div class="form-group">
-          <label for="booking-date">관람일 :</label>
-          <input type="date" data-placeholder="날짜 선택" required aria-required="true" id="booking-date" name="booking-date" value="" min="{{ [data.exhibition.start_date, data.current_date]|max }}" max="{{ data.exhibition.end_date }}" />
-          <button type="submit" class="btn btn-outline-secondary" id="booking">예매하기</button>
+          <div>
+            <label for="booking-date">관람일 :</label>
+            <input type="date" data-placeholder="날짜 선택" required aria-required="true" id="booking-date" name="booking-date" value="" min="{{ [data.exhibition.start_date, data.current_date]|max }}" max="{{ data.exhibition.end_date }}" />  
+          </div>
+          <div>
+            <label for="ticket-type">티켓 종류 :</label>
+            <select id="ticket-type">
+              <option value="">티켓 종류</option>
+              <option value="NO_DISCOUNT">일반티켓</option>
+              <option value="STUDENT">학생티켓</option>
+              <option value="SENIOR_CITIZEN">경로자티켓</option>
+              <option value="GROUP">그룹티켓</option>
+              <option value="EARLY_BIRD">얼리버드티켓</option>
+            </select>
+          </div>
+          <div>
+            <button type="button" class="btn btn-outline-secondary" id="booking">예매하기</button>
+          </div>
         </div>
       </div>
     </div>
