@@ -1,7 +1,8 @@
 {% extends 'common/layout.html' %}
 
 {% block style %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/css/bootstrap-datepicker.min.css">
+<link rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/css/bootstrap-datepicker.min.css">
 <link rel="stylesheet" href="{{ url_for('static', filename='/css/components/booking.css') }}">
 {% endblock %}
 
@@ -40,41 +41,48 @@
               <th class="col-md-3">요금</th>
               <td>
                 {% if data.exhibition_price %}
-                  <table>
-                    {% for price in data.exhibition_price %}
-                      <tr>
-                        <td>{{ price.ticket_type }}</td>
-                        <td>{{ price.final_price }}원</td>
-                      </tr>
-                    {% endfor %}
-                  </table>
+                <table>
+                  {% for price in data.exhibition_price %}
+                  <tr>
+                    <td>{{ price.ticket_type }}</td>
+                    <td>{{ price.final_price }}원</td>
+                  </tr>
+                  {% endfor %}
+                </table>
                 {% else %}
-                  -
+                -
                 {% endif %}
               </td>
             </tr>
           </tbody>
         </table>
         <!-- 예매 옵션 선택 -->
-        <div class="form-group">
-          <div id="booking-date"></div>
-          <div>
-            <label for="ticket-type">티켓 종류 :</label>
-            <select id="ticket-type">
-              <option disabled selected>티켓 종류</option>
-              {% for price in data.exhibition_price %}
-                <option value="{{ price.final_price }}" data-ticket-type="{{ price.ticket_type_name }}">{{ price.ticket_type }} | {{ price.final_price }}원</option>
-              {% endfor %}
-            </select>
-          </div>
-          <div class="selected-option">
-            <p id="selected-date"></p>
+        <div class="booking-option">
+          <div class="option-container">
+            <div id="booking-date"></div>
             <div>
-              <p class="selected-price-full"><span id="selected-price">0</span>원</p>
+              <label for="ticket-type"></label>
+              <select id="ticket-type">
+                <option disabled selected>티켓 종류</option>
+                {% for price in data.exhibition_price %}
+                <option value="{{ price.final_price }}" data-ticket-type="{{ price.ticket_type_name }}">{{
+                  price.ticket_type }} | {{ price.final_price }}원</option>
+                {% endfor %}
+              </select>
             </div>
           </div>
-          <div>
-            <button type="button" class="btn btn-outline-secondary" id="booking">예매하기</button>
+          <div class="selected-container">
+            <div>
+              <p class="selected-key">관람일</p>
+              <p id="selected-date"> </p>
+            </div>
+            <div>
+              <p class="selected-key">티켓가격</p>
+              <p class="selected-price-full"><span id="selected-price">0</span>원</p>
+            </div>
+            <div>
+              <button type="button" class="booking-btn" id="booking">예매하기</button>
+            </div>
           </div>
         </div>
       </div>
@@ -95,10 +103,12 @@
 
   {% block script %}
   <script>
-    var data = {{ data|tojson|safe }};
-  </script>  
+    var data = {{ data| tojson | safe }};
+  </script>
   <script src="https://js.tosspayments.com/v1/payment-widget"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/js/bootstrap-datepicker.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/locales/bootstrap-datepicker.ko.min.js"></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/js/bootstrap-datepicker.min.js"></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/locales/bootstrap-datepicker.ko.min.js"></script>
   <script type="module" src="{{ url_for('static', filename='/js/booking.js') }}"></script>
   {% endblock %}
