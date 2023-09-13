@@ -37,8 +37,8 @@ def insert_kcisa_to_db(data_dict):
             start_date = encode_date(data['startDate'], '%Y%m%d')
             end_date = encode_date(data['endDate'], '%Y%m%d')
             thumbnail_img = data['thumbnail']
-            thumbnail_img, low_thumbnail_img = thumbnail_to_s3(id, thumbnail_img)
-            make_exhibition(id, title, start_date, end_date, gallery_id, thumbnail_img, low_thumbnail_img)
+            thumbnail_img = thumbnail_to_s3(id, thumbnail_img)
+            make_exhibition(id, title, start_date, end_date, gallery_id, thumbnail_img)
     db.session.commit()
     remove_thumbnail(dirPath = "thumbnail_imgs")
 

@@ -25,22 +25,9 @@ def thumbnail_to_s3(id, thumbnail_img):
     s3_client.upload_file(filename, bucket_name, filename, ExtraArgs={'ContentType': ContentType })
 
     # S3 객체 URL 생성
-    object_url = f"https://{bucket_name}.s3.amazonaws.com/{filename}"
-
-    # 저화질 버킷 
-    low_bucket_name = LOW_QUALITY_BUCKET_NAME
-    low_object_url = None
-
-    response = s3_client.list_objects_v2(
-        Bucket=low_bucket_name,
-        Prefix=filename
-    )
-
-    if 'Contents' in response:
-        object_key = response['Contents'][0]['Key']
-        low_object_url = f"https://{low_bucket_name}.s3.amazonaws.com/{object_key}"
-
-    return object_url, low_object_url
+    object_url = f"https://{bucket_name}.s3.amazonaws.com/{filename}"  
+    
+    return object_url
 
 def image_download(id, image_url):
     local_directory = 'thumbnail_imgs/'
