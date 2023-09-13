@@ -67,15 +67,15 @@ class User(db.Model):
 class UserToken(db.Model):
     __tablename__ = 'user_token'
     user_id = db.Column(db.String(64), db.ForeignKey('user.id'), primary_key=True)
-    refresh_token = db.Column(db.String())
+    refresh_token = db.Column(db.String(64))
 
 class Gallery(db.Model):
     __tablename__ = 'gallery'
     id = db.Column(db.String(64), primary_key=True)
     name = db.Column(db.String(32), nullable=False)
-    opening_hours = db.Column(db.String())
+    opening_hours = db.Column(db.String(32))
     holiday_info = db.Column(db.String(128))
-    description = db.Column(db.String())
+    description = db.Column(db.String(255))
     parking_yn = db.Column(db.Boolean())
     contact = db.Column(db.String(32))
     homepage_url = db.Column(db.String(64))
@@ -107,8 +107,8 @@ class GalleryOpeningHour(db.Model):
 class Exhibition(db.Model):
     __tablename__ = 'exhibition'
     id = db.Column(db.String(64), primary_key=True)
-    title = db.Column(db.String(), nullable=False)
-    description = db.Column(db.String())
+    title = db.Column(db.String(32), nullable=False)
+    description = db.Column(db.String(255))
     start_date = db.Column(db.Date())
     end_date = db.Column(db.Date())
     gallery_id = db.Column(db.String(64), db.ForeignKey('gallery.id'))
@@ -190,5 +190,5 @@ class Comment(db.Model):
     id = db.Column(db.String(64), primary_key=True)
     user_id = db.Column(db.String(64), db.ForeignKey('user.id'), nullable=False)
     exhibition_id = db.Column(db.String(64), db.ForeignKey('exhibition.id'), nullable=False)
-    content = db.Column(db.String())
+    content = db.Column(db.String(64))
     created_at = db.Column(db.DateTime(), default=datetime.datetime.now(), nullable=False)

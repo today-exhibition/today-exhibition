@@ -3,7 +3,7 @@ import requests
 import os
 
 from utils import load_secrets
-from config import REGION_NAME, BUCKET_NAME, LOW_QUALITY_BUCKET_NAME
+from config import REGION_NAME, BUCKET_NAME
 
 def thumbnail_to_s3(id, thumbnail_img):
     secrets = load_secrets()
