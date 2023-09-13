@@ -16,7 +16,7 @@ def artist_follow():
         Artist.name,
         Artist.thumbnail_img.label('artist_thumbnail_img'),
         Exhibition.thumbnail_img.label('exhibition_thumbnail_img'),
-        func.count('*').label('follows')) \
+        func.count('*').label('followed')) \
         .join(FollowingArtist, FollowingArtist.artist_id == Artist.id) \
         .join(ArtistExhibition, Artist.id == ArtistExhibition.artist_id) \
         .join(Exhibition, ArtistExhibition.exhibition_id == Exhibition.id) \
@@ -24,7 +24,7 @@ def artist_follow():
         .group_by(FollowingArtist.artist_id) \
         .order_by(FollowingArtist.followed_at.desc()) \
         .all()
-    
+        
     result = {}
     result['artists'] = [row._asdict() for row in artist_list]
  

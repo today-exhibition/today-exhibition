@@ -9,7 +9,7 @@ function makeArtistCard(artist) {
     thumbnail_img = artist['exhibition_thumbnail_img'];
   }
   var bookmark = 'off';
-  if (artist['followed'] == 1) {
+  if (artist['followed'] >= 1) {
     bookmark = 'on';
   }
 
