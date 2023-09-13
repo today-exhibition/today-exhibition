@@ -4,19 +4,21 @@
 <table class="table table-hover">
   <thead>
     <tr>
-      <th scope="col">예매ID</th>
-      <th scope="col">전시제목</th>
       <th scope="col">관람일자</th>
+      <th scope="col">전시제목</th>
       <th scope="col">티켓종류</th>
+      <th scope="col">결제상태</th>
+      <th scope="col">결제수단</th>
     </tr>
   </thead>
   <tbody>
     {% for d in data.booking %}
     <tr>
-      <td>{{d.booking_id}}</td>
-      <td>{{d.exhibition_title}}</td>
       <td>{{d.visited_at}}</td>
+      <td>{{d.exhibition_title}}</td>
       <td>{{d.ticket_type}}</td>
+      <td>{{d.billing_status}}</td>
+      <td>{{d.billing_method}}</td>
     </tr>
     {% endfor %}
   </tbody>

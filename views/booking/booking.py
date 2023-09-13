@@ -5,7 +5,7 @@ import base64
 import json
 import requests
 
-from models.model import Booking, db, TicketPrice, User
+from models.model import Billing, Booking, db, TicketPrice, User
 from views.exhibition.exhibition import get_exhibition_data
 from decorators import check_user_login
 
@@ -94,7 +94,10 @@ def booking_success(date, exhibition_id, type):
         }
     
     new_booking = Booking(id=order_id, user_id=user_id, exhibition_id=exhibition_id, visited_at=date, ticket_type=type)
+    new_billing = Billing(id=respaymentKey, booking_id=order_id, requested_at=datetime.strptime(resjson['requestedAt'], '%Y-%m-%dT%H:%M:%S%z'), approved_at=datetime.strptime(resjson['approvedAt'], '%Y-%m-%dT%H:%M:%S%z'),
+                          billing_status=resjson['status'], billing_method=resjson['method'], price=int(amount))
     db.session.add(new_booking)
+    db.session.add(new_billing)
     db.session.commit()
 
     return render_template("booking/success.html", data=data)
