@@ -6,9 +6,8 @@
 
 {% block content %}
   <!-- 전시명, 클립보드, 하트 -->
-  <h3 class="fw-bold">
-    <!-- <a href="#" id="shareLink"><i class="fa-regular fa-paste fa-2x"></i></a>   -->
-    {{ data.exhibition.title|safe }}
+  <div class="exhibition-title">
+    <h3 class="fw-bold">{{ data.exhibition.title|safe }}</h3>
     {% if data.user_id %}
       {% if data.id in data.liked_exhibition_ids %}
         <div class="heart on" onclick="likeExhibition(event, this, '{{ data.id }}')"></div>
@@ -18,7 +17,7 @@
     {% else %}
       <div class="heart off" onclick="likeExhibition(event, this, '{{ data.id }}')"></div>
     {% endif %}
-  </h3>
+  </div>
   <!-- 전시 정보 -->
   <div class="container">
     <div class="row">
@@ -91,11 +90,13 @@
       </div>
     </div>
   </div>
-    <!-- 전시 소개 -->
-  {% if data.exhibition.description %}
-    <h3 class="fw-bold">전시소개</h3>
-    {{ data.exhibition.description|safe }}
-  {% endif %}
+  <!-- 전시 소개 -->
+  <div class="exhibition-description">
+    {% if data.exhibition.description %}
+      <h3 class="fw-bold">전시소개</h3>
+      {{ data.exhibition.description|safe }}
+    {% endif %}
+  </div>
   <!-- 간격 추가 -->
   <div class="mb-5"></div>
   <!-- 코멘트 작성 -->
