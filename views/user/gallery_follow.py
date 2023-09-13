@@ -16,7 +16,7 @@ def gallery_follow():
         Gallery.name,
         Gallery.thumbnail_img.label('gallery_thumbnail_img'),
         Exhibition.thumbnail_img.label('exhibition_thumbnail_img'),
-        func.count('*').label('follows')) \
+        func.count('*').label('followed')) \
         .join(Exhibition, Gallery.id == Exhibition.gallery_id) \
         .join(FollowingGallery, FollowingGallery.gallery_id == Gallery.id) \
         .filter(FollowingGallery.user_id == user_id) \
@@ -24,7 +24,10 @@ def gallery_follow():
         .order_by(FollowingGallery.followed_at.desc()) \
         .all()
     
+    # print(gallery_list)
+    
     result = {}
     result['galleries'] = [row._asdict() for row in gallery_list]
+    print(result['galleries'])
    
     return render_template('user/gallery_follow.html', data=result)
