@@ -3,7 +3,7 @@ from flask import Flask
 from flask_session import Session
 from flask_migrate import Migrate
 
-from config import DEBUG, SQLALCHEMY_DATABASE_URI, SQLALCHEMY_TRACK_MODIFICATIONS, SECRET_KEY, PORT
+from config import HOST, DEBUG, SQLALCHEMY_DATABASE_URI, SQLALCHEMY_TRACK_MODIFICATIONS, SECRET_KEY, PORT
 from models.model import db
 
 from views.main.main import main_bp
@@ -57,4 +57,4 @@ app.register_blueprint(booking_list_bp)
 if __name__ == "__main__" :
     with app.app_context():
         db.create_all()
-    app.run(port=PORT)
+    app.run(port=PORT, host=HOST)

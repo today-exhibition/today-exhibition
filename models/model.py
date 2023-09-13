@@ -21,11 +21,11 @@ class LoginType(enum.Enum):
     KAKAO = "KAKAO"
 
 class TicketType(enum.Enum):
-    NO_DISCOUNT = 0
-    STUDENT = 1
-    SENIOR_CITIZEN = 2
-    GROUP = 3
-    EARLY_BIRD = 4
+    NO_DISCOUNT = '일반티켓'
+    STUDENT = '학생티켓'
+    SENIOR_CITIZEN = '경로자티켓'
+    GROUP = '그룹티켓'
+    EARLY_BIRD = '얼리버드티켓'
 
 class BillingStatus(enum.Enum):
     READY = 0

@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session
 from sqlalchemy import func
 from datetime import datetime
-from models.model import db, Artist, Exhibition, Gallery, ArtistExhibition, GalleryAddress, User, Comment, LikeExhibition
+from models.model import db, Artist, Exhibition, Gallery, ArtistExhibition, GalleryAddress, User, Comment, LikeExhibition, TicketPrice
 from views.artist.artist import get_artist_data
 from views.search.search import get_liked_exhibition_ids
 import uuid
@@ -18,9 +18,22 @@ def exhibition(id):
         .join(Exhibition, Exhibition.id == ArtistExhibition.exhibition_id)\
         .filter(Exhibition.id == id)\
         .all()
-    comments = [row._asdict() for row in artists]
+    artists = [row._asdict() for row in artists]
+
     exhibition = get_exhibition_data(id)
     exhibition = [row._asdict() for row in exhibition][0]
+    
+    exhibition_price = db.session.query(
+        TicketPrice.ticket_type,
+        TicketPrice.final_price)\
+        .filter(TicketPrice.exhibition_id == id) \
+        .order_by(TicketPrice.final_price.desc()) \
+        .all()
+    exhibition_price = [{
+        'ticket_type': row.ticket_type.value,
+        'final_price': row.final_price
+    } for row in exhibition_price]
+
     comments = get_comments_data(id)
     comments = [row._asdict() for row in comments]
 
@@ -31,6 +44,7 @@ def exhibition(id):
         "id": id,
         "artists": artists,
         "exhibition": exhibition,
+        "exhibition_price" : exhibition_price,
         "comments": comments,
         "user_id": user_id,
         "liked_exhibition_ids": liked_exhibition_ids

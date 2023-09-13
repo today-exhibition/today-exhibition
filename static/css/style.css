@@ -110,21 +110,7 @@ input::placeholder {
   text-align: right;
   font-weight: 700;
   font-size: var(--font-size-14);
-}
-
-/* font awesome */
-.fa-heart{
-  width: 50px;
-  height: 50px;
-  position: absolute;
-  color: var(--red);
-  cursor: pointer;
-}
-
-.fa-bookmark {
-  width: 50px;
-  height: 50px;
-  position: absolute;
+  color: var(--navy);
 }
 
 /* button */
@@ -229,11 +215,6 @@ input::placeholder {
 /* Pretendard */
 .btn {
   font-family: 'Pretendard-Light';
-}
-
-/* link */
-a{
-  color: black;
 }
 
 /* modal */
