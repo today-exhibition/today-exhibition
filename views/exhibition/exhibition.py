@@ -93,6 +93,7 @@ def delete_comment(id, comment_id):
 # [함수] 전시
 def get_exhibition_data(id):
     exhibition = db.session.query(
+        Exhibition.id,
         Exhibition.title,
         Exhibition.start_date,
         Exhibition.end_date,
