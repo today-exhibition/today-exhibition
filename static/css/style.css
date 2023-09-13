@@ -120,6 +120,12 @@ input::placeholder {
 }
 
 /* artist gallery */
+.gallery-title, .artist-name, .exhibition-title {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+}
+
 .artist-row, .gallery-row {
   height: 180px;
 }
@@ -137,6 +143,10 @@ input::placeholder {
 
 .gallery-col img {
   width: 100%;
+}
+
+.exhibition-description {
+  margin: 20px 0;
 }
 
 /* pagination */

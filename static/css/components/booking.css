@@ -1,22 +1,61 @@
-input[type='date']::before {
-  content: attr(data-placeholder);
-  width: 100%;
-}
-
-input[type='date']:focus::before,
-input[type='date']:valid::before {
-  display: none;
-}
-
-.selected-option {
+.booking-option {
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: center;
+}
+
+.option-container {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+}
+
+.selected-container {
+  flex-grow: 1;
+  width: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.datepicker-inline {
+  width: 230px;
+  height: 250px;
+  padding: 15px 10px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  border: 1px var(--border) solid;
+}
+
+.table-condensed thead tr:nth-child(2) {
+  margin-bottom: 10px;
+}
+
+.selected-key {
+  font-weight: bold;
 }
 
 #selected-date, .selected-price-full {
-  color: var(--navy);
-  font-size: 24px;
+  font-size: var(--font-size-16);
+}
+
+.booking-btn, #payment-button {
+  width: 100px;
+  height: 40px;
+  border-radius: 10px;
+  border: 1px var(--blue) solid;
+  color: var(--blue);
+}
+
+.booking-btn:hover, #payment-button:hover {
+  color: var(--white);
+  background-color: var(--blue);
+}
+
+#payment-button {
+  margin: 20px 0;
 }
 
 .datepicker-days .day {
@@ -44,4 +83,12 @@ input[type='date']:valid::before {
 .datepicker-days .active.day:hover {
   border-radius: 50%;
   background-image: var(--blue);
+}
+
+#ticket-type {
+  width: 230px;
+  height: 40px;
+  padding: 5px 30px 5px 10px;
+  border-radius: 10px;
+  border: 1px var(--border) solid;
 }

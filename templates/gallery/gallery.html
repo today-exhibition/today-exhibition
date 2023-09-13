@@ -7,7 +7,8 @@
 
 {% block content %}
   <!-- 미술관 이름 -->
-  <h3 class="fw-bold">{{ data.gallery[0].name }}
+  <div class="gallery-title">
+    <h3 class="fw-bold">{{ data.gallery[0].name }}</h3>
     {% if data.user_id %}
       {% if data.gallery[0].id in data.followed_gallery_ids %}
         <div class="bookmark on" onclick="followGallery(this, '{{ data.gallery[0].id }}')"></div>
@@ -17,7 +18,7 @@
     {% else %}
     <div class="bookmark off" onclick="followGallery(this, '{{ data.gallery[0].id }}')"></div>
     {% endif %}
-  </h3> 
+  </div>
   <!-- 미술관 정보 -->
   <div class="container">
     <div class="row">

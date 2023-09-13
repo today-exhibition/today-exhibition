@@ -7,7 +7,8 @@
 
 {% block content %}
   <!-- 작가 이름 -->
-  <h3 class="fw-bold">{{ data.artist[0].name }}
+  <div class="artist-name">
+    <h3 class="fw-bold">{{ data.artist[0].name }}</h3>
     {% if data.user_id %}
       {% if data.artist[0].id in data.followed_artist_ids %}
         <div class="bookmark on" onclick="followArtist(this, '{{ data.artist[0].id }}')"></div>
@@ -17,7 +18,7 @@
     {% else %}
       <div class="bookmark off" onclick="followArtist(this, '{{ data.artist[0].id }}')"></div>
     {% endif %}
-  </h3>  
+  </div>
   <!-- 전시회 상태별 정보 -->
   <div class="ongoing_exhibitions">  
     <h5 class="fw-bold">진행중 전시회</h5>
