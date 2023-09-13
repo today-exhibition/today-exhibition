@@ -1,8 +1,9 @@
 import os
 from flask import Flask
 from flask_session import Session
+from flask_migrate import Migrate
 
-from config import DEBUG, SQLALCHEMY_DATABASE_URI, SQLALCHEMY_TRACK_MODIFICATIONS, SECRET_KEY, PORT
+from config import HOST, DEBUG, SQLALCHEMY_DATABASE_URI, SQLALCHEMY_TRACK_MODIFICATIONS, SECRET_KEY, PORT
 from models.model import db
 
 from views.main.main import main_bp
@@ -18,6 +19,7 @@ from views.user.user import user_bp
 from views.user.exhibition_like import exhibition_like_bp
 from views.user.gallery_follow import gallery_follow_bp
 from views.user.artist_follow import artist_follow_bp
+from views.user.booking_list import booking_list_bp
 from views.booking.booking import booking_bp
 
 
@@ -27,14 +29,14 @@ app.secret_key = SECRET_KEY
 app.instance_path = os.path.join(os.getcwd(), 'database')
 app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = SQLALCHEMY_TRACK_MODIFICATIONS
-app.debug = True
+app.debug = DEBUG
 
 app.config["SESSION_TYPE"] = "sqlalchemy"
 app.config["SESSION_SQLALCHEMY"] = db
 Session(app)
 
 db.init_app(app)
-
+migrate = Migrate(app, db)
 
 app.register_blueprint(main_bp)
 app.register_blueprint(artist_bp)
@@ -50,8 +52,9 @@ app.register_blueprint(search_artist_bp)
 app.register_blueprint(search_gallery_bp)
 app.register_blueprint(user_bp)
 app.register_blueprint(booking_bp)
+app.register_blueprint(booking_list_bp)
 
 if __name__ == "__main__" :
     with app.app_context():
         db.create_all()
-    app.run(port=PORT)
+    app.run(port=PORT, host=HOST)

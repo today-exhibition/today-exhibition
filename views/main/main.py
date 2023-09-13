@@ -8,7 +8,7 @@ main_bp = Blueprint('main', __name__)
 @main_bp.route('/')
 def main():
     exhibitions = []
-    exhibition_id = [247582, 247582, 247582]
+    exhibition_id = [251402, 'a8ccb22f-786a-4e53-81e0-b1d4a1531cfd', 248995]
     image_url = ['/img/main/247582/247582-1.png', '/img/main/247582/247582-2.png', '/img/main/247582/247582-3.png']
     
     for id in exhibition_id:

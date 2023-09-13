@@ -9,7 +9,7 @@ function makeGalleryCard(gallery) {
     thumbnail_img = gallery['exhibition_thumbnail_img'];
   }
   var bookmark = 'off';
-  if (gallery['followed'] == 1) {
+  if (gallery['followed'] >= 1) {
     bookmark = 'on';
   }
 

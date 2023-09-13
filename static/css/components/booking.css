@@ -1,0 +1,20 @@
+input[type='date']::before {
+  content: attr(data-placeholder);
+  width: 100%;
+}
+
+input[type='date']:focus::before,
+input[type='date']:valid::before {
+  display: none;
+}
+
+.selected-option {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+#selected-date, .selected-price-full {
+  color: var(--navy);
+  font-size: 24px;
+}

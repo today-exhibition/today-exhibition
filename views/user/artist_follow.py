@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, session
 from sqlalchemy import func
 
-from models.model import db, Artist, FollowingArtist
+from models.model import ArtistExhibition, Exhibition, db, Artist, FollowingArtist
 from decorators import check_user_login
 
 
@@ -14,13 +14,17 @@ def artist_follow():
     artist_list = db.session.query(
         Artist.id,
         Artist.name,
-        func.count('*').label('follows')) \
+        Artist.thumbnail_img.label('artist_thumbnail_img'),
+        Exhibition.thumbnail_img.label('exhibition_thumbnail_img'),
+        func.count('*').label('followed')) \
         .join(FollowingArtist, FollowingArtist.artist_id == Artist.id) \
+        .join(ArtistExhibition, Artist.id == ArtistExhibition.artist_id) \
+        .join(Exhibition, ArtistExhibition.exhibition_id == Exhibition.id) \
         .filter(FollowingArtist.user_id == user_id) \
         .group_by(FollowingArtist.artist_id) \
         .order_by(FollowingArtist.followed_at.desc()) \
         .all()
-    
+        
     result = {}
     result['artists'] = [row._asdict() for row in artist_list]
  

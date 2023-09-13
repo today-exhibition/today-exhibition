@@ -1,6 +1,6 @@
 import datetime
 from flask import Blueprint, render_template, session
-from sqlalchemy import func, case, and_, Cast, String
+from sqlalchemy import false, func, case, and_, Cast, String
 
 from models.model import db, Exhibition, Gallery, GalleryAddress, LikeExhibition
 
@@ -49,7 +49,9 @@ def get_exhibition_list(user_id, session, filter_type=None):
     elif filter_type == 'popular':
         query = query.join(LikeExhibition, LikeExhibition.exhibition_id == Exhibition.id) \
             .group_by(LikeExhibition.exhibition_id) \
-            .order_by(func.count('*').desc())                
+            .order_by(func.count('*').desc())
+    elif filter_type == 'recommended' :
+        query = query.filter(false())
                 
     return query.all()
 
@@ -91,4 +93,8 @@ def popular():
 #! [추천 전시 : 큐레이팅 전시]
 @map_bp.route('/map/recommended')
 def recommended():
-    pass
+    user_id = session.get("user_id", None)
+    exhibition_list = get_exhibition_list(user_id, db.session, 'recommended')    
+    exhibition_list = convert_rowlist_to_json("recommended", exhibition_list)
+    
+    return render_template("map/map.html", exhibition_list=exhibition_list)

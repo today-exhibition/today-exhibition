@@ -77,7 +77,7 @@ def sub_sorts_filter(query, selected_sub_sorts):
     sorts = []
 
     if 'ongoing' in selected_sub_sorts:
-        sorts.append(Exhibition.start_date <= datetime.datetime.today())
+        sorts.append((Exhibition.start_date <= datetime.datetime.today()) & (datetime.datetime.today() <= Exhibition.end_date))
     if 'ended' in selected_sub_sorts:
         sorts.append(Exhibition.end_date < datetime.datetime.today() - datetime.timedelta(days=1))
     if 'upcoming' in selected_sub_sorts:

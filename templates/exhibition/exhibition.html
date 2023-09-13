@@ -48,7 +48,20 @@
             </tr>
             <tr>
               <th class="col-md-3">요금</th>
-              <td>{{ data.exhibition.price or '-' }}</td>
+              <td>
+                {% if data.exhibition_price %}
+                  <table>
+                    {% for price in data.exhibition_price %}
+                      <tr>
+                        <td>{{ price.ticket_type }}</td>
+                        <td>{{ price.final_price }}원</td>
+                      </tr>
+                    {% endfor %}
+                  </table>
+                {% else %}
+                  -
+                {%endif %}
+              </td>
             </tr>
             <tr>
               <th class="col-md-3">작가</th>

@@ -6,24 +6,14 @@
 {% endblock %}
 
 {% block content %}
-<div class="rounded-card-list">
-  {% for gallery in data.galleries %}
-    <div class="rounded-card" id="{{ gallery.id }}">
-      <div class="bookmark on" onclick="followGallery(this, '{{ gallery.id }}')"></div>
-      {% if gallery.thumbnail_img %}
-        <img src="{{ gallery.thumbnail_img }}" alt="{{ gallery.name }}" class="rounded-card-img">
-      {% else %}
-        <img src="{{ url_for('static', filename='/img/default/default_gallery.png') }}" alt="{{ gallery.name }}" class="rounded-card-img">
-      {% endif %}
-      <a href="/gallery/{{ gallery.id }}" class="rounded-card-text-container">
-        <h5 class="rounded-card-name">{{ gallery.name }}</h5>
-      </a>
-    </div>
-  {% endfor %}
-</div>
+  <!-- 미술관 카드 리스트 (JavaScript로 카드 생성) -->
+  <div class="gallery-card-list rounded-card-list"></div>
 {% endblock %}
 
 {% block script %}
-<script src="https://kit.fontawesome.com/840a32f19e.js" crossorigin="anonymous"></script>
+<script>
+  var data = {{ data|tojson|safe }};
+</script>
+<script src="{{ url_for('static', filename='/js/gallery_card.js')}}"></script>
 <script src="{{ url_for('static', filename='/js/follow_gallery.js')}}"></script>
 {% endblock %}
