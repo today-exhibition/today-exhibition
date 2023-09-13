@@ -5,7 +5,7 @@ import base64
 import json
 import requests
 
-from models.model import db, Exhibition, TicketPrice, Gallery, LikeExhibition, User
+from models.model import Booking, db, TicketPrice, User
 from views.exhibition.exhibition import get_exhibition_data
 from decorators import check_user_login
 
@@ -40,6 +40,7 @@ def booking_detail(id):
         .all()
     exhibition_price = [{
         'ticket_type': row.ticket_type.value,
+        'ticket_type_name': row.ticket_type.name,
         'final_price': row.final_price
     } for row in exhibition_price]
 
@@ -53,8 +54,11 @@ def booking_detail(id):
     
     return render_template('booking/booking.html', data=data)
 
-@booking_bp.route('/booking/success', methods=['GET'])
-def booking_success():
+@booking_bp.route('/booking/success/<date>/<exhibition_id>/<type>', methods=['GET'])
+def booking_success(date, exhibition_id, type):
+    user_id = session.get('user_id')
+    date = datetime.strptime(date, '%Y-%m-%d').date()
+    
     order_id = request.args.get('orderId')
     amount = request.args.get('amount')
     payment_key = request.args.get('paymentKey')
@@ -82,13 +86,15 @@ def booking_success():
 
     respaymentKey = resjson["paymentKey"]
     resorderId = resjson["orderId"]
-    
-    # final_price = price, quantity
 
     data = {
         "res" : pretty,
         "respaymentKey" : respaymentKey,
         "resorderId" : resorderId,
         }
+    
+    new_booking = Booking(id=order_id, user_id=user_id, exhibition_id=exhibition_id, visited_at=date, ticket_type=type)
+    db.session.add(new_booking)
+    db.session.commit()
 
     return render_template("booking/success.html", data=data)

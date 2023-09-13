@@ -1,6 +1,7 @@
 {% extends 'common/layout.html' %}
 
 {% block style %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/css/bootstrap-datepicker.min.css">
 <link rel="stylesheet" href="{{ url_for('static', filename='/css/components/booking.css') }}">
 {% endblock %}
 
@@ -56,16 +57,13 @@
         </table>
         <!-- 예매 옵션 선택 -->
         <div class="form-group">
-          <div>
-            <label for="booking-date">관람일 :</label>
-            <input type="date" data-placeholder="날짜 선택" required aria-required="true" id="booking-date" name="booking-date" value="" min="{{ [data.exhibition.start_date, data.current_date]|max }}" max="{{ data.exhibition.end_date }}" />  
-          </div>
+          <div id="booking-date"></div>
           <div>
             <label for="ticket-type">티켓 종류 :</label>
             <select id="ticket-type">
-              <option value="">티켓 종류</option>
+              <option disabled selected>티켓 종류</option>
               {% for price in data.exhibition_price %}
-                <option value="{{ price.final_price }}">{{ price.ticket_type }} / {{ price.final_price }}원</option>
+                <option value="{{ price.final_price }}" data-ticket-type="{{ price.ticket_type_name }}">{{ price.ticket_type }} | {{ price.final_price }}원</option>
               {% endfor %}
             </select>
           </div>
@@ -100,5 +98,7 @@
     var data = {{ data|tojson|safe }};
   </script>  
   <script src="https://js.tosspayments.com/v1/payment-widget"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/js/bootstrap-datepicker.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/locales/bootstrap-datepicker.ko.min.js"></script>
   <script type="module" src="{{ url_for('static', filename='/js/booking.js') }}"></script>
   {% endblock %}
