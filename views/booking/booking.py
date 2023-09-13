@@ -40,6 +40,7 @@ def booking_detail(id):
         .all()
     exhibition_price = [{
         'ticket_type': row.ticket_type.value,
+        'ticket_type_name': row.ticket_type.name,
         'final_price': row.final_price
     } for row in exhibition_price]
 

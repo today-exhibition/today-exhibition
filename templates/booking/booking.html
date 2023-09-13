@@ -63,7 +63,7 @@
             <select id="ticket-type">
               <option disabled selected>티켓 종류</option>
               {% for price in data.exhibition_price %}
-                <option value="{{ price.final_price }}" data-ticket-type="{{ price.ticket_type }}">{{ price.ticket_type }} | {{ price.final_price }}원</option>
+                <option value="{{ price.final_price }}" data-ticket-type="{{ price.ticket_type_name }}">{{ price.ticket_type }} | {{ price.final_price }}원</option>
               {% endfor %}
             </select>
           </div>
