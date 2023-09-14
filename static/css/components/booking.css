@@ -1,3 +1,10 @@
+.to-booking-list {
+  color: var(--gray500);
+  border: 1px solid var(--gray500);
+  border-radius: 5px;
+  padding: 8px 16px;
+}
+
 .booking-option {
   display: flex;
   flex-direction: row;

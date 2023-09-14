@@ -15,7 +15,11 @@
     {% for d in data.booking %}
     <tr>
       <td>{{d.visited_at}}</td>
-      <td>{{d.exhibition_title}}</td>
+      <td>
+        <a href="/exhibition/{{ d.exhibition_id }}">
+          {{d.exhibition_title}}
+        </a>
+        </td>
       <td>{{d.ticket_type}}</td>
       <td>{{d.billing_status}}</td>
       <td>{{d.billing_method}}</td>

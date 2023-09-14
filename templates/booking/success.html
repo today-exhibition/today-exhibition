@@ -1,7 +1,10 @@
 {% extends 'common/layout.html' %}
 
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='/css/components/booking.css') }}">
+{% endblock %}
+
 {% block content %}
-  <div class="col-md-6">
     <!-- 결제 성공 시 -->
     <h2 style="margin-top: 10px; padding: 20px 0px 10px 0px">
       <img
@@ -11,16 +14,8 @@
       결제 성공
     </h2>
     <div class="gray">
-      <p>paymentKey = {{ data['respaymentKey'] }}</p>
-      <p>orderId = {{ data['resorderId'] }}</p>
+      <p>결제 ID: {{ data['respaymentKey'] }}</p>
+      <p>주문 ID: {{ data['resorderId'] }}</p>
     </div>
-
-    <div class="gray">
-      <b>Response Data :</b>
-      <pre>
-            {{ data['res'] }}
-          </pre
-      >
-    </div>
-  </div>
+    <a href="/user/booking_list" class="to-booking-list">내 예매 내역 페이지로 이동</a>
 {% endblock %}

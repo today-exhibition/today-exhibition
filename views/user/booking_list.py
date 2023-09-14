@@ -11,6 +11,7 @@ def booking_list():
     user_id = session["user_id"]
     booking = db.session.query(
         Booking.id,
+        Exhibition.id.label('exhibition_id'),
         Exhibition.title,
         Booking.visited_at,
         Booking.ticket_type,
@@ -21,12 +22,13 @@ def booking_list():
         .filter(Booking.user_id==user_id) \
         .join(Exhibition, Exhibition.id == Booking.exhibition_id) \
         .join(Billing, Billing.booking_id == Booking.id) \
-        .order_by(Booking.visited_at.desc()) \
+        .order_by(Booking.visited_at.asc()) \
         .all()
     
     result = {}
     result['booking'] = [{
         'booking_id': row.id,
+        'exhibition_id': row.exhibition_id,
         'exhibition_title': row.title,
         'visited_at': row.visited_at.date(),
         'ticket_type': row.ticket_type.value,
