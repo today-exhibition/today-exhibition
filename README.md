@@ -32,6 +32,7 @@ https://docs.google.com/spreadsheets/d/1zXg7Y2xQUDaGagg4yKjvCBrQDybQ1Vhk5urg7k4v
 - 외부API: Naver Login, Kakao Login, Kakao Map, 한국문화정보원 공연전시정보조회서비스, 서울시립미술관 전시 현황, 국토교통부 박물관미술관
 
 ## 🏛️ Architecture
+![architecture](https://github.com/today-exhibition/today-exhibition/assets/63828057/c661669d-1b51-4758-a845-f917a7a51b5a)
 
 ## 🔗ERD
 https://dbdiagram.io/d/64c22dc802bd1c4a5ec8b92a 
