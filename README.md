@@ -21,6 +21,62 @@
 - **How**: 인기 전시 리스트와 지도 검색을 통한 위치 기반 전시 조회 기능을 제공합니다.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;또한 전시 관람 후에 관람평을 기록하여 이용자들 간의 생각을 공유할 수 있는 플랫폼을 제공하고자 합니다.
 
+## 주요 페이지
+ <details>
+  <summary> 메인 페이지 </summary>
+
+   ![main](https://github.com/etesongg/Generator/assets/55964387/33c28fd5-cf07-46cb-bc32-90a249a544db)
+</details>
+
+---
+<details>
+  <summary> 검색 페이지</summary>
+  
+  <details>
+  <summary> 메인 검색 페이지 </summary>
+
+  ![search](https://github.com/etesongg/Generator/assets/55964387/3cbbc788-0d94-457b-9e7d-2d894b47a789)
+  </details>
+  
+   <details>
+  <summary> 작가 검색 페이지 </summary>
+     
+  ![artist-search](https://github.com/etesongg/Generator/assets/55964387/0fdfddda-a225-4e3c-ac57-3990a6f6a9f3)
+  </details>
+  
+  <details>
+  <summary> 미술관 검색 페이지 </summary>
+    
+   ![exhibition-search](https://github.com/etesongg/Generator/assets/55964387/86dbdaba-c660-494f-b769-433b9e2b24db)
+  </details>
+  
+</details>
+
+---
+ <details>
+  <summary> 지도 페이지 </summary>
+
+   ![map](https://github.com/etesongg/Generator/assets/55964387/e3b833c2-f9f4-417f-872b-849fa4dde0f3)
+</details>
+
+---
+ <details>
+  <summary> 로그인 알럿 </summary>
+
+   ![login-alert](https://github.com/etesongg/Generator/assets/55964387/1fcb0544-9fec-4083-ae6c-0b55ddb4a4fa)
+</details>
+
+---
+ <details>
+   <summary> 마이페이지</summary>
+   <details>
+  <summary> 팔로우한 전시관 </summary>
+
+   ![mypage](https://github.com/etesongg/Generator/assets/55964387/ce90a737-2ed7-4ec5-85c1-7e9de5fba2f3)
+   </details>
+</details>
+
+
 ## 📝 WBS / Gantt
 https://docs.google.com/spreadsheets/d/1zXg7Y2xQUDaGagg4yKjvCBrQDybQ1Vhk5urg7k4vn1E/edit#gid=896096823
 
